@@ -1,0 +1,222 @@
+# baseURI: http://www.coinsweb.nl/coins2/reffrm/se/parkbank
+# imports: http://www.coinsweb.nl/coins2/reffrm/se
+
+@prefix : <http://www.coinsweb.nl/coins2/reffrm/se/parkbank#> .
+@prefix coins2: <http://www.coinsweb.nl/cbim-2.0.rdf#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix se: <http://www.coinsweb.nl/coins2/reffrm/se#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.coinsweb.nl/coins2/reffrm/se/parkbank>
+  rdf:type owl:Ontology ;
+  owl:imports <http://www.coinsweb.nl/coins2/reffrm/se> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+:ContainsRelation_1
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasAssembly :SystemSlot_1 ;
+  coins2:hasPart :SystemSlot_4 ;
+.
+:ContainsRelation_2
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasAssembly :SystemSlot_1 ;
+  coins2:hasPart :SystemSlot_5 ;
+.
+:ContainsRelation_3
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasAssembly :SystemInterface_1 ;
+  coins2:hasPart :SystemInterface_3 ;
+.
+:ContainsRelation_4
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasAssembly :SystemInterface_2 ;
+  coins2:hasPart :SystemInterface_4 ;
+.
+:ContainsRelation_5
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasAssembly :Function_1 ;
+  coins2:hasPart :Function_2 ;
+.
+:ContainsRelation_6
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasAssembly :Function_1 ;
+  coins2:hasPart :Function_3 ;
+.
+:ContainsRelation_7
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasAssembly :RealisationModule_1 ;
+  coins2:hasPart :RealisationModule_2 ;
+.
+:ContainsRelation_8
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasAssembly :RealisationModule_1 ;
+  coins2:hasPart :RealisationModule_3 ;
+.
+:ContainsRelation_9
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasAssembly :RealisationModule_1 ;
+  coins2:hasPart :RealisationModule_4 ;
+.
+:Draagcapaciteit
+  rdf:type owl:Class ;
+  rdfs:subClassOf coins2:FloatProperty ;
+.
+:Draagcapaciteit_1
+  rdf:type :Draagcapaciteit ;
+  coins2:datatypeValue "300.0"^^xsd:float ;
+  coins2:unit <http://data.nasa.gov/qudt/owl/unit#Kilogram> ;
+  rdfs:label "Draagcapaciteit_1" ;
+.
+:Draagcapaciteit_2
+  rdf:type :Draagcapaciteit ;
+  coins2:datatypeValue "400.0"^^xsd:float ;
+  coins2:unit <http://data.nasa.gov/qudt/owl/unit#Kilogram> ;
+  rdfs:label "Draagcapaciteit_2" ;
+.
+:Function_1
+  rdf:type se:Function ;
+  se:hasRequirement :Requirement_1 ;
+  se:input :SystemInterface_1 ;
+  se:output :SystemInterface_2 ;
+  rdfs:label "Dragen" ;
+.
+:Function_2
+  rdf:type se:Function ;
+  se:input :SystemInterface_3 ;
+  se:output :SystemInterface_5 ;
+  rdfs:label "Dragen zitsysteem" ;
+.
+:Function_3
+  rdf:type se:Function ;
+  se:input :SystemInterface_5 ;
+  se:output :SystemInterface_4 ;
+  rdfs:label "Dragen personen" ;
+.
+:Hamburger_1
+  rdf:type se:Hamburger ;
+  se:functionalUnit :SystemSlot_1 ;
+  se:hasPortRealisation :PortRealisation_1 ;
+  se:hasPortRealisation :PortRealisation_2 ;
+  se:technicalSolution :RealisationModule_1 ;
+  rdfs:label "Zitvoorziening realisatie" ;
+.
+:Hamburger_2
+  rdf:type se:Hamburger ;
+  se:functionalUnit :SystemSlot_4 ;
+  se:technicalSolution :RealisationModule_2 ;
+  rdfs:label "Fundatiesysteem realisatie" ;
+.
+:Hamburger_3
+  rdf:type se:Hamburger ;
+  se:functionalUnit :SystemSlot_4 ;
+  se:technicalSolution :RealisationModule_3 ;
+  rdfs:label "Fundatiesysteem realisatie" ;
+.
+:Hamburger_4
+  rdf:type se:Hamburger ;
+  se:functionalUnit :SystemSlot_5 ;
+  se:technicalSolution :RealisationModule_4 ;
+  rdfs:label "Zitsysteem realisatie" ;
+.
+:Performance_1
+  rdf:type se:Performance ;
+  se:value :Draagcapaciteit_2 ;
+  rdfs:label "Draagcapaciteit 400 kg" ;
+.
+:PortRealisation_1
+  rdf:type se:PortRealisation ;
+  se:interface :SystemInterface_1 ;
+  se:port :RealisationPort_1 ;
+  rdfs:label "PortRealisation_1" ;
+.
+:PortRealisation_2
+  rdf:type se:PortRealisation ;
+  se:interface :SystemInterface_2 ;
+  se:port :RealisationPort_2 ;
+  rdfs:label "PortRealisation_2" ;
+.
+:RealisationModule_1
+  rdf:type se:RealisationModule ;
+  se:hasPerformance :Performance_1 ;
+  se:hasPort :RealisationPort_1 ;
+  se:hasPort :RealisationPort_2 ;
+  rdfs:label "Parkbank" ;
+.
+:RealisationModule_2
+  rdf:type se:RealisationModule ;
+  rdfs:label "Steun links" ;
+.
+:RealisationModule_3
+  rdf:type se:RealisationModule ;
+  rdfs:label "Steun rechts" ;
+.
+:RealisationModule_4
+  rdf:type se:RealisationModule ;
+  rdfs:label "Ligger" ;
+.
+:RealisationPort_1
+  rdf:type se:RealisationPort ;
+  rdfs:label "Funderingspoort" ;
+.
+:RealisationPort_2
+  rdf:type se:RealisationPort ;
+  rdfs:label "Personenpoort" ;
+.
+:Requirement_1
+  rdf:type se:Requirement ;
+  se:minValue :Draagcapaciteit_1 ;
+  rdfs:label "Draagcapaciteit 3 personen (300 kg)" ;
+.
+:SystemInterface_1
+  rdf:type se:SystemInterface ;
+  rdfs:label "SystemInterface_1" ;
+.
+:SystemInterface_2
+  rdf:type se:SystemInterface ;
+  rdfs:label "SystemInterface_2" ;
+.
+:SystemInterface_3
+  rdf:type se:SystemInterface ;
+  rdfs:label "SystemInterface_3" ;
+.
+:SystemInterface_4
+  rdf:type se:SystemInterface ;
+  rdfs:label "SystemInterface_4" ;
+.
+:SystemInterface_5
+  rdf:type se:SystemInterface ;
+  rdfs:label "SystemInterface_5" ;
+.
+:SystemSlot_1
+  rdf:type se:SystemSlot ;
+  se:hasFunction :Function_1 ;
+  se:hasInterfaces :SystemInterface_1 ;
+  se:hasInterfaces :SystemInterface_2 ;
+  rdfs:label "Zitvoorziening" ;
+.
+:SystemSlot_2
+  rdf:type se:SystemSlot ;
+  se:hasInterfaces :SystemInterface_1 ;
+  rdfs:label "Ondergrond" ;
+.
+:SystemSlot_3
+  rdf:type se:SystemSlot ;
+  se:hasInterfaces :SystemInterface_2 ;
+  rdfs:label "3 Personen" ;
+.
+:SystemSlot_4
+  rdf:type se:SystemSlot ;
+  se:hasFunction :Function_2 ;
+  se:hasInterfaces :SystemInterface_3 ;
+  se:hasInterfaces :SystemInterface_5 ;
+  rdfs:label "Fundatiesysteem" ;
+.
+:SystemSlot_5
+  rdf:type se:SystemSlot ;
+  se:hasFunction :Function_3 ;
+  se:hasInterfaces :SystemInterface_4 ;
+  se:hasInterfaces :SystemInterface_5 ;
+  rdfs:label "Zitsysteem" ;
+.

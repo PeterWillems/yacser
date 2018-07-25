@@ -1,0 +1,96 @@
+type Dataset {
+  datasetId: Int!
+  filepath: String!
+}
+
+type Function {
+	datasetId: Int!
+	uri: String!
+	label: String!
+	assembly: Function
+	parts: [Function]
+	requirements: [Requirement]
+	input: SystemInterface
+	output: SystemInterface
+}
+
+type NumericProperty {
+	datasetId: Int!
+	uri: String!
+	label: String!
+}
+
+type Requirement {
+	datasetId: Int!
+	uri: String!
+	label: String!
+	assembly: Requirement
+	parts: [Requirement]
+	minValue: NumericProperty
+	maxValue: NumericProperty
+}
+
+type SystemInterface {
+	datasetId: Int!
+	uri: String!
+	label: String!
+	assembly: SystemInterface
+	parts: [SystemInterface]
+	systemSlot0: SystemSlot
+	systemSlot1: SystemSlot
+	requirements: [Requirement]
+}
+
+type SystemSlot {
+	datasetId: Int!
+	uri: String!
+	label: String!
+	assembly: SystemSlot
+	parts: [SystemSlot]
+	functions: [Function]
+	requirements: [Requirement]
+	interfaces: [SystemInterface]
+}
+
+type Query {
+  allDatasets: [Dataset]
+  allSystemSlots(datasetId: Int): [SystemSlot]
+  oneSystemSlot(datasetId: Int, uri: String): SystemSlot
+  allFunctions(datasetId: Int): [Function]
+  allRequirements(datasetId: Int): [Requirement]
+  allSystemInterfaces(datasetId: Int): [SystemInterface]
+}
+
+input SystemSlotInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	functions: [String]
+	requirements: [String]
+	interfaces: [String]
+}
+
+input FunctionInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	requirements: [String]
+	input: String
+	output: String
+}
+
+type Mutation {
+  createSystemSlot(datasetId: Int!, uri: String!, label: String!): SystemSlot
+  createFunction(datasetId: Int!, uri: String!, label: String!): Function
+  updateSystemSlot(systemSlot: SystemSlotInput!): SystemSlot
+  updateFunction(functionInput: FunctionInput!): Function
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

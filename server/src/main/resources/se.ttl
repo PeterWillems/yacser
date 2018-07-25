@@ -1,0 +1,483 @@
+# baseURI: http://www.coinsweb.nl/coins2/reffrm/se
+# imports: http://data.qudt.org/qudt/owl/1.0.0/unit.owl
+# imports: http://www.coinsweb.nl/cbim-2.0.rdf
+
+@prefix : <http://www.coinsweb.nl/coins2/reffrm/se#> .
+@prefix coins2: <http://www.coinsweb.nl/cbim-2.0.rdf#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.coinsweb.nl/coins2/reffrm/se>
+  rdf:type owl:Ontology ;
+  owl:imports <http://data.qudt.org/qudt/owl/1.0.0/unit.owl> ;
+  owl:imports <http://www.coinsweb.nl/cbim-2.0.rdf> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+:AsBuilt
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "As Built phase"@en ;
+  rdfs:label "Opleveringsfase"@nl ;
+  rdfs:subClassOf :LifecyclePhase ;
+.
+:AsDesigned
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "As Designed phase"@en ;
+  rdfs:label "Ontwerpfase"@nl ;
+  rdfs:subClassOf :LifecyclePhase ;
+.
+:ContainsFunction
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Bevat functie"@nl ;
+  rdfs:label "Contains Function"@en ;
+  rdfs:subClassOf coins2:ContainsRelation ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :Function ;
+      owl:onProperty coins2:hasAssembly ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :Function ;
+      owl:onProperty coins2:hasPart ;
+    ] ;
+.
+:ContainsHamburger
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Bevat Hamburger"@nl ;
+  rdfs:label "Contains Hamburger"@en ;
+  rdfs:subClassOf coins2:ContainsRelation ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :Hamburger ;
+      owl:onProperty coins2:hasAssembly ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :Hamburger ;
+      owl:onProperty coins2:hasPart ;
+    ] ;
+.
+:ContainsPerformance
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Bevat prestatie"@nl ;
+  rdfs:label "Contains Performance"@en ;
+  rdfs:subClassOf coins2:ContainsRelation ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :Performance ;
+      owl:onProperty coins2:hasAssembly ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :Performance ;
+      owl:onProperty coins2:hasPart ;
+    ] ;
+.
+:ContainsPortRealisation
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Bevat poortrealisatie"@nl ;
+  rdfs:label "Contains Port Realisation"@en ;
+  rdfs:subClassOf coins2:ContainsRelation ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :PortRealisation ;
+      owl:onProperty coins2:hasAssembly ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :PortRealisation ;
+      owl:onProperty coins2:hasPart ;
+    ] ;
+.
+:ContainsRealisationModule
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Bevat realisatiemodule"@nl ;
+  rdfs:label "Contains Realisation Module"@en ;
+  rdfs:subClassOf coins2:ContainsRelation ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :RealisationModule ;
+      owl:onProperty coins2:hasAssembly ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :RealisationModule ;
+      owl:onProperty coins2:hasPart ;
+    ] ;
+.
+:ContainsRealisationPort
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Bevat realisatiepoort"@nl ;
+  rdfs:label "Contains Realisation Port"@en ;
+  rdfs:subClassOf coins2:ContainsRelation ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :RealisationPort ;
+      owl:onProperty coins2:hasAssembly ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :RealisationPort ;
+      owl:onProperty coins2:hasPart ;
+    ] ;
+.
+:ContainsRequirement
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Bevat eis"@nl ;
+  rdfs:label "Contains Requirement"@en ;
+  rdfs:subClassOf coins2:ContainsRelation ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :Requirement ;
+      owl:onProperty coins2:hasAssembly ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :Requirement ;
+      owl:onProperty coins2:hasPart ;
+    ] ;
+.
+:ContainsSystemInterface
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Bevat systeeminterface"@nl ;
+  rdfs:label "Contains System Interface"@en ;
+  rdfs:subClassOf coins2:ContainsRelation ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :SystemInterface ;
+      owl:onProperty coins2:hasAssembly ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :SystemInterface ;
+      owl:onProperty coins2:hasPart ;
+    ] ;
+.
+:ContainsSystemSlot
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Bevat systeemslot"@nl ;
+  rdfs:label "Contains System Slot"@en ;
+  rdfs:subClassOf coins2:ContainsRelation ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :SystemSlot ;
+      owl:onProperty coins2:hasAssembly ;
+    ] ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :SystemSlot ;
+      owl:onProperty coins2:hasPart ;
+    ] ;
+.
+:Function
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "Objectrepresentatie van een functieconcept. Functie-objecten kunnen worden gegroepeerd in een systeemslot. Een functie-object kan eisen groeperen die daarmee impliciet functionele eisen zijn. Een functie-object kan een input- en/of een output-interface specificeren."@nl ;
+  rdfs:label "Functie"@nl ;
+  rdfs:label "Function"@en ;
+  rdfs:subClassOf coins2:DirectedConnection ;
+  rdfs:subClassOf :SE-Object ;
+.
+:Hamburger
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "ObjectRepresentatie van een hamburgerconcept. In het General AEC Reference Model (GARM) koppelt een hamburgerobject een functionele beschrijving aan een technische oplossing. In deze COINS-SE ontologie zijn dat resp. een systeemslot en een realisatiemodule. Een hamburgerobject kan poortrealisaties groeperen die een vergelijkbaar gedrag vertonen ten aanzien van systeeminterfaces en realisatiepoorten."@nl ;
+  rdfs:label "Hamburger"@en ;
+  rdfs:label "Hamburger"@nl ;
+  rdfs:subClassOf coins2:DirectedConnection ;
+  rdfs:subClassOf :SE-Object ;
+.
+:LifecyclePhase
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "true"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:label "Levenscyclusfase"@nl ;
+  rdfs:label "Lifecycle Phase"@en ;
+  rdfs:subClassOf coins2:Entity ;
+.
+:Performance
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "Objectrepresentatie van een prestatieconcept. Een prestatie-object beschrijft een prestatie van een realisatiemodule of realisatiepoort. Een prestatie-object kan een rol spelen in een eis-prestatie-analyse."@nl ;
+  rdfs:label "Performance"@en ;
+  rdfs:label "Prestatie"@nl ;
+  rdfs:subClassOf :SE-Object ;
+.
+:PeterWillems
+  rdf:type coins2:Person ;
+  rdfs:label "Peter.Willems@tno.nl" ;
+.
+:PortRealisation
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "Objectrepresentatie van een poortrealisatieconcept. Een poortrealisatie-object koppelt een systeeminterface aan een realisatiepoort. Realisatiepoort-objecten worden gegroepeerd door een hamburger-object."@nl ;
+  rdfs:label "Poortrealisatie"@nl ;
+  rdfs:label "Port Realisation"@en ;
+  rdfs:subClassOf coins2:DirectedConnection ;
+  rdfs:subClassOf :SE-Object ;
+.
+:RealisationModule
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "Objectrepresentatie van een realisatiemoduleconcept."@nl ;
+  rdfs:label "Realisatiemodule"@nl ;
+  rdfs:label "Realisation Module"@en ;
+  rdfs:subClassOf :SE-Object ;
+  rdfs:subClassOf [
+      rdf:type owl:Restriction ;
+      owl:allValuesFrom :RealisationPort ;
+      owl:onProperty :hasPort ;
+    ] ;
+.
+:RealisationPort
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "Objectrepresentatie van een realisatiepoorconcept."@nl ;
+  rdfs:label "Realisatiepoort"@nl ;
+  rdfs:label "Realisation Port"@en ;
+  rdfs:subClassOf :SE-Object ;
+.
+:Requirement
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "Objectrepresentatie van een eisconcept. Eisobjecten kunnen worden verbonden aan functies (functionele eisen), systeemsloten (algemene eisen) en systeeminterfaces (overgangseisen)."@nl ;
+  rdfs:label "Eis"@nl ;
+  rdfs:label "Requirement"@en ;
+  rdfs:subClassOf :SE-Object ;
+.
+:SE-Object
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "true"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "Abstracte objectrepresentatie van een systems engineering concept. SE-objecten zijn decomponeerbaar (in part-objecten) en aggregeerbaar (in een assembly-object), waarbij assembly en part van hetzelfde subtype dienen te zijn."@nl ;
+  rdfs:label "Systems Engineering Object"@en ;
+  rdfs:label "Systems Engineering Object"@nl ;
+  rdfs:subClassOf coins2:Assembly ;
+  rdfs:subClassOf coins2:Object ;
+  rdfs:subClassOf coins2:Part ;
+.
+:SystemInterface
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "Objectrepresentatie van een systeeminterfaceconcept. Een systeeminterfaceobject specificeert de connectie tussen twee systeemslotobjecten. Een systeeminterfaceobject kan (overgangs-)eisen groeperen. Een systeeminterfaceobject kan worden gerealiseerd in realisatiepoorten van gekoppelde realisatiemodulen."@nl ;
+  rdfs:label "Systeeminterface"@nl ;
+  rdfs:label "System Interface"@en ;
+  rdfs:subClassOf coins2:Connection ;
+  rdfs:subClassOf :SE-Object ;
+.
+:SystemSlot
+  rdf:type owl:Class ;
+  coins2:classCreator :PeterWillems ;
+  coins2:isClassAbstract "false"^^xsd:boolean ;
+  coins2:isClassExtendable "true"^^xsd:boolean ;
+  rdfs:comment "Objectrepresentatie van een systeemslotconcept. Een systeemslotobject groepeert functies en algemene eisen (functionele eisen indirect via functies). Een systeemslotobject kan fysiek worden gerealiseerd door een of meer realisatiemodulen. Een systeemslot kan een element zijn in een netwerk waarby systeeminterfaces de connecties tussen telkens twee systeemsloten representeren."@nl ;
+  rdfs:label "Systeemslot"@nl ;
+  rdfs:label "System Slot"@en ;
+  rdfs:subClassOf :SE-Object ;
+.
+:endDate
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:domain :Hamburger ;
+  rdfs:label "einddatum"@nl ;
+  rdfs:label "end date"@en ;
+  rdfs:range xsd:dateTime ;
+.
+:functionalUnit
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :Hamburger ;
+  rdfs:range :SystemSlot ;
+  rdfs:subPropertyOf coins2:fromObject ;
+.
+:hasBuiltPerformance
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :AsBuilt ;
+  rdfs:label "has as-built performance"@en ;
+  rdfs:label "heeft opleveringsprestatie"@nl ;
+  rdfs:range :Performance ;
+.
+:hasDesignedPerformance
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :AsDesigned ;
+  rdfs:range :Performance ;
+.
+:hasFunction
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :SystemSlot ;
+  rdfs:range :Function ;
+.
+:hasInterfaces
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :SystemSlot ;
+  rdfs:range :SystemInterface ;
+  rdfs:subPropertyOf coins2:hasConnections ;
+.
+:hasPerformance
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain [
+      rdf:type owl:Class ;
+      owl:unionOf (
+          :RealisationModule
+          :RealisationPort
+        ) ;
+    ] ;
+  rdfs:range :Performance ;
+.
+:hasPort
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :RealisationModule ;
+  rdfs:range :RealisationPort ;
+.
+:hasPortRealisation
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :Hamburger ;
+  rdfs:range :PortRealisation ;
+.
+:hasRequirement
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain [
+      rdf:type owl:Class ;
+      owl:unionOf (
+          :SystemSlot
+          :Function
+          :SystemInterface
+        ) ;
+    ] ;
+  rdfs:range :Requirement ;
+.
+:input
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :Function ;
+  rdfs:range :SystemInterface ;
+  rdfs:subPropertyOf coins2:fromObject ;
+.
+:interface
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :PortRealisation ;
+  rdfs:label "interface"@en ;
+  rdfs:label "interface"@nl ;
+  rdfs:range :SystemInterface ;
+  rdfs:subPropertyOf coins2:fromObject ;
+.
+:maxValue
+  rdf:type owl:FunctionalProperty ;
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :Requirement ;
+  rdfs:label "Max. value"@en ;
+  rdfs:label "Max. waarde"@nl ;
+  rdfs:range coins2:NumericProperty ;
+.
+:minValue
+  rdf:type owl:FunctionalProperty ;
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :Requirement ;
+  rdfs:range coins2:NumericProperty ;
+.
+:nextAsBuiltVersion
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :AsBuilt ;
+  rdfs:range :AsBuilt ;
+  rdfs:subPropertyOf :nextLifecyclePhaseVersion ;
+.
+:nextAsDesignedVersion
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :AsDesigned ;
+  rdfs:range :AsDesigned ;
+  rdfs:subPropertyOf :nextLifecyclePhaseVersion ;
+.
+:nextLifecyclePhaseVersion
+  rdf:type owl:FunctionalProperty ;
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :LifecyclePhase ;
+  rdfs:label "next lifecycle phase version"@en ;
+  rdfs:label "volgende levenscyclusfase versie"@nl ;
+  rdfs:range :LifecyclePhase ;
+  rdfs:subPropertyOf coins2:nextTrunkVersion ;
+.
+:output
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :Function ;
+  rdfs:range :SystemInterface ;
+  rdfs:subPropertyOf coins2:toObject ;
+.
+:port
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :PortRealisation ;
+  rdfs:label "poort"@nl ;
+  rdfs:label "port"@en ;
+  rdfs:range :RealisationPort ;
+  rdfs:subPropertyOf coins2:toObject ;
+.
+:startDate
+  rdf:type owl:DatatypeProperty ;
+  rdf:type owl:FunctionalProperty ;
+  rdfs:domain :Hamburger ;
+  rdfs:label "start date"@en ;
+  rdfs:label "startdatum"@nl ;
+  rdfs:range xsd:dateTime ;
+.
+:technicalSolution
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :Hamburger ;
+  rdfs:range :RealisationModule ;
+  rdfs:subPropertyOf coins2:toObject ;
+.
+:value
+  rdf:type owl:FunctionalProperty ;
+  rdf:type owl:ObjectProperty ;
+  rdfs:domain :Performance ;
+  rdfs:range coins2:NumericProperty ;
+.

@@ -1,0 +1,104 @@
+# baseURI: http://www.coinsweb.nl/coins2/reffrm/se/wegjunctie
+# imports: http://www.coinsweb.nl/coins2/reffrm/se
+
+@prefix : <http://www.coinsweb.nl/coins2/reffrm/se/wegjunctie#> .
+@prefix coins2: <http://www.coinsweb.nl/cbim-2.0.rdf#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix se: <http://www.coinsweb.nl/coins2/reffrm/se#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.coinsweb.nl/coins2/reffrm/se/wegjunctie>
+  rdf:type owl:Ontology ;
+  owl:imports <http://www.coinsweb.nl/coins2/reffrm/se> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+:Function_1
+  rdf:type se:Function ;
+  se:hasRequirement :Requirement_1 ;
+  se:input :SystemInterface_1 ;
+  se:output :SystemInterface_2 ;
+  rdfs:label "Stromen W2" ;
+.
+:Function_2
+  rdf:type se:Function ;
+  se:hasRequirement :Requirement_2 ;
+  se:input :SystemInterface_1 ;
+  se:output :SystemInterface_3 ;
+  rdfs:label "Stromen W3" ;
+.
+:Requirement_1
+  rdf:type se:Requirement ;
+  se:minValue :Stroomcapaciteit_1 ;
+  rdfs:label "Stroomcapaciteit: xxx voertuigen/dag" ;
+.
+:Requirement_2
+  rdf:type se:Requirement ;
+  se:minValue :Stroomcapaciteit_2 ;
+  rdfs:label "Stroomcapaciteit: yyy voertuigen/dag" ;
+.
+:Requirement_3
+  rdf:type se:Requirement ;
+  se:minValue :Stroomcapaciteit_3 ;
+  rdfs:label "Stroomcapaciteit: yyy voertuigen per dag" ;
+.
+:Stroomcapaciteit
+  rdf:type owl:Class ;
+  rdfs:label "Stroomcapaciteit"@nl ;
+  rdfs:subClassOf coins2:IntegerProperty ;
+.
+:Stroomcapaciteit_1
+  rdf:type :Stroomcapaciteit ;
+  coins2:datatypeValue 4000 ;
+  rdfs:label "Stroomcapaciteit (voertuigen/dag)" ;
+.
+:Stroomcapaciteit_2
+  rdf:type :Stroomcapaciteit ;
+  coins2:datatypeValue 2000 ;
+  rdfs:label "Stroomcapaciteit (voertuigen/dag)" ;
+.
+:Stroomcapaciteit_3
+  rdf:type :Stroomcapaciteit ;
+  coins2:datatypeValue 6000 ;
+  rdfs:label "Stroomcapaciteit (voertuigen/dag)" ;
+.
+:SystemInterface_1
+  rdf:type se:SystemInterface ;
+  se:hasRequirement :Requirement_3 ;
+  rdfs:label "SystemInterface_1" ;
+.
+:SystemInterface_2
+  rdf:type se:SystemInterface ;
+  se:hasRequirement :Requirement_1 ;
+  rdfs:label "SystemInterface_2" ;
+.
+:SystemInterface_3
+  rdf:type se:SystemInterface ;
+  se:hasRequirement :Requirement_3 ;
+  rdfs:label "SystemInterface_3" ;
+.
+:SystemSlot_1
+  rdf:type se:SystemSlot ;
+  se:hasFunction :Function_1 ;
+  se:hasFunction :Function_2 ;
+  se:hasInterfaces :SystemInterface_1 ;
+  se:hasInterfaces :SystemInterface_2 ;
+  se:hasInterfaces :SystemInterface_3 ;
+  rdfs:label "Wegjunctie J1" ;
+.
+:SystemSlot_2
+  rdf:type se:SystemSlot ;
+  se:hasInterfaces :SystemInterface_1 ;
+  rdfs:label "Wegvak W1" ;
+.
+:SystemSlot_3
+  rdf:type se:SystemSlot ;
+  se:hasInterfaces :SystemInterface_2 ;
+  rdfs:label "Wegvak W2" ;
+.
+:SystemSlot_4
+  rdf:type se:SystemSlot ;
+  se:hasInterfaces :SystemInterface_3 ;
+  rdfs:label "Wegvak W3" ;
+.

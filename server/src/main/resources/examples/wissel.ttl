@@ -1,0 +1,122 @@
+# baseURI: http://www.coinsweb.nl/coins2/reffrm/se/wissel
+# imports: http://www.coinsweb.nl/coins2/reffrm/se
+
+@prefix : <http://www.coinsweb.nl/coins2/reffrm/se/wissel#> .
+@prefix coins2: <http://www.coinsweb.nl/cbim-2.0.rdf#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix se: <http://www.coinsweb.nl/coins2/reffrm/se#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://www.coinsweb.nl/coins2/reffrm/se/wissel>
+  rdf:type owl:Ontology ;
+  owl:imports <http://www.coinsweb.nl/coins2/reffrm/se> ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+:AsBuilt_1
+  rdf:type se:AsBuilt ;
+  se:hasBuiltPerformance :Performance_1 ;
+.
+:ContainsRelation_1
+  rdf:type coins2:CoinsContainerObject ;
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasPart :SystemSlot_2 ;
+.
+:ContainsRelation_2
+  rdf:type coins2:CoinsContainerObject ;
+  rdf:type coins2:ContainsRelation ;
+  coins2:hasPart :Requirement_2 ;
+.
+:Function_1
+  rdf:type se:Function ;
+  se:input :SystemInterface_1 ;
+  se:output :SystemInterface_2 ;
+  rdfs:label "Geleiden" ;
+.
+:Function_2
+  rdf:type se:Function ;
+  se:input :SystemInterface_1 ;
+  se:output :SystemInterface_3 ;
+  rdfs:label "Geleiden" ;
+.
+:Hamburger_1
+  rdf:type se:Hamburger ;
+  se:functionalUnit :SystemSlot_2 ;
+  se:startDate "2018-06-12T12:00:00.00"^^xsd:dateTime ;
+  se:technicalSolution :RealisationModule_1 ;
+  rdfs:label "Wissel31 realisatie" ;
+.
+:Performance_1
+  rdf:type se:Performance ;
+  coins2:description "maximum snelheid 60km/u" ;
+  se:value :Snelheid_2 ;
+  rdfs:label "maximum snelheid 60km/u" ;
+.
+:RealisationModule_1
+  rdf:type se:AsBuilt ;
+  rdf:type se:AsDesigned ;
+  rdf:type se:RealisationModule ;
+  se:hasBuiltPerformance :Performance_1 ;
+  se:hasDesignedPerformance :Performance_1 ;
+  se:hasPerformance :Performance_1 ;
+  se:nextAsBuiltVersion :AsBuilt_1 ;
+  rdfs:label "Wisseltype 1:12" ;
+.
+:Requirement_1
+  rdf:type se:Requirement ;
+  coins2:description "ontwerpsnelheid 50km/u" ;
+  coins2:hasContainsRelation :ContainsRelation_2 ;
+  se:minValue :Snelheid_1 ;
+  rdfs:label "ontwerpsnelheid 50km/u" ;
+.
+:Requirement_2
+  rdf:type se:Requirement ;
+  coins2:description "ontwerpsnelheid 50km/u" ;
+  se:minValue :Snelheid_1 ;
+  rdfs:label "ontwerpsnelheid 50km/u" ;
+.
+:Snelheid
+  rdf:type owl:Class ;
+  rdfs:subClassOf coins2:FloatProperty ;
+.
+:Snelheid_1
+  rdf:type :Snelheid ;
+  coins2:datatypeValue "50"^^xsd:float ;
+  coins2:unit <http://data.nasa.gov/qudt/owl/unit#KilometerPerHour> ;
+  rdfs:label "Snelheid: 50 km/h" ;
+.
+:Snelheid_2
+  rdf:type :Snelheid ;
+  coins2:datatypeValue "60"^^xsd:float ;
+  coins2:unit <http://data.nasa.gov/qudt/owl/unit#KilometerPerHour> ;
+  rdfs:label "Snelheid: 60 km/h" ;
+.
+:SystemInterface_1
+  rdf:type se:SystemInterface ;
+  rdfs:label "SystemInterface_1" ;
+.
+:SystemInterface_2
+  rdf:type se:SystemInterface ;
+  rdfs:label "SystemInterface_2" ;
+.
+:SystemInterface_3
+  rdf:type se:SystemInterface ;
+  rdfs:label "SystemInterface_3" ;
+.
+:SystemSlot_1
+  rdf:type se:SystemSlot ;
+  coins2:hasContainsRelation :ContainsRelation_1 ;
+  se:hasRequirement :Requirement_1 ;
+  rdfs:label "Baanvak A" ;
+.
+:SystemSlot_2
+  rdf:type se:SystemSlot ;
+  se:hasFunction :Function_1 ;
+  se:hasFunction :Function_2 ;
+  se:hasInterfaces :SystemInterface_1 ;
+  se:hasInterfaces :SystemInterface_2 ;
+  se:hasInterfaces :SystemInterface_3 ;
+  se:hasRequirement :Requirement_2 ;
+  rdfs:label "Wissel 31" ;
+.

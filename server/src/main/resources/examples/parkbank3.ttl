@@ -1,0 +1,302 @@
+@base          <http://www.coinsweb.nl/coins2/reffrm/se/parkbank3> .
+@prefix :      <http://www.coinsweb.nl/coins2/reffrm/se/parkbank3#> .
+@prefix se:    <http://www.coinsweb.nl/coins2/reffrm/se#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix coins2: <http://www.coinsweb.nl/cbim-2.0.rdf#> .
+
+:PortRealisation_20422ce4-a0a9-47cc-b801-806a041e1b5e
+        a             coins2:CoinsContainerObject , se:PortRealisation ;
+        rdfs:label    "Realisatie fundering interface (0)" ;
+        se:interface  :SystemInterface_2dfcdbc8-beb9-46ee-a780-d7f2fc6aa85b ;
+        se:port       :RealisationPort_256ceecd-e302-4893-a19b-4a06e8c46d73 .
+
+:ContainsRelation_236bc569-f27e-4567-a263-ed06122d4ca0
+        a                   coins2:CoinsContainerObject , se:ContainsRealisationModule ;
+        coins2:hasAssembly  :RealisationModule_38feaa91-fb4c-4925-8832-8efc54f3c383 ;
+        coins2:hasPart      :RealisationModule_908004d2-4036-4b0b-b74d-4569d199b715 .
+
+:SystemInterface_e9070f27-4acd-487a-8705-83b887e79b86
+        a           coins2:CoinsContainerObject , se:SystemInterface ;
+        rdfs:label  "Fundering interface (1)" .
+
+:ContainsRelation_e682b9a6-0421-4909-91b5-e2f76085c3ea
+        a                   coins2:CoinsContainerObject , se:ContainsSystemSlot ;
+        coins2:hasAssembly  :SystemSlot_f205b076-a3ac-435e-9f96-3ca35b57e3c8 ;
+        coins2:hasPart      :SystemSlot_6b213746-6e5b-4360-9597-a900f9d42922 .
+
+:ContainsRelation_9bf501ab-13d8-4fcd-9c6c-d7ed1aa642ed
+        a                   coins2:CoinsContainerObject , se:ContainsRealisationPort ;
+        coins2:hasAssembly  :RealisationPort_256ceecd-e302-4893-a19b-4a06e8c46d73 ;
+        coins2:hasPart      :RealisationPort_30a415c4-fe63-4d9f-9788-abedc6ed1eef .
+
+:SystemSlot_f205b076-a3ac-435e-9f96-3ca35b57e3c8
+        a                 se:SystemSlot , coins2:CoinsContainerObject ;
+        rdfs:label        "Zitvoorziening (0)" ;
+        se:hasFunction    :Function_5d3590c7-7a7f-4bac-826b-f91015ed23a7 ;
+        se:hasInterfaces  :SystemInterface_0ec56ffe-5a8f-4b2b-94bd-b9951233a30a , :SystemInterface_2dfcdbc8-beb9-46ee-a780-d7f2fc6aa85b .
+
+:ContainsRelation_98e760f6-bdf9-486c-a2cf-05c534d859a5
+        a                   coins2:CoinsContainerObject , se:ContainsRealisationModule ;
+        coins2:hasAssembly  :RealisationModule_38feaa91-fb4c-4925-8832-8efc54f3c383 ;
+        coins2:hasPart      :RealisationModule_fb60526f-33ea-4281-8915-8cff01df1f4f .
+
+:Hamburger_f967855e-3e22-429a-9d99-5b719f10ef69
+        a                      coins2:CoinsContainerObject , se:Hamburger ;
+        rdfs:label             "Fundatiesysteemrealisatie (1.2)" ;
+        se:functionalUnit      :SystemSlot_0a7f4a5d-13b8-4283-9284-7dc54502116f ;
+        se:hasPortRealisation  :PortRealisation_df076466-70b4-45ec-b98e-96f1722c8fd0 , :PortRealisation_dd61fda0-77dc-4dfd-875c-d5e592aea1c3 ;
+        se:technicalSolution   :RealisationModule_fbba0239-1134-46b6-a04f-ef19dd24a8e8 .
+
+:RealisationPort_e285d191-11fc-4634-804b-f60f73229796
+        a           se:RealisationPort , coins2:CoinsContainerObject ;
+        rdfs:label  "Steun rechts:Dragen interface (1)" .
+
+:PortRealisation_dd61fda0-77dc-4dfd-875c-d5e592aea1c3
+        a             coins2:CoinsContainerObject , se:PortRealisation ;
+        rdfs:label    "Realisatie fundering interface (1.2)" ;
+        se:interface  :SystemInterface_e9070f27-4acd-487a-8705-83b887e79b86 ;
+        se:port       :RealisationPort_30a415c4-fe63-4d9f-9788-abedc6ed1eef .
+
+:PortRealisation_1be44ca2-cd49-4b52-abf7-4a53e451d272
+        a             coins2:CoinsContainerObject , se:PortRealisation ;
+        rdfs:label    "Realisatie draaginterface (1.1)" ;
+        se:interface  :SystemInterface_0c6f1f13-b411-47d1-9da8-0c929dc5c7b9 ;
+        se:port       :RealisationPort_2afbed24-eddf-41f8-8f86-0ea8aca9895c .
+
+:PortRealisation_5a923935-fbe5-4a21-8c50-bf8473394f89
+        a             coins2:CoinsContainerObject , se:PortRealisation ;
+        rdfs:label    "Realisatie draaginterface (1.2)" ;
+        se:interface  :SystemInterface_0c6f1f13-b411-47d1-9da8-0c929dc5c7b9 ;
+        se:port       :RealisationPort_c07e86dd-7670-4454-ad40-f95732a9a8f8 .
+
+:ContainsRelation_1ebbd242-82d3-46a4-8fd5-f9847cceb0c5
+        a                   coins2:CoinsContainerObject , se:ContainsSystemSlot ;
+        coins2:hasAssembly  :SystemSlot_f205b076-a3ac-435e-9f96-3ca35b57e3c8 ;
+        coins2:hasPart      :SystemSlot_0a7f4a5d-13b8-4283-9284-7dc54502116f .
+
+<>      a                owl:Ontology ;
+        rdfs:comment     "Template model to create new SE models"@en ;
+        owl:imports      <http://www.coinsweb.nl/coins2/reffrm/se> ;
+        owl:versionInfo  "Created with COINS Navigator SE" .
+
+:RealisationModule_908004d2-4036-4b0b-b74d-4569d199b715
+        a           se:RealisationModule , coins2:CoinsContainerObject ;
+        rdfs:label  "Steun links (1)" ;
+        se:hasPort  :RealisationPort_5e12c215-a919-4edd-b0ff-e52f2d2553a4 , :RealisationPort_938cbf6c-81eb-4ead-8e2d-e9be072ce26c .
+
+:RealisationModule_fbba0239-1134-46b6-a04f-ef19dd24a8e8
+        a           se:RealisationModule , coins2:CoinsContainerObject ;
+        rdfs:label  "Steun rechts (1)" ;
+        se:hasPort  :RealisationPort_e285d191-11fc-4634-804b-f60f73229796 , :RealisationPort_30a415c4-fe63-4d9f-9788-abedc6ed1eef .
+
+:SystemInterface_c027bb12-ddae-4976-81f0-e4ee78990744
+        a           coins2:CoinsContainerObject , se:SystemInterface ;
+        rdfs:label  "Personen interface (1)" .
+
+:PortRealisation_d42bf815-bd07-4e59-ac84-a2f029c168f3
+        a             coins2:CoinsContainerObject , se:PortRealisation ;
+        rdfs:label    "Realisatie draaginterface (1.1)" ;
+        se:interface  :SystemInterface_0c6f1f13-b411-47d1-9da8-0c929dc5c7b9 ;
+        se:port       :RealisationPort_5e12c215-a919-4edd-b0ff-e52f2d2553a4 .
+
+:Performance_391a58c6-3bba-4b4a-b7de-25ae9174ff10
+        a           coins2:CoinsContainerObject , se:Performance ;
+        rdfs:label  "Draagcapaciteit: 400 kg" ;
+        se:value    :NumericProperty_b64615cf-0594-45a0-bd7d-bee9fc7ac97a .
+
+:PortRealisation_f39c00e1-17ae-4834-bf8e-ddd91f27d2f9
+        a             coins2:CoinsContainerObject , se:PortRealisation ;
+        rdfs:label    "Realisatie personen interface (0)" ;
+        se:interface  :SystemInterface_0ec56ffe-5a8f-4b2b-94bd-b9951233a30a ;
+        se:port       :RealisationPort_ba653335-1717-4225-8f6e-2a905c8a767c .
+
+:SystemInterface_0c6f1f13-b411-47d1-9da8-0c929dc5c7b9
+        a           coins2:CoinsContainerObject , se:SystemInterface ;
+        rdfs:label  "Zit/Draag interface (1)" .
+
+:Function_5d3590c7-7a7f-4bac-826b-f91015ed23a7
+        a                  coins2:CoinsContainerObject , se:Function ;
+        rdfs:label         "Dragen zitvoorziening" ;
+        se:hasRequirement  :Requirement_79d3f5f6-a73a-4d77-b243-9b3d82633f84 ;
+        se:input           :SystemInterface_2dfcdbc8-beb9-46ee-a780-d7f2fc6aa85b ;
+        se:output          :SystemInterface_0ec56ffe-5a8f-4b2b-94bd-b9951233a30a .
+
+:SystemInterface_0ec56ffe-5a8f-4b2b-94bd-b9951233a30a
+        a           coins2:CoinsContainerObject , se:SystemInterface ;
+        rdfs:label  "Personen interface (0)" .
+
+:ContainsRelation_6a162018-f7c7-4e2d-aae4-a533d3f7f083
+        a                   coins2:CoinsContainerObject , se:ContainsRealisationPort ;
+        coins2:hasAssembly  :RealisationPort_256ceecd-e302-4893-a19b-4a06e8c46d73 ;
+        coins2:hasPart      :RealisationPort_938cbf6c-81eb-4ead-8e2d-e9be072ce26c .
+
+:RealisationPort_30a415c4-fe63-4d9f-9788-abedc6ed1eef
+        a           se:RealisationPort , coins2:CoinsContainerObject ;
+        rdfs:label  "Steun rechts:Fundering interface (1)" .
+
+:RealisationPort_256ceecd-e302-4893-a19b-4a06e8c46d73
+        a           se:RealisationPort , coins2:CoinsContainerObject ;
+        rdfs:label  "Parkbank:Fundering interface (0)" .
+
+:Hamburger_465345cc-6431-43e5-b0d4-cbe18b3eda60
+        a                      coins2:CoinsContainerObject , se:Hamburger ;
+        rdfs:label             "Zitsysteemrealisatie (1)" ;
+        se:functionalUnit      :SystemSlot_6b213746-6e5b-4360-9597-a900f9d42922 ;
+        se:hasPortRealisation  :PortRealisation_5a923935-fbe5-4a21-8c50-bf8473394f89 , :PortRealisation_1be44ca2-cd49-4b52-abf7-4a53e451d272 , :PortRealisation_da2f2ef6-f781-40f4-9fb2-f5a6c3060d6f ;
+        se:technicalSolution   :RealisationModule_fb60526f-33ea-4281-8915-8cff01df1f4f .
+
+:SystemSlot_0a7f4a5d-13b8-4283-9284-7dc54502116f
+        a                 coins2:CoinsContainerObject , se:SystemSlot ;
+        rdfs:label        "Fundatiesysteem (1)" ;
+        se:hasInterfaces  :SystemInterface_0c6f1f13-b411-47d1-9da8-0c929dc5c7b9 , :SystemInterface_e9070f27-4acd-487a-8705-83b887e79b86 .
+
+:NumericProperty_b64615cf-0594-45a0-bd7d-bee9fc7ac97a
+        a                     coins2:CoinsContainerObject , coins2:FloatProperty ;
+        rdfs:label            "Draagcapaciteit: 400 kg" ;
+        coins2:datatypeValue  "400.0"^^xsd:double ;
+        coins2:unit           <http://data.nasa.gov/qudt/owl/unit#Kilogram> .
+
+:SystemInterface_2dfcdbc8-beb9-46ee-a780-d7f2fc6aa85b
+        a           coins2:CoinsContainerObject , se:SystemInterface ;
+        rdfs:label  "Fundering interface (0)" .
+
+:ContainsRelation_a1890c93-7892-4f17-9de6-824ba3902e58
+        a                   coins2:CoinsContainerObject , se:ContainsSystemInterface ;
+        coins2:hasAssembly  :SystemInterface_0ec56ffe-5a8f-4b2b-94bd-b9951233a30a ;
+        coins2:hasPart      :SystemInterface_c027bb12-ddae-4976-81f0-e4ee78990744 .
+
+:PortRealisation_ba55e16a-3253-4a90-894f-958b7e93c652
+        a             coins2:CoinsContainerObject , se:PortRealisation ;
+        rdfs:label    "Realisatie fundering interface (1.1)" ;
+        se:interface  :SystemInterface_e9070f27-4acd-487a-8705-83b887e79b86 ;
+        se:port       :RealisationPort_938cbf6c-81eb-4ead-8e2d-e9be072ce26c .
+
+:ContainsRelation_c67370ad-167d-45d5-8dbb-6ab4de1bd6e1
+        a                   coins2:CoinsContainerObject , se:ContainsSystemInterface ;
+        coins2:hasAssembly  :SystemInterface_2dfcdbc8-beb9-46ee-a780-d7f2fc6aa85b ;
+        coins2:hasPart      :SystemInterface_e9070f27-4acd-487a-8705-83b887e79b86 .
+
+:ContainsRelation_562e74fb-3d49-43ff-a0ca-a1dbe1357dbe
+        a                   coins2:CoinsContainerObject , se:ContainsHamburger ;
+        coins2:hasAssembly  :Hamburger_b69c6280-5edc-4d4a-a74c-78588eb745be ;
+        coins2:hasPart      :Hamburger_f967855e-3e22-429a-9d99-5b719f10ef69 .
+
+:PortRealisation_da2f2ef6-f781-40f4-9fb2-f5a6c3060d6f
+        a             coins2:CoinsContainerObject , se:PortRealisation ;
+        rdfs:label    "Realisatie personeninterface (1)" ;
+        se:interface  :SystemInterface_c027bb12-ddae-4976-81f0-e4ee78990744 ;
+        se:port       :RealisationPort_eb595bf1-9d55-4031-8ad9-9d7140611c5f .
+
+:RealisationPort_2afbed24-eddf-41f8-8f86-0ea8aca9895c
+        a           se:RealisationPort , coins2:CoinsContainerObject ;
+        rdfs:label  "Ligger:Dragen interface links (1)" .
+
+:ContainsRelation_f6afac71-eaa2-48ea-9df5-0373103d2cfa
+        a                   coins2:CoinsContainerObject , se:ContainsRealisationPort ;
+        coins2:hasAssembly  :RealisationPort_ba653335-1717-4225-8f6e-2a905c8a767c ;
+        coins2:hasPart      :RealisationPort_eb595bf1-9d55-4031-8ad9-9d7140611c5f .
+
+:RealisationPort_938cbf6c-81eb-4ead-8e2d-e9be072ce26c
+        a           se:RealisationPort , coins2:CoinsContainerObject ;
+        rdfs:label  "Steun links:Fundering interface (1)" .
+
+:Hamburger_19e58379-b16f-4291-a3ca-42ab1820cbdc
+        a                      coins2:CoinsContainerObject , se:Hamburger ;
+        rdfs:label             "Fundatiesysteemrealisatie (1.1)" ;
+        se:functionalUnit      :SystemSlot_0a7f4a5d-13b8-4283-9284-7dc54502116f ;
+        se:hasPortRealisation  :PortRealisation_d42bf815-bd07-4e59-ac84-a2f029c168f3 , :PortRealisation_ba55e16a-3253-4a90-894f-958b7e93c652 ;
+        se:technicalSolution   :RealisationModule_908004d2-4036-4b0b-b74d-4569d199b715 .
+
+:NumericProperty_19592814-2513-4339-a1db-f22edbf03f52
+        a                     coins2:CoinsContainerObject , coins2:FloatProperty ;
+        rdfs:label            "Draagcapaciteit: 300 kg" ;
+        coins2:datatypeValue  "300.0"^^xsd:double ;
+        coins2:unit           <http://data.nasa.gov/qudt/owl/unit#Kilogram> .
+
+:ContainsRelation_ce7c2c7c-7040-45a9-9691-2778b5da23ff
+        a                   coins2:CoinsContainerObject , se:ContainsPortRealisation ;
+        coins2:hasAssembly  :PortRealisation_20422ce4-a0a9-47cc-b801-806a041e1b5e ;
+        coins2:hasPart      :PortRealisation_dd61fda0-77dc-4dfd-875c-d5e592aea1c3 .
+
+:RealisationPort_c07e86dd-7670-4454-ad40-f95732a9a8f8
+        a           se:RealisationPort , coins2:CoinsContainerObject ;
+        rdfs:label  "Ligger:Dragen interface rechts (1)" .
+
+:ContainsRelation_8c4fafeb-3490-4d1a-915b-b65ac8fd83f7
+        a                   coins2:CoinsContainerObject , se:ContainsRealisationModule ;
+        coins2:hasAssembly  :RealisationModule_38feaa91-fb4c-4925-8832-8efc54f3c383 ;
+        coins2:hasPart      :RealisationModule_fbba0239-1134-46b6-a04f-ef19dd24a8e8 .
+
+:RealisationPort_ba653335-1717-4225-8f6e-2a905c8a767c
+        a           se:RealisationPort , coins2:CoinsContainerObject ;
+        rdfs:label  "Parkbank:Personen interface (0)" .
+
+:ContainsRelation_f503f916-6a21-4483-ae25-3631425f2bfc
+        a                   coins2:CoinsContainerObject , se:ContainsSystemInterface ;
+        coins2:hasAssembly  :SystemInterface_0ec56ffe-5a8f-4b2b-94bd-b9951233a30a ;
+        coins2:hasPart      :SystemInterface_c027bb12-ddae-4976-81f0-e4ee78990744 .
+
+:RealisationModule_38feaa91-fb4c-4925-8832-8efc54f3c383
+        a                  se:RealisationModule , coins2:CoinsContainerObject ;
+        rdfs:label         "Parkbank (0)" ;
+        se:hasPerformance  :Performance_391a58c6-3bba-4b4a-b7de-25ae9174ff10 ;
+        se:hasPort         :RealisationPort_ba653335-1717-4225-8f6e-2a905c8a767c , :RealisationPort_256ceecd-e302-4893-a19b-4a06e8c46d73 .
+
+:RealisationModule_fb60526f-33ea-4281-8915-8cff01df1f4f
+        a           se:RealisationModule , coins2:CoinsContainerObject ;
+        rdfs:label  "Ligger (1)" ;
+        se:hasPort  :RealisationPort_c07e86dd-7670-4454-ad40-f95732a9a8f8 , :RealisationPort_2afbed24-eddf-41f8-8f86-0ea8aca9895c , :RealisationPort_eb595bf1-9d55-4031-8ad9-9d7140611c5f .
+
+:SystemSlot_6b213746-6e5b-4360-9597-a900f9d42922
+        a                 coins2:CoinsContainerObject , se:SystemSlot ;
+        rdfs:label        "Zitsysteem (1)" ;
+        se:hasInterfaces  :SystemInterface_c027bb12-ddae-4976-81f0-e4ee78990744 , :SystemInterface_0c6f1f13-b411-47d1-9da8-0c929dc5c7b9 .
+
+:ContainsRelation_248003d1-44e3-4291-859f-0e2b776fba0b
+        a                   coins2:CoinsContainerObject , se:ContainsHamburger ;
+        coins2:hasAssembly  :Hamburger_b69c6280-5edc-4d4a-a74c-78588eb745be ;
+        coins2:hasPart      :Hamburger_465345cc-6431-43e5-b0d4-cbe18b3eda60 .
+
+:Hamburger_b69c6280-5edc-4d4a-a74c-78588eb745be
+        a                      se:Hamburger , coins2:CoinsContainerObject ;
+        rdfs:label             "Zitvoorziening realisatie (0)" ;
+        se:functionalUnit      :SystemSlot_f205b076-a3ac-435e-9f96-3ca35b57e3c8 ;
+        se:hasPortRealisation  :PortRealisation_f39c00e1-17ae-4834-bf8e-ddd91f27d2f9 , :PortRealisation_20422ce4-a0a9-47cc-b801-806a041e1b5e ;
+        se:technicalSolution   :RealisationModule_38feaa91-fb4c-4925-8832-8efc54f3c383 .
+
+:Requirement_79d3f5f6-a73a-4d77-b243-9b3d82633f84
+        a            coins2:CoinsContainerObject , se:Requirement ;
+        rdfs:label   "Draagcapaciteit: 300 kg" ;
+        se:minValue  :NumericProperty_19592814-2513-4339-a1db-f22edbf03f52 .
+
+:RealisationPort_eb595bf1-9d55-4031-8ad9-9d7140611c5f
+        a           se:RealisationPort , coins2:CoinsContainerObject ;
+        rdfs:label  "Ligger:Personen interface (1)" .
+
+:PortRealisation_df076466-70b4-45ec-b98e-96f1722c8fd0
+        a             coins2:CoinsContainerObject , se:PortRealisation ;
+        rdfs:label    "Realisatie draaginterface (1.2)" ;
+        se:interface  :SystemInterface_0c6f1f13-b411-47d1-9da8-0c929dc5c7b9 ;
+        se:port       :RealisationPort_5e12c215-a919-4edd-b0ff-e52f2d2553a4 .
+
+:ContainsRelation_6e3cb630-c05f-4572-bf76-837a8daa1299
+        a                   coins2:CoinsContainerObject , se:ContainsPortRealisation ;
+        coins2:hasAssembly  :PortRealisation_f39c00e1-17ae-4834-bf8e-ddd91f27d2f9 ;
+        coins2:hasPart      :PortRealisation_da2f2ef6-f781-40f4-9fb2-f5a6c3060d6f .
+
+:ContainsRelation_b0f3637f-ce94-4187-8953-efd2f674a572
+        a                   coins2:CoinsContainerObject , se:ContainsPortRealisation ;
+        coins2:hasAssembly  :PortRealisation_20422ce4-a0a9-47cc-b801-806a041e1b5e ;
+        coins2:hasPart      :PortRealisation_ba55e16a-3253-4a90-894f-958b7e93c652 .
+
+:ContainsRelation_1024dc17-c0e5-44bf-a60d-eb699a24fe47
+        a                   coins2:CoinsContainerObject , se:ContainsHamburger ;
+        coins2:hasAssembly  :Hamburger_b69c6280-5edc-4d4a-a74c-78588eb745be ;
+        coins2:hasPart      :Hamburger_19e58379-b16f-4291-a3ca-42ab1820cbdc .
+
+:RealisationPort_5e12c215-a919-4edd-b0ff-e52f2d2553a4
+        a           se:RealisationPort , coins2:CoinsContainerObject ;
+        rdfs:label  "Steun links:Dragen interface (1)" .
