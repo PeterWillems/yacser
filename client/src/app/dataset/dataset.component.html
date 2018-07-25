@@ -1,0 +1,15 @@
+<table class="table">
+  <thead>
+  <tr>
+    <th>dataset ID</th>
+    <th>file path</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let dataset of datasets" (click)="selectDataset(dataset)"
+      [class]="isSelected(dataset)">
+    <td>{{dataset.datasetId}}</td>
+    <td>{{dataset.filepath}}</td>
+  </tr>
+  </tbody>
+</table>

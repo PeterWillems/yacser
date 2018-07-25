@@ -1,0 +1,123 @@
+<div class="card border-primary">
+  <div class="card-header">
+    <h5 class="card-title">System Slot: "{{selectedSystemSlot.label}}"</h5></div>
+  <div class="card-body">
+    <table class="table table-hover table-bordered table-sm">
+      <thead class="thead-light">
+      <tr class="table-record">
+        <th>property</th>
+        <th>value</th>
+        <th><span class="fa fa-edit fa-lg"></span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>label</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='label'" [value]="selectedSystemSlot.label"
+                        (sessionStarted)="onSessionStarted('label')"
+                        (sessionEnded)="onSessionEnded($event, 'label')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('label')"
+                  [class]="propertyEdited=='label'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>uri</td>
+        <td class="disabled-property">{{selectedSystemSlot.uri}}</td>
+        <td>
+          <button type="button" [disabled]="true"
+                  class="btn  btn-sm"><span class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>assembly</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='assembly'" [iri]="true" [options]="allSystemSlots"
+                        [label]="selectedSystemSlot.assembly?selectedSystemSlot.assembly.label:' '"
+                        [value]="selectedSystemSlot.assembly?selectedSystemSlot.assembly.uri:null"
+                        (sessionStarted)="onSessionStarted('assembly')"
+                        (sessionEnded)="onSessionEnded($event, 'assembly')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('assembly')"
+                  [class]="propertyEdited=='assembly'?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>parts</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='parts'" [iri]="true" [list]="true" [options]="allSystemSlots"
+                        [label]="showList(selectedSystemSlot.parts)"
+                        [value]="selectedSystemSlot.parts"
+                        (sessionStarted)="onSessionStarted('parts')"
+                        (sessionEnded)="onSessionEnded($event, 'parts')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('parts')"
+                  [class]="propertyEdited=='parts'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+
+      </tr>
+      <tr>
+        <td>functions</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='functions'" [iri]="true" [list]="true" [options]="allFunctions"
+                        [label]="showList(selectedSystemSlot.functions)"
+                        [value]="selectedSystemSlot.functions"
+                        (sessionStarted)="onSessionStarted('functions')"
+                        (sessionEnded)="onSessionEnded($event, 'functions')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('functions')"
+                  [class]="propertyEdited=='functions'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>requirements</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='requirements'" [iri]="true" [list]="true"
+                        [options]="allRequirements"
+                        [label]="showList(selectedSystemSlot.requirements)"
+                        [value]="selectedSystemSlot.requirements"
+                        (sessionStarted)="onSessionStarted('requirements')"
+                        (sessionEnded)="onSessionEnded($event, 'requirements')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('requirements')"
+                  [class]="propertyEdited=='requirements'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>interfaces</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='interfaces'" [iri]="true" [list]="true"
+                        [options]="allSystemInterfaces"
+                        [label]="showList(selectedSystemSlot.interfaces)"
+                        [value]="selectedSystemSlot.interfaces"
+                        (sessionStarted)="onSessionStarted('interfaces')"
+                        (sessionEnded)="onSessionEnded($event, 'interfaces')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('interfaces')"
+                  [class]="propertyEdited=='interfaces'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

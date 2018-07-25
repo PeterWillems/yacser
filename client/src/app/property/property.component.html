@@ -1,0 +1,44 @@
+<div *ngIf="editMode && !iri">
+  <input class="form-control" type="text" [(ngModel)]="value" (keyup)="onKey($event)">
+</div>
+<div *ngIf="!editMode && !iri"
+     (dblclick)="onEditModeChanged()">
+  {{value}}
+</div>
+<div *ngIf="editMode && iri && !list">
+  <select class="form-control" [(ngModel)]="value" (change)="onSelectionChange($event)">
+    <option [ngValue]="null" [selected]="value === null">&lt;null&gt;</option>
+    <option *ngFor="let option of options" [value]="option.uri" [selected]="option.uri===value">{{option.label}}
+    </option>
+  </select>
+</div>
+<div *ngIf="editMode && iri && list">
+  <table class="table">
+    <tr *ngFor="let item of value; let i = index; ">
+      <td>{{item.uri.substring(item.uri.indexOf('#'))}}</td>
+      <td>{{item.label}}</td>
+      <td>
+        <button type="button" (click)="remove(i)"
+                class="btn btn-sm"><span class="fa fa-remove fa-lg"></span>
+        </button>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <select class="form-control" [(ngModel)]="selectedOption">
+          <option *ngFor="let option of options" [ngValue]="option" [selected]="option===selectedOption">
+            {{option.uri.substring(option.uri.indexOf('#')) + ' | ' + option.label}}
+          </option>
+        </select>
+      </td>
+      <td>
+        <button type="button" (click)="add(selectedOption)" [disabled]="!selectedOption"
+                class="btn btn-sm"><span class="fa fa-plus fa-lg"></span>
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>
+<div *ngIf="!editMode && iri" (dblclick)="onEditModeChanged()">{{label}}&nbsp;
+</div>
+
