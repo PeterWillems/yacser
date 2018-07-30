@@ -1,3 +1,46 @@
-<p>
-  requirement-repository works!
-</p>
+<div class="row ">
+  <div class="col-md-5 column-content left-column">
+    <div class="card border-primary">
+      <div class="card-header">
+        <h5 class="card-title">Requirements</h5></div>
+      <div class="card-body">
+        <table class="table table-hover table-bordered table-sm">
+          <thead class="thead-light">
+          <tr class="table-record">
+            <th>label</th>
+            <th>local name</th>
+            <th>assembly</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let requirementItem of allRequirements; let i = index" class="table-record" (click)="onSelect(i)"
+              [class]="requirementItem == selectedRequirement?'selected':''">
+            <td>{{requirementItem.label}}</td>
+            <td>{{localName(requirementItem)}}</td>
+            <td>{{show(requirementItem.assembly)}}</td>
+            <td>
+              <button type="button" (click)="onDelete(i)" class="btn btn-sm">
+                <span class="fa fa-trash fa-lg"></span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <button type="button" (click)="onCreate()" class="btn btn-sm">
+                <span class="fa fa-asterisk fa-lg"></span>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-7 column-content">
+    <app-requirement *ngIf="selectedRequirement" [selectedRequirement]="selectedRequirement"></app-requirement>
+  </div>
+</div>

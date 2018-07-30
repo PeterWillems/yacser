@@ -14,12 +14,22 @@ import { DatasetComponent } from './dataset/dataset.component';
 import { FunctionRepositoryComponent } from './function-repository/function-repository.component';
 import { RequirementRepositoryComponent } from './requirement-repository/requirement-repository.component';
 import { FunctionComponent } from './function/function.component';
+import { RequirementComponent } from './requirement/requirement.component';
+import { RealisationModuleRepositoryComponent } from './realisation-module-repository/realisation-module-repository.component';
+import { RealisationModuleComponent } from './realisation-module/realisation-module.component';
+import { PerformanceRepositoryComponent } from './performance-repository/performance-repository.component';
+import { PerformanceComponent } from './performance/performance.component';
+import { HamburgerRepositoryComponent } from './hamburger-repository/hamburger-repository.component';
+import { HamburgerComponent } from './hamburger/hamburger.component';
 
 const appRoutes: Routes = [
   {path: 'datasets', component: DatasetComponent},
   {path: 'systemslots', component: SystemslotRepositoryComponent},
   {path: 'functions', component: FunctionRepositoryComponent},
   {path: 'requirements', component: RequirementRepositoryComponent},
+  {path: 'realisationmodules', component: RealisationModuleRepositoryComponent},
+  {path: 'performances', component: PerformanceRepositoryComponent},
+  {path: 'hamburgers', component: HamburgerRepositoryComponent},
 ];
 
 @NgModule({
@@ -32,6 +42,13 @@ const appRoutes: Routes = [
     FunctionRepositoryComponent,
     RequirementRepositoryComponent,
     FunctionComponent,
+    RequirementComponent,
+    RealisationModuleRepositoryComponent,
+    RealisationModuleComponent,
+    PerformanceRepositoryComponent,
+    PerformanceComponent,
+    HamburgerRepositoryComponent,
+    HamburgerComponent,
   ],
   imports: [
     BrowserModule,

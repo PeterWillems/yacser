@@ -25,7 +25,6 @@ export class DatasetService {
   }
 
   public setSelectedDataset(dataset: Dataset): void {
-    console.log('DatasetService:setDataset: ' + dataset.datasetId);
     this.selectedDataset = dataset;
     this.datasetSelected.emit(this.selectedDataset);
   }

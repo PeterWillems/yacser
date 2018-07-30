@@ -10,14 +10,30 @@
             <th>label</th>
             <th>local name</th>
             <th>assembly</th>
+            <th></th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let functionItem of allFunctions; let i = index" class="table-record" (click)="onSelect(i)"
-              [class]="i == _selectedFunctionIndex?'selected':''">
+              [class]="functionItem == selectedFunction?'selected':''">
             <td>{{functionItem.label}}</td>
             <td>{{localName(functionItem)}}</td>
             <td>{{show(functionItem.assembly)}}</td>
+            <td>
+              <button type="button" (click)="onDelete(i)" class="btn btn-sm">
+                <span class="fa fa-trash fa-lg"></span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              <button type="button" (click)="onCreate()" class="btn btn-sm">
+                <span class="fa fa-asterisk fa-lg"></span>
+              </button>
+            </td>
           </tr>
           </tbody>
         </table>

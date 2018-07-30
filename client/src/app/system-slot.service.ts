@@ -1,14 +1,17 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {Mutation, Query, SeObject, SystemSlot, SystemSlotInput} from './types';
-import {ALL_SYSTEM_SLOTS, ONE_SYSTEM_SLOT, UPDATE_SYSTEM_SLOT} from './graphql';
-import {convertRuleOptions} from 'tslint/lib/configuration';
+import {ALL_SYSTEM_SLOTS, CREATE_SYSTEM_SLOT, DELETE_SYSTEM_SLOT, ONE_SYSTEM_SLOT, UPDATE_SYSTEM_SLOT} from './graphql';
+// import {convertRuleOptions} from 'tslint/lib/configuration';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SystemSlotService {
+  public selectedSystemSlot: SystemSlot;
   public allSystemSlotsUpdated = new EventEmitter<Array<SystemSlot>>();
+  public systemSlotCreated = new EventEmitter<SystemSlot>();
+  public systemSlotDeleted = new EventEmitter<SystemSlot>();
   public systemSlotUpdated = new EventEmitter<SystemSlot>();
 
   constructor(private apollo: Apollo) {
@@ -35,6 +38,24 @@ export class SystemSlotService {
     })
       .valueChanges.subscribe((value => this.systemSlotUpdated.emit(value.data.oneSystemSlot))
     );
+  }
+
+  public createSystemSlot(systemSlotInput: SystemSlotInput) {
+    console.log('createSystemSlot');
+    this.apollo.mutate<Mutation>({
+      mutation:
+      CREATE_SYSTEM_SLOT,
+      variables: {
+        datasetId: systemSlotInput.datasetId,
+        uri: systemSlotInput.uri,
+        label: systemSlotInput.label
+      },
+      refetchQueries: [{
+        query: ALL_SYSTEM_SLOTS, variables: {
+          datasetId: systemSlotInput.datasetId
+        }
+      }]
+    }).subscribe((value) => this.systemSlotCreated.emit(value.data.createSystemSlot));
   }
 
   public mutateSystemSlot(systemSlot: SystemSlotInput) {
@@ -78,6 +99,23 @@ export class SystemSlotService {
         }
       }]
     }).subscribe();
+  }
+
+  public deleteSystemSlot(datasetId: number, uri: string) {
+    console.log('deleteSystemSlot');
+    this.apollo.mutate<Mutation>({
+      mutation:
+      DELETE_SYSTEM_SLOT,
+      variables: {
+        datasetId: datasetId,
+        uri: uri
+      },
+      refetchQueries: [{
+        query: ALL_SYSTEM_SLOTS, variables: {
+          datasetId: datasetId
+        }
+      }]
+    }).subscribe((value) => this.systemSlotDeleted.emit(value.data.deleteSystemSlot));
   }
 
   public cloneSystemSlotInput(systemSlot: SystemSlot): SystemSlotInput {

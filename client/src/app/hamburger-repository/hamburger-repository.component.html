@@ -2,7 +2,7 @@
   <div class="col-md-5 column-content left-column">
     <div class="card border-primary">
       <div class="card-header">
-        <h5 class="card-title">System Slots</h5></div>
+        <h5 class="card-title">Hamburgers</h5></div>
       <div class="card-body">
         <table class="table table-hover table-bordered table-sm">
           <thead class="thead-light">
@@ -14,11 +14,11 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let systemSlotItem of allSystemSlots; let i = index" class="table-record" (click)="onSelect(i)"
-              [class]="systemSlotItem == selectedSystemSlot?'selected':''">
-            <td>{{systemSlotItem.label}}</td>
-            <td>{{localName(systemSlotItem)}}</td>
-            <td>{{show(systemSlotItem.assembly)}}</td>
+          <tr *ngFor="let hamburgerItem of allHamburgers; let i = index" class="table-record" (click)="onSelect(i)"
+              [class]="hamburgerItem == selectedHamburger?'selected':''">
+            <td>{{hamburgerItem.label}}</td>
+            <td>{{localName(hamburgerItem)}}</td>
+            <td>{{show(hamburgerItem.assembly)}}</td>
             <td>
               <button type="button" (click)="onDelete(i)" class="btn btn-sm">
                 <span class="fa fa-trash fa-lg"></span>
@@ -41,6 +41,6 @@
     </div>
   </div>
   <div class="col-md-7 column-content">
-    <app-systemslot *ngIf="selectedSystemSlot" [selectedSystemSlot]="selectedSystemSlot"></app-systemslot>
+    <app-hamburger *ngIf="selectedHamburger" [selectedHamburger]="selectedHamburger"></app-hamburger>
   </div>
 </div>
