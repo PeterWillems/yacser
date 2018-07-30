@@ -35,7 +35,7 @@ public class SystemSlotRepository {
 		GetSystemSlot getSystemSlot = seService.createSystemSlot(systemSlot.getDatasetId());
 		PutSystemSlot putSystemSlot = new PutSystemSlot();
 		putSystemSlot.setUri(getSystemSlot.getUri());
-		putSystemSlot.setLabel(systemSlot.getLabel());
+		putSystemSlot.setLabel(getSystemSlot.getLabel());
 		seService.updateSystemSlot(systemSlot.getDatasetId(), getSystemSlot.getLocalName(), putSystemSlot);
 		systemSlot.setUri(putSystemSlot.getUri());
 		systemSlot.setLabel(putSystemSlot.getLabel());
@@ -89,5 +89,13 @@ public class SystemSlotRepository {
 				getSystemSlot.getLocalName(), putSystemSlot);
 		return new SystemSlot(systemSlotInput.getDatasetId(), updatedSystemSlot.getUri().toString(),
 				updatedSystemSlot.getLabel());
+	}
+	
+	public SystemSlot deleteOne(int datasetId, String uri) throws URISyntaxException, IOException {
+		String systemSlotLocalName = (new URI(uri)).getFragment();
+		GetSystemSlot getSystemSlot = seService.getSystemSlot(datasetId, systemSlotLocalName);
+		SystemSlot systemSlot = new SystemSlot(datasetId, uri, getSystemSlot.getLabel());
+		seService.deleteSystemSlot(datasetId, systemSlotLocalName);
+		return systemSlot;
 	}
 }

@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.jena.query.ParameterizedSparqlString;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,6 +21,12 @@ import nl.tno.willemsph.coins_navigator.se.model.GetHamburger;
 import nl.tno.willemsph.coins_navigator.se.model.GetNumericProperty;
 import nl.tno.willemsph.coins_navigator.se.model.GetPerformance;
 import nl.tno.willemsph.coins_navigator.se.model.GetPortRealisation;
+import nl.tno.willemsph.coins_navigator.se.model.GetRealisationModule;
+import nl.tno.willemsph.coins_navigator.se.model.GetRealisationPort;
+import nl.tno.willemsph.coins_navigator.se.model.GetRequirement;
+import nl.tno.willemsph.coins_navigator.se.model.GetSeObject;
+import nl.tno.willemsph.coins_navigator.se.model.GetSystemInterface;
+import nl.tno.willemsph.coins_navigator.se.model.GetSystemSlot;
 import nl.tno.willemsph.coins_navigator.se.model.PutFunction;
 import nl.tno.willemsph.coins_navigator.se.model.PutHamburger;
 import nl.tno.willemsph.coins_navigator.se.model.PutNumericProperty;
@@ -33,12 +38,6 @@ import nl.tno.willemsph.coins_navigator.se.model.PutRequirement;
 import nl.tno.willemsph.coins_navigator.se.model.PutSystemInterface;
 import nl.tno.willemsph.coins_navigator.se.model.PutSystemSlot;
 import nl.tno.willemsph.sparql.EmbeddedServer;
-import nl.tno.willemsph.coins_navigator.se.model.GetRealisationModule;
-import nl.tno.willemsph.coins_navigator.se.model.GetRealisationPort;
-import nl.tno.willemsph.coins_navigator.se.model.GetRequirement;
-import nl.tno.willemsph.coins_navigator.se.model.GetSeObject;
-import nl.tno.willemsph.coins_navigator.se.model.GetSystemInterface;
-import nl.tno.willemsph.coins_navigator.se.model.GetSystemSlot;
 
 @Service
 public class SeService {

@@ -2,17 +2,16 @@ package nl.tno.willemsph.coins_navigator.se.graphql.models;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
 
 public class SystemSlot {
 	private int datasetId;
 	private URI uri;
 	private String label;
-	private Optional<SystemSlot> assembly;
-	private List<SystemSlot> parts;
-	private List<Function> functions;
-	private List<Requirement> requirements;
+//	private Optional<SystemSlot> assembly;
+//	private List<SystemSlot> parts;
+//	private List<Function> functions;
+//	private List<Requirement> requirements;
+//	private List<Hamburger> hamburgers;
 
 	public SystemSlot(int datasetId, String uriString, String labelString) throws URISyntaxException {
 		this.datasetId = datasetId;
@@ -44,36 +43,44 @@ public class SystemSlot {
 		this.label = label;
 	}
 
-	public Optional<SystemSlot> getAssembly() {
-		return assembly;
-	}
-
-	public void setAssembly(Optional<SystemSlot> assembly) {
-		this.assembly = assembly;
-	}
-
-	public List<SystemSlot> getParts() {
-		return parts;
-	}
-
-	public void setParts(List<SystemSlot> parts) {
-		this.parts = parts;
-	}
-
-	public List<Function> getFunctions() {
-		return functions;
-	}
-
-	public void setFunctions(List<Function> functions) {
-		this.functions = functions;
-	}
-
-	public List<Requirement> getRequirements() {
-		return requirements;
-	}
-
-	public void setRequirements(List<Requirement> requirements) {
-		this.requirements = requirements;
-	}
+//	public Optional<SystemSlot> getAssembly() {
+//		return assembly;
+//	}
+//
+//	public void setAssembly(Optional<SystemSlot> assembly) {
+//		this.assembly = assembly;
+//	}
+//
+//	public List<SystemSlot> getParts() {
+//		return parts;
+//	}
+//
+//	public void setParts(List<SystemSlot> parts) {
+//		this.parts = parts;
+//	}
+//
+//	public List<Function> getFunctions() {
+//		return functions;
+//	}
+//
+//	public void setFunctions(List<Function> functions) {
+//		this.functions = functions;
+//	}
+//
+//	public List<Requirement> getRequirements() {
+//		return requirements;
+//	}
+//
+//	public void setRequirements(List<Requirement> requirements) {
+//		this.requirements = requirements;
+//	}
+//
+//	public List<Hamburger> getHamburgers() {
+//		return hamburgers;
+//	}
+//
+//	public void setHamburgers(List<Hamburger> hamburgers) {
+//		this.hamburgers = hamburgers;
+//	}
 
 }

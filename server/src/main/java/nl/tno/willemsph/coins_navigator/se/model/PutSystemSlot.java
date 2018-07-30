@@ -9,8 +9,11 @@ public class PutSystemSlot extends PutSeObject {
 	private List<URI> requirements;
 
 	public PutSystemSlot() {
-		super();
 	}
+
+//	public PutSystemSlot(SeService seService, int datasetId, String uri) throws URISyntaxException {
+//		super();
+//	}
 
 	public List<URI> getFunctions() {
 		return functions;

@@ -35,8 +35,8 @@ public class FunctionRepository {
 		GetFunction getFunction = seService.createFunction(function.getDatasetId());
 		PutFunction putFunction = new PutFunction();
 		putFunction.setUri(getFunction.getUri());
-		putFunction.setLabel(function.getLabel());
-		seService.updateFunction(0, getFunction.getLocalName(), putFunction);
+		putFunction.setLabel(getFunction.getLabel());
+		seService.updateFunction(function.getDatasetId(), getFunction.getLocalName(), putFunction);
 		function.setUri(putFunction.getUri());
 		function.setLabel(putFunction.getLabel());
 	}
@@ -46,7 +46,7 @@ public class FunctionRepository {
 		GetFunction function = seService.getFunction(datasetId, localName);
 		return new Function(datasetId, function.getUri().toString(), function.getLabel());
 	}
-	
+
 	public Function updateOne(FunctionInput functionInput) throws URISyntaxException, IOException {
 		URI uri = new URI(functionInput.getUri());
 		GetFunction getFunction = seService.getFunction(functionInput.getDatasetId(), uri.getFragment());
@@ -77,9 +77,17 @@ public class FunctionRepository {
 			putFunction.setOutput(new URI(functionInput.getOutput()));
 		}
 
-		GetFunction updatedFunction = seService.updateFunction(functionInput.getDatasetId(),
-				getFunction.getLocalName(), putFunction);
+		GetFunction updatedFunction = seService.updateFunction(functionInput.getDatasetId(), getFunction.getLocalName(),
+				putFunction);
 		return new Function(functionInput.getDatasetId(), updatedFunction.getUri().toString(),
 				updatedFunction.getLabel());
+	}
+
+	public Function deleteOne(int datasetId, String uri) throws URISyntaxException, IOException {
+		String functionLocalName = (new URI(uri)).getFragment();
+		GetFunction getFunction = seService.getFunction(datasetId, functionLocalName);
+		Function function = new Function(datasetId, uri, getFunction.getLabel());
+		seService.deleteFunction(datasetId, functionLocalName);
+		return function;
 	}
 }

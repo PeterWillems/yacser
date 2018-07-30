@@ -1,6 +1,7 @@
 package nl.tno.willemsph.coins_navigator.se.graphql.repositories;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Requirement;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.RequirementInput;
 import nl.tno.willemsph.coins_navigator.se.model.GetRequirement;
 import nl.tno.willemsph.coins_navigator.se.model.PutRequirement;
 
@@ -23,18 +25,19 @@ public class RequirementRepository {
 		List<Requirement> requirements = new ArrayList<>();
 		List<GetRequirement> getRequirements = seService.getAllRequirements(datasetId);
 		for (GetRequirement getRequirement : getRequirements) {
-			Requirement requirement = new Requirement(datasetId, getRequirement.getUri().toString(), getRequirement.getLabel());
+			Requirement requirement = new Requirement(datasetId, getRequirement.getUri().toString(),
+					getRequirement.getLabel());
 			requirements.add(requirement);
 		}
 		return requirements;
 	}
 
 	public void saveRequirement(Requirement requirement) throws URISyntaxException, IOException {
-		GetRequirement getRequirement = seService.createRequirement(0);
+		GetRequirement getRequirement = seService.createRequirement(requirement.getDatasetId());
 		PutRequirement putRequirement = new PutRequirement();
 		putRequirement.setUri(getRequirement.getUri());
-		putRequirement.setLabel(requirement.getLabel());
-		seService.updateRequirement(0, getRequirement.getLocalName(), putRequirement);
+		putRequirement.setLabel(getRequirement.getLabel());
+		seService.updateRequirement(requirement.getDatasetId(), getRequirement.getLocalName(), putRequirement);
 		requirement.setUri(putRequirement.getUri());
 		requirement.setLabel(putRequirement.getLabel());
 	}
@@ -44,4 +47,42 @@ public class RequirementRepository {
 		GetRequirement requirement = seService.getRequirement(datasetId, localName);
 		return new Requirement(datasetId, requirement.getUri().toString(), requirement.getLabel());
 	}
+
+	public Requirement updateOne(RequirementInput requirementInput) throws URISyntaxException, IOException {
+		URI uri = new URI(requirementInput.getUri());
+		GetRequirement getRequirement = seService.getRequirement(requirementInput.getDatasetId(), uri.getFragment());
+		PutRequirement putRequirement = new PutRequirement();
+		putRequirement.setUri(getRequirement.getUri());
+		putRequirement.setLabel(requirementInput.getLabel());
+		if (requirementInput.getAssembly() != null) {
+			putRequirement.setAssembly(new URI(requirementInput.getAssembly()));
+		}
+		if (requirementInput.getParts() != null) {
+			List<URI> parts = new ArrayList<>();
+			for (String part : requirementInput.getParts()) {
+				parts.add(new URI(part));
+			}
+			putRequirement.setParts(parts);
+		}
+		if (requirementInput.getMinValue() != null) {
+			putRequirement.setMinValue(new URI(requirementInput.getMinValue()));
+		}
+		if (requirementInput.getMaxValue() != null) {
+			putRequirement.setMaxValue(new URI(requirementInput.getMaxValue()));
+		}
+
+		GetRequirement updatedRequirement = seService.updateRequirement(requirementInput.getDatasetId(),
+				getRequirement.getLocalName(), putRequirement);
+		return new Requirement(requirementInput.getDatasetId(), updatedRequirement.getUri().toString(),
+				updatedRequirement.getLabel());
+	}
+
+	public Requirement deleteOne(int datasetId, String uri) throws URISyntaxException, IOException {
+		String requirementLocalName = (new URI(uri)).getFragment();
+		GetRequirement getRequirement = seService.getRequirement(datasetId, requirementLocalName);
+		Requirement requirement = new Requirement(datasetId, uri, getRequirement.getLabel());
+		seService.deleteRequirement(datasetId, requirementLocalName);
+		return requirement;
+	}
+
 }

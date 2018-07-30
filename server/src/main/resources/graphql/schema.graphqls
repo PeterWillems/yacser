@@ -14,10 +14,39 @@ type Function {
 	output: SystemInterface
 }
 
+type Hamburger {
+	datasetId: Int!
+	uri: String!
+	label: String!
+	assembly: Hamburger
+	parts: [Hamburger]
+	functionalUnit: SystemSlot
+	technicalSolution: RealisationModule
+}
+
 type NumericProperty {
 	datasetId: Int!
 	uri: String!
 	label: String!
+	datatypeValue: Float
+}
+
+type Performance {
+	datasetId: Int!
+	uri: String!
+	label: String!
+	assembly: Performance
+	parts: [Performance]
+	value: NumericProperty
+}
+
+type RealisationModule {
+	datasetId: Int!
+	uri: String!
+	label: String!
+	assembly: RealisationModule
+	parts: [RealisationModule]
+	performances: [Performance]
 }
 
 type Requirement {
@@ -50,15 +79,70 @@ type SystemSlot {
 	functions: [Function]
 	requirements: [Requirement]
 	interfaces: [SystemInterface]
+	hamburgers: [Hamburger]
 }
 
 type Query {
   allDatasets: [Dataset]
-  allSystemSlots(datasetId: Int): [SystemSlot]
-  oneSystemSlot(datasetId: Int, uri: String): SystemSlot
-  allFunctions(datasetId: Int): [Function]
-  allRequirements(datasetId: Int): [Requirement]
-  allSystemInterfaces(datasetId: Int): [SystemInterface]
+  allFunctions(datasetId: Int!): [Function]
+  allHamburgers(datasetId: Int!): [Hamburger]
+  allNumericProperties(datasetId: Int!): [NumericProperty]
+  allPerformances(datasetId: Int!): [Performance]
+  allRealisationModules(datasetId: Int!): [RealisationModule]
+  allRequirements(datasetId: Int!): [Requirement]
+  allSystemInterfaces(datasetId: Int!): [SystemInterface]
+  allSystemSlots(datasetId: Int!): [SystemSlot]
+  oneSystemSlot(datasetId: Int!, uri: String!): SystemSlot
+}
+
+
+input FunctionInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	requirements: [String]
+	input: String
+	output: String
+}
+
+input HamburgerInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	functionalUnit: String
+	technicalSolution: String
+}
+
+input PerformanceInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	value: String
+}
+
+input RealisationModuleInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	performances: [String]
+}
+
+input RequirementInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	minValue: String
+	maxValue: String
 }
 
 input SystemSlotInput {
@@ -72,22 +156,25 @@ input SystemSlotInput {
 	interfaces: [String]
 }
 
-input FunctionInput {
-	datasetId: Int!
-	uri: String!
-	label: String
-	assembly: String
-	parts: [String]
-	requirements: [String]
-	input: String
-	output: String
-}
-
 type Mutation {
   createSystemSlot(datasetId: Int!, uri: String!, label: String!): SystemSlot
   createFunction(datasetId: Int!, uri: String!, label: String!): Function
+  createHamburger(datasetId: Int!, uri: String!, label: String!): Hamburger
+  createPerformance(datasetId: Int!, uri: String!, label: String!): Performance
+  createRealisationModule(datasetId: Int!, uri: String!, label: String!): RealisationModule
+  createRequirement(datasetId: Int!, uri: String!, label: String!): Requirement
   updateSystemSlot(systemSlot: SystemSlotInput!): SystemSlot
   updateFunction(functionInput: FunctionInput!): Function
+  updateHamburger(hamburgerInput: HamburgerInput!): Hamburger
+  updatePerformance(performanceInput: PerformanceInput!): Performance
+  updateRealisationModule(realisationModuleInput: RealisationModuleInput!): RealisationModule
+  updateRequirement(requirementInput: RequirementInput): Requirement
+  deleteFunction(datasetId: Int!, uri: String!): Function
+  deleteHamburger(datasetId: Int!, uri: String!): Hamburger
+  deletePerformance(datasetId: Int!, uri: String!): Performance
+  deleteRealisationModule(datasetId: Int!, uri: String!): RealisationModule
+  deleteRequirement(datasetId: Int!, uri: String!): Requirement
+  deleteSystemSlot(datasetId: Int!, uri: String!): SystemSlot
 }
 
 schema {

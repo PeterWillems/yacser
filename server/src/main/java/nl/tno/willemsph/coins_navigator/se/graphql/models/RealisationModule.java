@@ -2,14 +2,19 @@ package nl.tno.willemsph.coins_navigator.se.graphql.models;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
-public class NumericProperty {
+public class RealisationModule {
 	private int datasetId;
 	private URI uri;
 	private String label;
-	private Double datatypeValue;
+	private RealisationModule assembly;
+	private List<RealisationModule> parts;
 
-	public NumericProperty(int datasetId, String uriString, String labelString) throws URISyntaxException {
+	public RealisationModule() {
+	}
+	
+	public RealisationModule(int datasetId, String uriString, String labelString) throws URISyntaxException {
 		this.datasetId = datasetId;
 		this.uri = new URI(uriString);
 		this.label = labelString;
@@ -39,12 +44,20 @@ public class NumericProperty {
 		this.label = label;
 	}
 
-	public Double getDatatypeValue() {
-		return datatypeValue;
+	public RealisationModule getAssembly() {
+		return assembly;
 	}
 
-	public void setDatatypeValue(Double datatypeValue) {
-		this.datatypeValue = datatypeValue;
+	public void setAssembly(RealisationModule assembly) {
+		this.assembly = assembly;
+	}
+
+	public List<RealisationModule> getParts() {
+		return parts;
+	}
+
+	public void setParts(List<RealisationModule> parts) {
+		this.parts = parts;
 	}
 
 }

@@ -34,7 +34,7 @@ public class SystemInterfaceRepository {
 		GetSystemInterface getSystemInterface = seService.createSystemInterface(systemInterface.getDatasetId());
 		PutSystemInterface putSystemInterface = new PutSystemInterface();
 		putSystemInterface.setUri(getSystemInterface.getUri());
-		putSystemInterface.setLabel(systemInterface.getLabel());
+		putSystemInterface.setLabel(getSystemInterface.getLabel());
 		seService.updateSystemInterface(systemInterface.getDatasetId(), getSystemInterface.getLocalName(),
 				putSystemInterface);
 		systemInterface.setUri(putSystemInterface.getUri());

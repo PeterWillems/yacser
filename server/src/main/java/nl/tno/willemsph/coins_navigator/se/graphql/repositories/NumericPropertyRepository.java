@@ -25,6 +25,7 @@ public class NumericPropertyRepository {
 		for (GetNumericProperty getNumericProperty : getNumericProperties) {
 			NumericProperty numericProperty = new NumericProperty(datasetId, getNumericProperty.getUri().toString(), getNumericProperty.getLabel());
 			numericProperties.add(numericProperty);
+			numericProperty.setDatatypeValue(getNumericProperty.getDatatypeValue());
 		}
 		return numericProperties;
 	}
@@ -33,15 +34,18 @@ public class NumericPropertyRepository {
 		GetNumericProperty getNumericProperty = seService.createNumericProperty(numericProperty.getDatasetId());
 		PutNumericProperty putNumericProperty = new PutNumericProperty();
 		putNumericProperty.setUri(getNumericProperty.getUri());
-		putNumericProperty.setLabel(numericProperty.getLabel());
-		seService.updateNumericProperty(0, getNumericProperty.getLocalName(), putNumericProperty);
+		putNumericProperty.setLabel(getNumericProperty.getLabel());
+		seService.updateNumericProperty(numericProperty.getDatasetId(), getNumericProperty.getLocalName(), putNumericProperty);
 		numericProperty.setUri(putNumericProperty.getUri());
 		numericProperty.setLabel(putNumericProperty.getLabel());
+		numericProperty.setDatatypeValue(getNumericProperty.getDatatypeValue());
 	}
 
 	public NumericProperty findOne(int datasetId, String uri) throws URISyntaxException, IOException {
 		String localName = uri.substring(uri.indexOf('#') + 1);
 		GetNumericProperty getNumericProperty = seService.getNumericProperty(datasetId, localName);
-		return new NumericProperty(datasetId, getNumericProperty.getUri().toString(), getNumericProperty.getLabel());
+		NumericProperty numericProperty = new NumericProperty(datasetId, getNumericProperty.getUri().toString(), getNumericProperty.getLabel());
+		numericProperty.setDatatypeValue(getNumericProperty.getDatatypeValue());
+		return numericProperty;
 	}
 }

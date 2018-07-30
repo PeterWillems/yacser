@@ -13,15 +13,19 @@ import com.coxautodev.graphql.tools.GraphQLResolver;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.FunctionRepository;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.HamburgerRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RequirementRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemInterfaceRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemSlotRepository;
+import nl.tno.willemsph.coins_navigator.se.model.GetHamburger;
 import nl.tno.willemsph.coins_navigator.se.model.GetSystemSlot;
 
 @Component
 public class SystemSlotResolver implements GraphQLResolver<SystemSlot> {
 	@Autowired
 	private SystemSlotRepository systemSlotRepository;
+	@Autowired
+	private HamburgerRepository hamburgerRepository;
 	@Autowired
 	private FunctionRepository functionRepository;
 	@Autowired
@@ -52,7 +56,7 @@ public class SystemSlotResolver implements GraphQLResolver<SystemSlot> {
 		}
 		return parts;
 	}
-	
+
 	public List<Function> getFunctions(SystemSlot systemSlot) throws URISyntaxException, IOException {
 		List<Function> functions = null;
 		GetSystemSlot getSystemSlot = seService.getSystemSlot(systemSlot.getDatasetId(),
@@ -66,7 +70,7 @@ public class SystemSlotResolver implements GraphQLResolver<SystemSlot> {
 		}
 		return functions;
 	}
-	
+
 	public List<Requirement> getRequirements(SystemSlot systemSlot) throws URISyntaxException, IOException {
 		List<Requirement> requirements = null;
 		GetSystemSlot getSystemSlot = seService.getSystemSlot(systemSlot.getDatasetId(),
@@ -80,7 +84,7 @@ public class SystemSlotResolver implements GraphQLResolver<SystemSlot> {
 		}
 		return requirements;
 	}
-	
+
 	public List<SystemInterface> getInterfaces(SystemSlot systemSlot) throws URISyntaxException, IOException {
 		List<SystemInterface> interfaces = null;
 		GetSystemSlot getSystemSlot = seService.getSystemSlot(systemSlot.getDatasetId(),
@@ -93,5 +97,19 @@ public class SystemSlotResolver implements GraphQLResolver<SystemSlot> {
 			}
 		}
 		return interfaces;
+	}
+
+	public List<Hamburger> getHamburgers(SystemSlot systemSlot) throws URISyntaxException, IOException {
+		List<Hamburger> hamburgers = null;
+		List<GetHamburger> hamburgersForSystemSlot = seService.getHamburgersForSystemSlot(systemSlot.getDatasetId(),
+				systemSlot.getUri().getFragment());
+		if (hamburgersForSystemSlot != null && hamburgersForSystemSlot.size() > 0) {
+			hamburgers = new ArrayList<>();
+			for (GetHamburger getHamburger : hamburgersForSystemSlot) {
+				hamburgers
+						.add(hamburgerRepository.findOne(systemSlot.getDatasetId(), getHamburger.getUri().toString()));
+			}
+		}
+		return hamburgers;
 	}
 }
