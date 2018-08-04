@@ -22,6 +22,7 @@ type Hamburger {
 	parts: [Hamburger]
 	functionalUnit: SystemSlot
 	technicalSolution: RealisationModule
+	portRealisations: [PortRealisation]
 }
 
 type NumericProperty {
@@ -40,6 +41,15 @@ type Performance {
 	value: NumericProperty
 }
 
+type PortRealisation {
+	datasetId: Int!
+	uri: String!
+	label: String!
+	assembly: PortRealisation
+	parts: [PortRealisation]
+	systemInterface: SystemInterface
+}
+
 type RealisationModule {
 	datasetId: Int!
 	uri: String!
@@ -47,6 +57,7 @@ type RealisationModule {
 	assembly: RealisationModule
 	parts: [RealisationModule]
 	performances: [Performance]
+	hamburgers: [Hamburger]
 }
 
 type Requirement {
@@ -92,6 +103,8 @@ type Query {
   allRequirements(datasetId: Int!): [Requirement]
   allSystemInterfaces(datasetId: Int!): [SystemInterface]
   allSystemSlots(datasetId: Int!): [SystemSlot]
+  oneHamburger(datasetId: Int!, uri: String!): Hamburger
+  onePortRealisation(datasetId: Int!, uri: String!): PortRealisation
   oneSystemSlot(datasetId: Int!, uri: String!): SystemSlot
 }
 
@@ -115,6 +128,7 @@ input HamburgerInput {
 	parts: [String]
 	functionalUnit: String
 	technicalSolution: String
+	portRealisations: [String]
 }
 
 input PerformanceInput {
@@ -124,6 +138,15 @@ input PerformanceInput {
 	assembly: String
 	parts: [String]
 	value: String
+}
+
+input PortRealisationInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	systemInterface: String
 }
 
 input RealisationModuleInput {
@@ -145,6 +168,17 @@ input RequirementInput {
 	maxValue: String
 }
 
+input SystemInterfaceInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	systemSlot0: String
+	systemSlot1: String
+	requirements: [String]
+}
+
 input SystemSlotInput {
 	datasetId: Int!
 	uri: String!
@@ -157,23 +191,29 @@ input SystemSlotInput {
 }
 
 type Mutation {
-  createSystemSlot(datasetId: Int!, uri: String!, label: String!): SystemSlot
   createFunction(datasetId: Int!, uri: String!, label: String!): Function
   createHamburger(datasetId: Int!, uri: String!, label: String!): Hamburger
   createPerformance(datasetId: Int!, uri: String!, label: String!): Performance
+  createPortRealisation(datasetId: Int!, uri: String!, label: String!): PortRealisation
   createRealisationModule(datasetId: Int!, uri: String!, label: String!): RealisationModule
   createRequirement(datasetId: Int!, uri: String!, label: String!): Requirement
-  updateSystemSlot(systemSlot: SystemSlotInput!): SystemSlot
+  createSystemInterface(datasetId: Int!, uri: String!, label: String!): SystemInterface
+  createSystemSlot(datasetId: Int!, uri: String!, label: String!): SystemSlot
   updateFunction(functionInput: FunctionInput!): Function
   updateHamburger(hamburgerInput: HamburgerInput!): Hamburger
   updatePerformance(performanceInput: PerformanceInput!): Performance
+  updatePortRealisation(portRealisationInput: PortRealisationInput!): PortRealisation
   updateRealisationModule(realisationModuleInput: RealisationModuleInput!): RealisationModule
   updateRequirement(requirementInput: RequirementInput): Requirement
+  updateSystemInterface(systemInterfaceInput: SystemInterfaceInput!): SystemInterface
+  updateSystemSlot(systemSlotInput: SystemSlotInput!): SystemSlot
   deleteFunction(datasetId: Int!, uri: String!): Function
   deleteHamburger(datasetId: Int!, uri: String!): Hamburger
   deletePerformance(datasetId: Int!, uri: String!): Performance
+  deletePortRealisation(datasetId: Int!, uri: String!): PortRealisation
   deleteRealisationModule(datasetId: Int!, uri: String!): RealisationModule
   deleteRequirement(datasetId: Int!, uri: String!): Requirement
+  deleteSystemInterface(datasetId: Int!, uri: String!): SystemInterface
   deleteSystemSlot(datasetId: Int!, uri: String!): SystemSlot
 }
 

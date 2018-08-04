@@ -13,9 +13,11 @@ import com.coxautodev.graphql.tools.GraphQLResolver;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.HamburgerRepository;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PortRealisationRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationModuleRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemSlotRepository;
 import nl.tno.willemsph.coins_navigator.se.model.GetHamburger;
+import nl.tno.willemsph.coins_navigator.se.model.GetPortRealisation;
 
 @Component
 public class HamburgerResolver implements GraphQLResolver<Hamburger> {
@@ -26,12 +28,15 @@ public class HamburgerResolver implements GraphQLResolver<Hamburger> {
 	@Autowired
 	private RealisationModuleRepository realisationModuleRepository;
 	@Autowired
+	private PortRealisationRepository portRealisationRepository;
+	@Autowired
 	private SeService seService;
 
 	public Hamburger getAssembly(Hamburger hamburger) throws URISyntaxException, IOException {
 		GetHamburger getHamburger = seService.getHamburger(hamburger.getDatasetId(), hamburger.getUri().getFragment());
 		URI assemblyUri = getHamburger.getAssembly();
-		return assemblyUri != null ? hamburgerRepository.findOne(hamburger.getDatasetId(), assemblyUri.toString()) : null;
+		return assemblyUri != null ? hamburgerRepository.findOne(hamburger.getDatasetId(), assemblyUri.toString())
+				: null;
 	}
 
 	public List<Hamburger> getParts(Hamburger hamburger) throws URISyntaxException, IOException {
@@ -50,15 +55,31 @@ public class HamburgerResolver implements GraphQLResolver<Hamburger> {
 	public SystemSlot getFunctionalUnit(Hamburger hamburger) throws URISyntaxException, IOException {
 		GetHamburger getHamburger = seService.getHamburger(hamburger.getDatasetId(), hamburger.getUri().getFragment());
 		URI functionalUnitUri = getHamburger.getFunctionalUnit();
-		return functionalUnitUri != null ? systemSlotRepository.findOne(hamburger.getDatasetId(), functionalUnitUri.toString())
+		return functionalUnitUri != null
+				? systemSlotRepository.findOne(hamburger.getDatasetId(), functionalUnitUri.toString())
 				: null;
 	}
-	
+
 	public RealisationModule getTechnicalSolution(Hamburger hamburger) throws URISyntaxException, IOException {
 		GetHamburger getHamburger = seService.getHamburger(hamburger.getDatasetId(), hamburger.getUri().getFragment());
 		URI technicalSolutionUri = getHamburger.getTechnicalSolution();
-		return technicalSolutionUri != null ? realisationModuleRepository.findOne(hamburger.getDatasetId(), technicalSolutionUri.toString())
+		return technicalSolutionUri != null
+				? realisationModuleRepository.findOne(hamburger.getDatasetId(), technicalSolutionUri.toString())
 				: null;
+	}
+
+	public List<PortRealisation> getPortRealisations(Hamburger hamburger) throws URISyntaxException, IOException {
+		List<PortRealisation> portRealisations = null;
+		List<GetPortRealisation> portRealisationsOfHamburger = seService
+				.getPortRealisationsOfHamburger(hamburger.getDatasetId(), hamburger.getUri().getFragment());
+		if (portRealisationsOfHamburger != null && portRealisationsOfHamburger.size() > 0) {
+			portRealisations = new ArrayList<>();
+			for (GetPortRealisation getPortRealisation : portRealisationsOfHamburger) {
+				portRealisations.add(portRealisationRepository.findOne(hamburger.getDatasetId(),
+						getPortRealisation.getUri().toString()));
+			}
+		}
+		return portRealisations;
 	}
 
 }

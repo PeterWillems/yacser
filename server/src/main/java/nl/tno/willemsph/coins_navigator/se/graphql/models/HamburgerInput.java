@@ -11,6 +11,7 @@ public class HamburgerInput {
 	private List<String> parts;
 	private String functionalUnit;
 	private String technicalSolution;
+	private List<String> portRealisations;
 
 	public HamburgerInput() {
 	}
@@ -74,6 +75,14 @@ public class HamburgerInput {
 
 	public void setTechnicalSolution(String technicalSolution) {
 		this.technicalSolution = technicalSolution;
+	}
+
+	public List<String> getPortRealisations() {
+		return portRealisations;
+	}
+
+	public void setPortRealisations(List<String> portRealisations) {
+		this.portRealisations = portRealisations;
 	}
 
 

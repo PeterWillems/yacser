@@ -12,8 +12,10 @@ import org.springframework.stereotype.Component;
 import com.coxautodev.graphql.tools.GraphQLResolver;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.HamburgerRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PerformanceRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationModuleRepository;
+import nl.tno.willemsph.coins_navigator.se.model.GetHamburger;
 import nl.tno.willemsph.coins_navigator.se.model.GetRealisationModule;
 
 @Component
@@ -22,6 +24,8 @@ public class RealisationModuleResolver implements GraphQLResolver<RealisationMod
 	private RealisationModuleRepository realisationModuleRepository;
 	@Autowired
 	private PerformanceRepository performanceRepository;
+	@Autowired
+	private HamburgerRepository hamburgerRepository;
 	@Autowired
 	private SeService seService;
 
@@ -61,5 +65,19 @@ public class RealisationModuleResolver implements GraphQLResolver<RealisationMod
 			}
 		}
 		return performances;
+	}
+	
+	public List<Hamburger> getHamburgers(RealisationModule realisationModule) throws URISyntaxException, IOException {
+		List<Hamburger> hamburgers = null;
+		List<GetHamburger> hamburgersForSystemSlot = seService.getHamburgersForRealisationModule(realisationModule.getDatasetId(),
+				realisationModule.getUri().getFragment());
+		if (hamburgersForSystemSlot != null && hamburgersForSystemSlot.size() > 0) {
+			hamburgers = new ArrayList<>();
+			for (GetHamburger getHamburger : hamburgersForSystemSlot) {
+				hamburgers
+						.add(hamburgerRepository.findOne(realisationModule.getDatasetId(), getHamburger.getUri().toString()));
+			}
+		}
+		return hamburgers;
 	}
 }

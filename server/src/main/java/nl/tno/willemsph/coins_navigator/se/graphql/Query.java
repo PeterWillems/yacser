@@ -13,6 +13,7 @@ import nl.tno.willemsph.coins_navigator.se.graphql.models.Function;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Hamburger;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.NumericProperty;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Performance;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.PortRealisation;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationModule;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Requirement;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemInterface;
@@ -22,6 +23,7 @@ import nl.tno.willemsph.coins_navigator.se.graphql.repositories.FunctionReposito
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.HamburgerRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.NumericPropertyRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PerformanceRepository;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PortRealisationRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationModuleRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RequirementRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemInterfaceRepository;
@@ -35,6 +37,7 @@ public class Query implements GraphQLQueryResolver {
 	private final HamburgerRepository hamburgerRepository;
 	private final NumericPropertyRepository numericPropertyRepository;
 	private final PerformanceRepository performanceRepository;
+	private final PortRealisationRepository portRealisationRepository;
 	private final RealisationModuleRepository realisationModuleRepository;
 	private final RequirementRepository requirementRepository;
 	private final SystemInterfaceRepository systemInterfaceRepository;
@@ -42,14 +45,15 @@ public class Query implements GraphQLQueryResolver {
 
 	public Query(DatasetRepository datasetRepository, FunctionRepository functionRepository,
 			HamburgerRepository hamburgerRepository, NumericPropertyRepository numericPropertyRepository,
-			PerformanceRepository performanceRepository, RealisationModuleRepository realisationModuleRepository,
-			RequirementRepository requirementRepository, SystemInterfaceRepository systemInterfaceRepository,
-			SystemSlotRepository systemSlotRepository) {
+			PerformanceRepository performanceRepository, PortRealisationRepository portRealisationRepository,
+			RealisationModuleRepository realisationModuleRepository, RequirementRepository requirementRepository,
+			SystemInterfaceRepository systemInterfaceRepository, SystemSlotRepository systemSlotRepository) {
 		this.datasetRepository = datasetRepository;
 		this.functionRepository = functionRepository;
 		this.hamburgerRepository = hamburgerRepository;
 		this.numericPropertyRepository = numericPropertyRepository;
 		this.performanceRepository = performanceRepository;
+		this.portRealisationRepository = portRealisationRepository;
 		this.realisationModuleRepository = realisationModuleRepository;
 		this.requirementRepository = requirementRepository;
 		this.systemInterfaceRepository = systemInterfaceRepository;
@@ -67,7 +71,7 @@ public class Query implements GraphQLQueryResolver {
 	public List<Hamburger> allHamburgers(int datasetId) throws IOException, URISyntaxException {
 		return hamburgerRepository.getAllHamburgers(datasetId);
 	}
-	
+
 	public List<NumericProperty> allNumericProperties(int datasetId) throws IOException, URISyntaxException {
 		return numericPropertyRepository.getAllNumericProperties(datasetId);
 	}
@@ -90,6 +94,14 @@ public class Query implements GraphQLQueryResolver {
 
 	public List<SystemSlot> allSystemSlots(int datasetId) throws IOException, URISyntaxException {
 		return systemSlotRepository.getAllSystemSlots(datasetId);
+	}
+
+	public Hamburger oneHamburger(int datasetId, String uri) throws URISyntaxException, IOException {
+		return hamburgerRepository.findOne(datasetId, uri);
+	}
+	
+	public PortRealisation onePortRealisation(int datasetId, String uri) throws URISyntaxException, IOException {
+		return portRealisationRepository.findOne(datasetId, uri);
 	}
 
 	public SystemSlot oneSystemSlot(int datasetId, String uri) throws URISyntaxException, IOException {

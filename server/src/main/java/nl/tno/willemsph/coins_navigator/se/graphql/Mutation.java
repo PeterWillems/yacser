@@ -13,55 +13,49 @@ import nl.tno.willemsph.coins_navigator.se.graphql.models.Hamburger;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.HamburgerInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Performance;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.PerformanceInput;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.PortRealisation;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.PortRealisationInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationModule;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationModuleInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Requirement;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RequirementInput;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemInterface;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemInterfaceInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlot;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlotInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.FunctionRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.HamburgerRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PerformanceRepository;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PortRealisationRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationModuleRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RequirementRepository;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemInterfaceRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemSlotRepository;
 
 @Component
 public class Mutation implements GraphQLMutationResolver {
 
-	private final SystemSlotRepository systemSlotRepository;
 	private final FunctionRepository functionRepository;
 	private final HamburgerRepository hamburgerRepository;
 	private final PerformanceRepository performanceRepository;
+	private final PortRealisationRepository portRealisationRepository;
 	private final RealisationModuleRepository realisationModuleRepository;
 	private final RequirementRepository requirementRepository;
+	private final SystemInterfaceRepository systemInterfaceRepository;
+	private final SystemSlotRepository systemSlotRepository;
 
-	public Mutation(SystemSlotRepository systemSlotRepository, FunctionRepository functionRepository,
-			HamburgerRepository hamburgerRepository, PerformanceRepository performanceRepository,
-			RealisationModuleRepository realisationModuleRepository, RequirementRepository requirementRepository) {
-		this.systemSlotRepository = systemSlotRepository;
+	public Mutation(FunctionRepository functionRepository, HamburgerRepository hamburgerRepository,
+			PerformanceRepository performanceRepository, PortRealisationRepository portRealisationRepository,
+			RealisationModuleRepository realisationModuleRepository, RequirementRepository requirementRepository,
+			SystemInterfaceRepository systemInterfaceRepository, SystemSlotRepository systemSlotRepository) {
 		this.functionRepository = functionRepository;
 		this.hamburgerRepository = hamburgerRepository;
 		this.performanceRepository = performanceRepository;
+		this.portRealisationRepository = portRealisationRepository;
 		this.realisationModuleRepository = realisationModuleRepository;
 		this.requirementRepository = requirementRepository;
-	}
-
-	/*
-	 * SYSTEM - SLOTS
-	 */
-	public SystemSlot createSystemSlot(int datasetId, String uri, String label) throws URISyntaxException, IOException {
-		SystemSlot newSystemSlot = new SystemSlot(datasetId, uri, label);
-		systemSlotRepository.saveSystemSlot(newSystemSlot);
-		return newSystemSlot;
-	}
-
-	public SystemSlot updateSystemSlot(SystemSlotInput systemSlot) throws URISyntaxException, IOException {
-		return systemSlotRepository.updateOne(systemSlot);
-	}
-
-	public SystemSlot deleteSystemSlot(int datasetId, String uri) throws URISyntaxException, IOException {
-		return systemSlotRepository.deleteOne(datasetId, uri);
+		this.systemInterfaceRepository = systemInterfaceRepository;
+		this.systemSlotRepository = systemSlotRepository;
 	}
 
 	/*
@@ -79,6 +73,59 @@ public class Mutation implements GraphQLMutationResolver {
 
 	public Function deleteFunction(int datasetId, String uri) throws URISyntaxException, IOException {
 		return functionRepository.deleteOne(datasetId, uri);
+	}
+
+	/*
+	 * HAMBURGERS
+	 */
+	public Hamburger createHamburger(int datasetId, String uri, String label) throws URISyntaxException, IOException {
+		Hamburger newHamburger = new Hamburger(datasetId, uri, label);
+		hamburgerRepository.saveHamburger(newHamburger);
+		return newHamburger;
+	}
+
+	public Hamburger updateHamburger(HamburgerInput hamburgerInput) throws URISyntaxException, IOException {
+		return hamburgerRepository.updateOne(hamburgerInput);
+	}
+
+	public Hamburger deleteHamburger(int datasetId, String uri) throws URISyntaxException, IOException {
+		return hamburgerRepository.deleteOne(datasetId, uri);
+	}
+
+	/*
+	 * PORT REALISATIONS
+	 */
+	public PortRealisation createPortRealisation(int datasetId, String uri, String label) throws URISyntaxException, IOException {
+		PortRealisation newPortRealisation = new PortRealisation(datasetId, uri, label);
+		portRealisationRepository.savePortRealisation(newPortRealisation);
+		return newPortRealisation;
+	}
+	
+	public PortRealisation updatePortRealisation(PortRealisationInput portRealisationInput)
+			throws URISyntaxException, IOException {
+		return portRealisationRepository.updateOne(portRealisationInput);
+	}
+	
+	public PortRealisation deletePortRealisation(int datasetId, String uri) throws URISyntaxException, IOException {
+		return portRealisationRepository.deleteOne(datasetId, uri);
+	}
+
+	/*
+	 * PERFORMANCES
+	 */
+	public Performance createPerformance(int datasetId, String uri, String label)
+			throws URISyntaxException, IOException {
+		Performance newPerformance = new Performance(datasetId, uri, label);
+		performanceRepository.savePerformance(newPerformance);
+		return newPerformance;
+	}
+
+	public Performance updatePerformance(PerformanceInput performanceInput) throws URISyntaxException, IOException {
+		return performanceRepository.updateOne(performanceInput);
+	}
+
+	public Performance deletePerformance(int datasetId, String uri) throws URISyntaxException, IOException {
+		return performanceRepository.deleteOne(datasetId, uri);
 	}
 
 	/*
@@ -119,37 +166,39 @@ public class Mutation implements GraphQLMutationResolver {
 	}
 
 	/*
-	 * PERFORMANCES
+	 * SYSTEM - SLOTS
 	 */
-	public Performance createPerformance(int datasetId, String uri, String label)
-			throws URISyntaxException, IOException {
-		Performance newPerformance = new Performance(datasetId, uri, label);
-		performanceRepository.savePerformance(newPerformance);
-		return newPerformance;
+	public SystemSlot createSystemSlot(int datasetId, String uri, String label) throws URISyntaxException, IOException {
+		SystemSlot newSystemSlot = new SystemSlot(datasetId, uri, label);
+		systemSlotRepository.saveSystemSlot(newSystemSlot);
+		return newSystemSlot;
 	}
 
-	public Performance updatePerformance(PerformanceInput performanceInput) throws URISyntaxException, IOException {
-		return performanceRepository.updateOne(performanceInput);
+	public SystemSlot updateSystemSlot(SystemSlotInput systemSlotInput) throws URISyntaxException, IOException {
+		return systemSlotRepository.updateOne(systemSlotInput);
 	}
 
-	public Performance deletePerformance(int datasetId, String uri) throws URISyntaxException, IOException {
-		return performanceRepository.deleteOne(datasetId, uri);
+	public SystemSlot deleteSystemSlot(int datasetId, String uri) throws URISyntaxException, IOException {
+		return systemSlotRepository.deleteOne(datasetId, uri);
 	}
 
 	/*
-	 * HAMBURGERS
+	 * SYSTEM - INTERFACES
 	 */
-	public Hamburger createHamburger(int datasetId, String uri, String label) throws URISyntaxException, IOException {
-		Hamburger newHamburger = new Hamburger(datasetId, uri, label);
-		hamburgerRepository.saveHamburger(newHamburger);
-		return newHamburger;
+	public SystemInterface createSystemInterface(int datasetId, String uri, String label)
+			throws URISyntaxException, IOException {
+		SystemInterface newSystemInterface = new SystemInterface(datasetId, uri, label);
+		systemInterfaceRepository.saveSystemInterface(newSystemInterface);
+		return newSystemInterface;
 	}
 
-	public Hamburger updateHamburger(HamburgerInput hamburgerInput) throws URISyntaxException, IOException {
-		return hamburgerRepository.updateOne(hamburgerInput);
+	public SystemInterface updateSystemInterface(SystemInterfaceInput systemInterfaceInput)
+			throws URISyntaxException, IOException {
+		return systemInterfaceRepository.updateOne(systemInterfaceInput);
 	}
 
-	public Hamburger deleteHamburger(int datasetId, String uri) throws URISyntaxException, IOException {
-		return hamburgerRepository.deleteOne(datasetId, uri);
+	public SystemInterface deleteSystemInterface(int datasetId, String uri) throws URISyntaxException, IOException {
+		return systemInterfaceRepository.deleteOne(datasetId, uri);
 	}
+
 }

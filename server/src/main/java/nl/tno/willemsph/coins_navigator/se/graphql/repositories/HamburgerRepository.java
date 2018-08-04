@@ -69,6 +69,13 @@ public class HamburgerRepository {
 		if (hamburgerInput.getTechnicalSolution() != null) {
 			putHamburger.setTechnicalSolution(new URI(hamburgerInput.getTechnicalSolution()));
 		}
+		if (hamburgerInput.getPortRealisations() != null) {
+			List<URI> parts = new ArrayList<>();
+			for (String part : hamburgerInput.getPortRealisations()) {
+				parts.add(new URI(part));
+			}
+			putHamburger.setPortRealisations(parts);
+		}
 
 		GetHamburger updatedHamburger = seService.updateHamburger(hamburgerInput.getDatasetId(),
 				getHamburger.getLocalName(), putHamburger);
