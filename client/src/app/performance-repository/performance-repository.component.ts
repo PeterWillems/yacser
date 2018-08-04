@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {SeObjectRepositoryComponent} from '../se-object-repository.component';
-import {Dataset, Performance, PerformanceInput, Requirement, RequirementInput} from '../types';
+import {Dataset, Performance, PerformanceInput, Requirement, RequirementInput, SystemSlot} from '../types';
 import {DatasetService} from '../dataset.service';
 import {PerformanceService} from '../performance.service';
 import {Subscription} from 'apollo-client/util/Observable';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-performance-repository',
@@ -16,7 +17,9 @@ export class PerformanceRepositoryComponent extends SeObjectRepositoryComponent 
   allPerformances: Performance[];
 
   constructor(private _datasetService: DatasetService,
-              private _performanceService: PerformanceService) {
+              private _performanceService: PerformanceService,
+              private route: ActivatedRoute,
+              private router: Router) {
     super();
   }
 
@@ -25,15 +28,30 @@ export class PerformanceRepositoryComponent extends SeObjectRepositoryComponent 
     if (this.selectedDataset) {
       this._performanceService.allPerformancesUpdated.subscribe((performances) => {
         this.allPerformances = performances;
-        this.selectedPerformance = <Performance>this.resetSelected(this._performanceService.selectedPerformance, performances);
+        this.route.params.subscribe(params => this.setSelectedPerformance(params['id']));
       });
       this._performanceService.queryAllPerformances(this.selectedDataset.datasetId);
+    }
+  }
+
+  setSelectedPerformance(performanceUri: string) {
+    if (performanceUri) {
+      for (let index = 0; index < this.allPerformances.length; index++) {
+        if (this.allPerformances[index].uri === performanceUri) {
+          this.selectedPerformance = this.allPerformances[index];
+          this._performanceService.selectedPerformance = this.selectedPerformance;
+          break;
+        }
+      }
+    } else {
+      this.selectedPerformance = <Performance>this.resetSelected(this._performanceService.selectedPerformance, this.allPerformances);
     }
   }
 
   onSelect(index: number): void {
     this.selectedPerformance = this.allPerformances[index];
     this._performanceService.selectedPerformance = this.selectedPerformance;
+    this.router.navigate(['/performances', {id: this.selectedPerformance.uri}]);
   }
 
   onCreate(): void {

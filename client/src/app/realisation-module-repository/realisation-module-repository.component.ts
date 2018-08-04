@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {SeObjectRepositoryComponent} from '../se-object-repository.component';
-import {Dataset, RealisationModule, RealisationModuleInput, Requirement, RequirementInput} from '../types';
+import {Dataset, RealisationModule, RealisationModuleInput, Requirement, RequirementInput, SystemSlot} from '../types';
 import {DatasetService} from '../dataset.service';
 import {RequirementService} from '../requirement.service';
 import {RealisationModuleService} from '../realisation-module.service';
 import {Subscription} from 'apollo-client/util/Observable';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-realisation-module-repository',
@@ -17,7 +18,9 @@ export class RealisationModuleRepositoryComponent extends SeObjectRepositoryComp
   allRealisationModules: RealisationModule[];
 
   constructor(private _datasetService: DatasetService,
-              private _realisationModuleService: RealisationModuleService) {
+              private _realisationModuleService: RealisationModuleService,
+              private route: ActivatedRoute,
+              private router: Router) {
     super();
   }
 
@@ -26,16 +29,31 @@ export class RealisationModuleRepositoryComponent extends SeObjectRepositoryComp
     if (this.selectedDataset) {
       this._realisationModuleService.allRealisationModulesUpdated.subscribe((allRealisationModules) => {
         this.allRealisationModules = allRealisationModules;
-        this.selectedRealisationModule =
-          <RealisationModule>this.resetSelected(this._realisationModuleService.selectedRealisationModule, allRealisationModules);
+        this.route.params.subscribe(params => this.setSelectedRealisationModule(params['id']));
       });
       this._realisationModuleService.queryAllRealisationModules(this.selectedDataset.datasetId);
+    }
+  }
+
+  setSelectedRealisationModule(realisationModuleUri: string) {
+    if (realisationModuleUri) {
+      for (let index = 0; index < this.allRealisationModules.length; index++) {
+        if (this.allRealisationModules[index].uri === realisationModuleUri) {
+          this.selectedRealisationModule = this.allRealisationModules[index];
+          this._realisationModuleService.selectedRealisationModule = this.selectedRealisationModule;
+          break;
+        }
+      }
+    } else {
+      this.selectedRealisationModule =
+        <RealisationModule>this.resetSelected(this._realisationModuleService.selectedRealisationModule, this.allRealisationModules);
     }
   }
 
   onSelect(index: number): void {
     this.selectedRealisationModule = this.allRealisationModules[index];
     this._realisationModuleService.selectedRealisationModule = this.selectedRealisationModule;
+    this.router.navigate(['/realisationmodules', {id: this.selectedRealisationModule.uri}]);
   }
 
   onCreate(): void {

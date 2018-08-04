@@ -40,6 +40,7 @@
           <app-property [editMode]="propertyEdited=='assembly'" [iri]="true" [options]="allFunctions"
                         [label]="selectedFunction.assembly?selectedFunction.assembly.label:' '"
                         [value]="selectedFunction.assembly?selectedFunction.assembly.uri:null"
+                        [route]="'/functions'"
                         (sessionStarted)="onSessionStarted('assembly')"
                         (sessionEnded)="onSessionEnded($event, 'assembly')"></app-property>
         </td>
@@ -55,7 +56,7 @@
         <td>
           <app-property [editMode]="propertyEdited=='parts'" [iri]="true" [list]="true" [options]="allFunctions"
                         [label]="showList(selectedFunction.parts)"
-                        [value]="selectedFunction.parts"
+                        [value]="selectedFunction.parts" [route]="'/functions'"
                         (sessionStarted)="onSessionStarted('parts')"
                         (sessionEnded)="onSessionEnded($event, 'parts')"></app-property>
         </td>
@@ -73,7 +74,7 @@
           <app-property [editMode]="propertyEdited=='requirements'" [iri]="true" [list]="true"
                         [options]="allRequirements"
                         [label]="showList(selectedFunction.requirements)"
-                        [value]="selectedFunction.requirements"
+                        [value]="selectedFunction.requirements" [route]="'/requirements'"
                         (sessionStarted)="onSessionStarted('requirements')"
                         (sessionEnded)="onSessionEnded($event, 'requirements')"></app-property>
         </td>
@@ -90,6 +91,7 @@
           <app-property [editMode]="propertyEdited=='input'" [iri]="true" [options]="allSystemInterfaces"
                         [label]="selectedFunction.input?selectedFunction.input.label:' '"
                         [value]="selectedFunction.input?selectedFunction.input.uri:null"
+                        [route]="'/systeminterfaces'"
                         (sessionStarted)="onSessionStarted('input')"
                         (sessionEnded)="onSessionEnded($event, 'input')"></app-property>
         </td>
@@ -106,6 +108,7 @@
           <app-property [editMode]="propertyEdited=='output'" [iri]="true" [options]="allSystemInterfaces"
                         [label]="selectedFunction.output?selectedFunction.output.label:' '"
                         [value]="selectedFunction.output?selectedFunction.output.uri:null"
+                        [route]="'/systeminterfaces'"
                         (sessionStarted)="onSessionStarted('output')"
                         (sessionEnded)="onSessionEnded($event, 'output')"></app-property>
         </td>

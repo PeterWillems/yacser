@@ -32,12 +32,14 @@ export interface Hamburger extends SeObject {
   parts: Hamburger[];
   functionalUnit: SystemSlot;
   technicalSolution: RealisationModule;
+  portRealisations: PortRealisation[];
 }
 
 export class HamburgerInput {
   parts: string[];
   functionalUnit: string;
   technicalSolution: string;
+  portRealisations: string[];
 
   constructor(public datasetId: number, public uri: string, public label: string, public assembly: string) {
   }
@@ -64,10 +66,26 @@ export class PerformanceInput {
   }
 }
 
+export interface PortRealisation extends SeObject {
+  assembly: PortRealisation;
+  parts: PortRealisation[];
+  systemInterface: SystemInterface;
+//  realisationPort: RealisationPort;
+}
+
+export class PortRealisationInput {
+  parts: string[];
+  systemInterface: string;
+
+  constructor(public datasetId: number, public uri: string, public label: string, public assembly: string) {
+  }
+}
+
 export interface RealisationModule extends SeObject {
   assembly: RealisationModule;
   parts: RealisationModule[];
   performances: Performance[];
+  hamburgers: Hamburger[];
 }
 
 export class RealisationModuleInput {
@@ -97,7 +115,19 @@ export class RequirementInput {
 export interface SystemInterface extends SeObject {
   assembly: SystemInterface;
   parts: SystemInterface[];
+  systemSlot0: SystemSlot;
+  systemSlot1: SystemSlot;
   requirements: Requirement[];
+}
+
+export class SystemInterfaceInput {
+  parts: string[];
+  systemSlot0: string;
+  systemSlot1: string;
+  requirements: string[];
+
+  constructor(public datasetId: number, public uri: string, public label: string, public assembly: string) {
+  }
 }
 
 export interface SystemSlot extends SeObject {
@@ -106,6 +136,7 @@ export interface SystemSlot extends SeObject {
   functions: Function[];
   requirements: Requirement[];
   interfaces: SystemInterface[];
+  hamburgers: Hamburger[];
 }
 
 export class SystemSlotInput {
@@ -128,6 +159,7 @@ export interface Query {
   allRequirements: Requirement[];
   allSystemInterfaces: SystemInterface[];
   allSystemSlots: SystemSlot[];
+  oneHamburger: Hamburger;
   oneSystemSlot: SystemSlot;
 }
 
@@ -135,20 +167,26 @@ export interface Mutation {
   createFunction: Function;
   createHamburger: Hamburger;
   createPerformance: Performance;
+  createPortRealisation: PortRealisation;
   createRealisationModule: RealisationModule;
   createRequirement: Requirement;
+  createSystemInterface: SystemInterface;
   createSystemSlot: SystemSlot;
   deleteFunction: Function;
   deleteHamburger: Hamburger;
   deletePerformance: Performance;
+  deletePortRealisation: PortRealisation;
   deleteRealisationModule: RealisationModule;
   deleteRequirement: Requirement;
+  deleteSystemInterface: SystemInterface;
   deleteSystemSlot: SystemSlot;
   updateFunction: Function;
   updateHamburger: Hamburger;
   updatePerformance: Performance;
+  updatePortRealisation: PortRealisation;
   updateRealisationModule: RealisationModule;
   updateRequirement: Requirement;
+  updateSystemInterface: SystemInterface;
   updateSystemSlot: SystemSlot;
 }
 

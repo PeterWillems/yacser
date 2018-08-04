@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {SeObjectRepositoryComponent} from '../se-object-repository.component';
-import {Dataset, Function, FunctionInput, Hamburger, HamburgerInput} from '../types';
+import {Dataset, Hamburger, HamburgerInput} from '../types';
 import {DatasetService} from '../dataset.service';
 import {HamburgerService} from '../hamburger.service';
 import {Subscription} from 'apollo-client/util/Observable';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-hamburger-repository',
@@ -16,7 +17,9 @@ export class HamburgerRepositoryComponent extends SeObjectRepositoryComponent im
   allHamburgers: Hamburger[];
 
   constructor(private _datasetService: DatasetService,
-              private _hamburgerService: HamburgerService) {
+              private _hamburgerService: HamburgerService,
+              private route: ActivatedRoute,
+              private router: Router) {
     super();
   }
 
@@ -24,16 +27,33 @@ export class HamburgerRepositoryComponent extends SeObjectRepositoryComponent im
     this.selectedDataset = this._datasetService.getSelectedDataset();
     if (this.selectedDataset) {
       this._hamburgerService.allHamburgersUpdated.subscribe((hamburgers) => {
+        console.log('allHamburgersUpdated');
         this.allHamburgers = hamburgers;
-        this.selectedHamburger = <Hamburger>this.resetSelected(this._hamburgerService.selectedHamburger, hamburgers);
+        this.selectedHamburger = <Hamburger>this.resetSelected(this._hamburgerService.selectedHamburger, this.allHamburgers);
+        this.route.params.subscribe(params => this.setSelectedHamburger(params['id']));
       });
       this._hamburgerService.queryAllHamburgers(this.selectedDataset.datasetId);
+    }
+  }
+
+  setSelectedHamburger(hamburgerUri: string) {
+    if (hamburgerUri) {
+      for (let index = 0; index < this.allHamburgers.length; index++) {
+        if (this.allHamburgers[index].uri === hamburgerUri) {
+          this.selectedHamburger = this.allHamburgers[index];
+          this._hamburgerService.selectedHamburger = this.selectedHamburger;
+          break;
+        }
+      }
+    } else {
+      this.selectedHamburger = <Hamburger>this.resetSelected(this._hamburgerService.selectedHamburger, this.allHamburgers);
     }
   }
 
   onSelect(index: number): void {
     this.selectedHamburger = this.allHamburgers[index];
     this._hamburgerService.selectedHamburger = this.selectedHamburger;
+    this.router.navigate(['/hamburgers', {id: this.selectedHamburger.uri}]);
   }
 
   onCreate(): void {

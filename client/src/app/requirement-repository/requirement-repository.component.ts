@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Dataset, Requirement, RequirementInput} from '../types';
+import {Dataset, Requirement, RequirementInput, SystemSlot} from '../types';
 import {DatasetService} from '../dataset.service';
 import {RequirementService} from '../requirement.service';
 import {SeObjectRepositoryComponent} from '../se-object-repository.component';
 import {Subscription} from 'apollo-client/util/Observable';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-requirement-repository',
@@ -17,7 +18,9 @@ export class RequirementRepositoryComponent extends SeObjectRepositoryComponent 
 
   constructor(
     private _datasetService: DatasetService,
-    private _requirementService: RequirementService) {
+    private _requirementService: RequirementService,
+    private route: ActivatedRoute,
+    private router: Router) {
     super();
   }
 
@@ -26,15 +29,30 @@ export class RequirementRepositoryComponent extends SeObjectRepositoryComponent 
     if (this.selectedDataset) {
       this._requirementService.allRequirementsUpdated.subscribe((requirements) => {
         this.allRequirements = requirements;
-        this.selectedRequirement = <Requirement>this.resetSelected(this._requirementService.selectedRequirement, requirements);
+        this.route.params.subscribe(params => this.setSelectedRequirement(params['id']));
       });
       this._requirementService.queryAllRequirements(this.selectedDataset.datasetId);
+    }
+  }
+
+  setSelectedRequirement(requirementUri: string) {
+    if (requirementUri) {
+      for (let index = 0; index < this.allRequirements.length; index++) {
+        if (this.allRequirements[index].uri === requirementUri) {
+          this.selectedRequirement = this.allRequirements[index];
+          this._requirementService.selectedRequirement = this.selectedRequirement;
+          break;
+        }
+      }
+    } else {
+      this.selectedRequirement = <Requirement>this.resetSelected(this._requirementService.selectedRequirement, this.allRequirements);
     }
   }
 
   onSelect(index: number): void {
     this.selectedRequirement = this.allRequirements[index];
     this._requirementService.selectedRequirement = this.selectedRequirement;
+    this.router.navigate(['/requirements', {id: this.selectedRequirement.uri}]);
   }
 
   onCreate(): void {

@@ -1,17 +1,20 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Requirement, SeObject, SystemInterface, SystemSlot, SystemSlotInput} from '../types';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Requirement, SystemInterface, SystemSlot} from '../types';
 import {SystemSlotService} from '../system-slot.service';
 import {FunctionService} from '../function.service';
 import {RequirementService} from '../requirement.service';
 import {SystemInterfaceService} from '../system-interface.service';
+import {SeObjectComponent} from '../se-object-component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-systemslot',
   templateUrl: './systemslot.component.html',
   styleUrls: ['./systemslot.component.css'],
 })
-export class SystemslotComponent implements OnInit {
+export class SystemslotComponent extends SeObjectComponent implements OnInit {
   @Input() selectedSystemSlot: SystemSlot;
+  @Output() selectedSystemSlotChanged = new EventEmitter<string>();
   allSystemSlots: SystemSlot[];
   allFunctions: Function[];
   allRequirements: Requirement[];
@@ -21,7 +24,9 @@ export class SystemslotComponent implements OnInit {
   constructor(private _systemSlotService: SystemSlotService,
               private _functionService: FunctionService,
               private _requirementService: RequirementService,
-              private _systemInterfaceService: SystemInterfaceService) {
+              private _systemInterfaceService: SystemInterfaceService,
+              private router: Router) {
+    super();
   }
 
   ngOnInit() {
@@ -33,18 +38,6 @@ export class SystemslotComponent implements OnInit {
     this._requirementService.queryAllRequirements(this.selectedSystemSlot.datasetId);
     this._systemInterfaceService.allSystemInterfacesUpdated.subscribe((systemInterfaces) => this.allSystemInterfaces = systemInterfaces);
     this._systemInterfaceService.queryAllSystemInterfaces(this.selectedSystemSlot.datasetId);
-  }
-
-  show(object: SeObject): string {
-    return this._systemSlotService.show(object);
-  }
-
-  showList(list: Array<SeObject>): string {
-    return this._systemSlotService.showList(list);
-  }
-
-  onSessionStarted(propertyLabel: string) {
-    this.propertyEdited = (this.propertyEdited === propertyLabel) ? null : propertyLabel;
   }
 
   onSessionEnded(propertyValue: string, propertyLabel: string) {

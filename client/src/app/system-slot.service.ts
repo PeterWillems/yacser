@@ -1,7 +1,15 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {Mutation, Query, SeObject, SystemSlot, SystemSlotInput} from './types';
-import {ALL_SYSTEM_SLOTS, CREATE_SYSTEM_SLOT, DELETE_SYSTEM_SLOT, ONE_SYSTEM_SLOT, UPDATE_SYSTEM_SLOT} from './graphql';
+import {
+  ALL_SYSTEM_INTERFACES,
+  ALL_SYSTEM_SLOTS,
+  CREATE_SYSTEM_SLOT,
+  DELETE_SYSTEM_SLOT,
+  ONE_SYSTEM_SLOT,
+  UPDATE_SYSTEM_SLOT
+} from './graphql';
+
 // import {convertRuleOptions} from 'tslint/lib/configuration';
 
 @Injectable({
@@ -95,6 +103,10 @@ export class SystemSlotService {
       // },
       refetchQueries: [{
         query: ALL_SYSTEM_SLOTS, variables: {
+          datasetId: systemSlot.datasetId
+        }
+      }, {
+        query: ALL_SYSTEM_INTERFACES, variables: {
           datasetId: systemSlot.datasetId
         }
       }]

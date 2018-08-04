@@ -40,6 +40,7 @@
           <app-property [editMode]="propertyEdited=='assembly'" [iri]="true" [options]="allRealisationModules"
                         [label]="selectedRealisationModule.assembly?selectedRealisationModule.assembly.label:' '"
                         [value]="selectedRealisationModule.assembly?selectedRealisationModule.assembly.uri:null"
+                        [route]="'/realisationmodules'"
                         (sessionStarted)="onSessionStarted('assembly')"
                         (sessionEnded)="onSessionEnded($event, 'assembly')"></app-property>
         </td>
@@ -57,6 +58,7 @@
                         [options]="allRealisationModules"
                         [label]="showList(selectedRealisationModule.parts)"
                         [value]="selectedRealisationModule.parts"
+                        [route]="'/realisationmodules'"
                         (sessionStarted)="onSessionStarted('parts')"
                         (sessionEnded)="onSessionEnded($event, 'parts')"></app-property>
         </td>
@@ -74,6 +76,7 @@
                         [options]="allPerformances"
                         [label]="showList(selectedRealisationModule.performances)"
                         [value]="selectedRealisationModule.performances"
+                        [route]="'/performances'"
                         (sessionStarted)="onSessionStarted('performances')"
                         (sessionEnded)="onSessionEnded($event, 'performances')"></app-property>
         </td>
@@ -82,6 +85,17 @@
                   [class]="propertyEdited=='performances'?'btn btn-primary btn-sm':'btn btn-sm'"><span
             class="fa fa-edit fa-lg"></span>
           </button>
+        </td>
+      </tr>
+      <tr>
+        <td>hamburgers</td>
+        <td class="disabled-property">
+          <app-property [editMode]="false" [iri]="true" [list]="true" [disabled]="true"
+                        [value]="selectedRealisationModule.hamburgers" [route]="'/hamburgers'"></app-property>
+          <!--{{showList(selectedSystemSlot.hamburgers)}}-->
+        </td>
+        <td>
+          <button type="button" [disabled]="true" class="btn btn-sm"><span class="fa fa-edit fa-lg"></span></button>
         </td>
       </tr>
       </tbody>

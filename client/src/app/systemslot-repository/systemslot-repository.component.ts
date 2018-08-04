@@ -4,6 +4,7 @@ import {SystemSlotService} from '../system-slot.service';
 import {DatasetService} from '../dataset.service';
 import {SeObjectRepositoryComponent} from '../se-object-repository.component';
 import {Subscription} from 'apollo-client/util/Observable';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-systemslot-repository',
@@ -18,7 +19,9 @@ export class SystemslotRepositoryComponent extends SeObjectRepositoryComponent i
 
   constructor(
     private _datasetService: DatasetService,
-    private _systemSlotService: SystemSlotService) {
+    private _systemSlotService: SystemSlotService,
+    private route: ActivatedRoute,
+    private router: Router) {
     super();
   }
 
@@ -27,15 +30,30 @@ export class SystemslotRepositoryComponent extends SeObjectRepositoryComponent i
     if (this.selectedDataset) {
       this._systemSlotService.allSystemSlotsUpdated.subscribe((systemSlots) => {
         this.allSystemSlots = systemSlots;
-        this.selectedSystemSlot = <SystemSlot>this.resetSelected(this._systemSlotService.selectedSystemSlot, systemSlots);
+        this.route.params.subscribe(params => this.setSelectedSystemSlot(params['id']));
       });
       this._systemSlotService.queryAllSystemSlots(this.selectedDataset.datasetId);
+    }
+  }
+
+  setSelectedSystemSlot(systemSlotUri: string) {
+    if (systemSlotUri) {
+      for (let index = 0; index < this.allSystemSlots.length; index++) {
+        if (this.allSystemSlots[index].uri === systemSlotUri) {
+          this.selectedSystemSlot = this.allSystemSlots[index];
+          this._systemSlotService.selectedSystemSlot = this.selectedSystemSlot;
+          break;
+        }
+      }
+    } else {
+      this.selectedSystemSlot = <SystemSlot>this.resetSelected(this._systemSlotService.selectedSystemSlot, this.allSystemSlots);
     }
   }
 
   onSelect(index: number): void {
     this.selectedSystemSlot = this.allSystemSlots[index];
     this._systemSlotService.selectedSystemSlot = this.selectedSystemSlot;
+    this.router.navigate(['/systemslots', {id: this.selectedSystemSlot.uri}]);
   }
 
   onCreate(): void {

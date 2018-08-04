@@ -40,6 +40,7 @@
           <app-property [editMode]="propertyEdited=='assembly'" [iri]="true" [options]="allSystemSlots"
                         [label]="selectedSystemSlot.assembly?selectedSystemSlot.assembly.label:' '"
                         [value]="selectedSystemSlot.assembly?selectedSystemSlot.assembly.uri:null"
+                        [route]="'/systemslots'"
                         (sessionStarted)="onSessionStarted('assembly')"
                         (sessionEnded)="onSessionEnded($event, 'assembly')"></app-property>
         </td>
@@ -55,7 +56,7 @@
         <td>
           <app-property [editMode]="propertyEdited=='parts'" [iri]="true" [list]="true" [options]="allSystemSlots"
                         [label]="showList(selectedSystemSlot.parts)"
-                        [value]="selectedSystemSlot.parts"
+                        [value]="selectedSystemSlot.parts" [route]="'/systemslots'"
                         (sessionStarted)="onSessionStarted('parts')"
                         (sessionEnded)="onSessionEnded($event, 'parts')"></app-property>
         </td>
@@ -72,7 +73,7 @@
         <td>
           <app-property [editMode]="propertyEdited=='functions'" [iri]="true" [list]="true" [options]="allFunctions"
                         [label]="showList(selectedSystemSlot.functions)"
-                        [value]="selectedSystemSlot.functions"
+                        [value]="selectedSystemSlot.functions" [route]="'/functions'"
                         (sessionStarted)="onSessionStarted('functions')"
                         (sessionEnded)="onSessionEnded($event, 'functions')"></app-property>
         </td>
@@ -89,7 +90,7 @@
           <app-property [editMode]="propertyEdited=='requirements'" [iri]="true" [list]="true"
                         [options]="allRequirements"
                         [label]="showList(selectedSystemSlot.requirements)"
-                        [value]="selectedSystemSlot.requirements"
+                        [value]="selectedSystemSlot.requirements" [route]="'/requirements'"
                         (sessionStarted)="onSessionStarted('requirements')"
                         (sessionEnded)="onSessionEnded($event, 'requirements')"></app-property>
         </td>
@@ -106,7 +107,7 @@
           <app-property [editMode]="propertyEdited=='interfaces'" [iri]="true" [list]="true"
                         [options]="allSystemInterfaces"
                         [label]="showList(selectedSystemSlot.interfaces)"
-                        [value]="selectedSystemSlot.interfaces"
+                        [value]="selectedSystemSlot.interfaces" [route]="'/systeminterfaces'"
                         (sessionStarted)="onSessionStarted('interfaces')"
                         (sessionEnded)="onSessionEnded($event, 'interfaces')"></app-property>
         </td>
@@ -115,6 +116,17 @@
                   [class]="propertyEdited=='interfaces'?'btn btn-primary btn-sm':'btn btn-sm'"><span
             class="fa fa-edit fa-lg"></span>
           </button>
+        </td>
+      </tr>
+      <tr>
+        <td>hamburgers</td>
+        <td class="disabled-property">
+          <app-property [editMode]="false" [iri]="true" [list]="true" [disabled]="true"
+                        [value]="selectedSystemSlot.hamburgers" [route]="'/hamburgers'"></app-property>
+          <!--{{showList(selectedSystemSlot.hamburgers)}}-->
+        </td>
+        <td>
+          <button type="button" [disabled]="true" class="btn btn-sm"><span class="fa fa-edit fa-lg"></span></button>
         </td>
       </tr>
       </tbody>

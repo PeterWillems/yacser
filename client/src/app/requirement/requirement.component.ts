@@ -40,29 +40,19 @@ export class RequirementComponent extends SeObjectComponent implements OnInit {
           return;
         }
         break;
-      case 'min value':
+      case 'minValue':
         if (this.selectedRequirement['minValue'] !== null && this.selectedRequirement['minValue'].uri === propertyValue) {
           return;
         }
         break;
-      case 'max value':
+      case 'maxValue':
         if (this.selectedRequirement['maxValue'] !== null && this.selectedRequirement['maxValue'].uri === propertyValue) {
           return;
         }
         break;
     }
     const requirementInput = this._requirementService.cloneRequirementInput(this.selectedRequirement);
-    switch (propertyLabel) {
-      case 'min value':
-        requirementInput['minValue'] = (propertyValue ? propertyValue : null);
-        break;
-      case 'max value':
-        requirementInput['maxValue'] = (propertyValue ? propertyValue : null);
-        break;
-      default:
-        requirementInput[propertyLabel] = (propertyValue ? propertyValue : null);
-        break;
-    }
+    requirementInput[propertyLabel] = (propertyValue ? propertyValue : null);
     console.log('propertyLabel=' + propertyLabel + ' ' + (requirementInput[propertyLabel] ? requirementInput[propertyLabel] : '<null>'));
     this._requirementService.mutateRequirement(requirementInput);
     this.propertyEdited = null;

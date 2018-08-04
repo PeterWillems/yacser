@@ -40,6 +40,7 @@
           <app-property [editMode]="propertyEdited=='assembly'" [iri]="true" [options]="allHamburgers"
                         [label]="selectedHamburger.assembly?selectedHamburger.assembly.label:' '"
                         [value]="selectedHamburger.assembly?selectedHamburger.assembly.uri:null"
+                        [route]="'/hamburgers'"
                         (sessionStarted)="onSessionStarted('assembly')"
                         (sessionEnded)="onSessionEnded($event, 'assembly')"></app-property>
         </td>
@@ -56,6 +57,7 @@
           <app-property [editMode]="propertyEdited=='parts'" [iri]="true" [list]="true" [options]="allHamburgers"
                         [label]="showList(selectedHamburger.parts)"
                         [value]="selectedHamburger.parts"
+                        [route]="'/hamburgers'"
                         (sessionStarted)="onSessionStarted('parts')"
                         (sessionEnded)="onSessionEnded($event, 'parts')"></app-property>
         </td>
@@ -65,7 +67,6 @@
             class="fa fa-edit fa-lg"></span>
           </button>
         </td>
-
       </tr>
       <tr>
         <td>functional unit</td>
@@ -73,6 +74,7 @@
           <app-property [editMode]="propertyEdited=='functionalUnit'" [iri]="true" [options]="allSystemSlots"
                         [label]="selectedHamburger.functionalUnit?selectedHamburger.functionalUnit.label:' '"
                         [value]="selectedHamburger.functionalUnit?selectedHamburger.functionalUnit.uri:null"
+                        [route]="'/systemslots'"
                         (sessionStarted)="onSessionStarted('functionalUnit')"
                         (sessionEnded)="onSessionEnded($event, 'functionalUnit')"></app-property>
         </td>
@@ -89,6 +91,7 @@
           <app-property [editMode]="propertyEdited=='technicalSolution'" [iri]="true" [options]="allRealisationModules"
                         [label]="selectedHamburger.technicalSolution?selectedHamburger.technicalSolution.label:' '"
                         [value]="selectedHamburger.technicalSolution?selectedHamburger.technicalSolution.uri:null"
+                        [route]="'/realisationmodules'"
                         (sessionStarted)="onSessionStarted('technicalSolution')"
                         (sessionEnded)="onSessionEnded($event, 'technicalSolution')"></app-property>
         </td>
@@ -98,6 +101,35 @@
             class="fa fa-edit fa-lg"></span>
           </button>
         </td>
+      </tr>
+      <tr>
+        <td>port realisations</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='portRealisations'" [iri]="true" [list]="true"
+                        [label]="showList(selectedHamburger.portRealisations)"
+                        [value]="selectedHamburger.portRealisations"
+                        (sessionStarted)="onSessionStarted('portRealisations')"
+                        (sessionEnded)="onSessionEnded($event, 'portRealisations')"
+                        (selectedObject)="onSelectedObject($event)"
+                        (createObjectRequested)="onCreateObjectRequested($event)"
+                        (deleteObjectRequested)="onDeleteObjectRequested($event)">
+          </app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('portRealisations')"
+                  [class]="propertyEdited=='portRealisations'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="selectedPortRealisation">
+        <td></td>
+        <td>
+          <app-portrealisation [selectedPortRealisation]="selectedPortRealisation"
+                               [assemblyOptions]="portRealisationAssemblyOptions"
+                               [partOptions]="portRealisationPartOptions"></app-portrealisation>
+        </td>
+        <td></td>
       </tr>
       </tbody>
     </table>

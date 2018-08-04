@@ -9,110 +9,6 @@ export const ALL_DATASETS = gql`
   }
 `;
 
-export const ALL_SYSTEM_SLOTS = gql`
-       query allSystemSlots($datasetId: Int!) {
-          allSystemSlots(datasetId: $datasetId) {
-            datasetId
-            uri
-            label
-            assembly {
-              uri
-              label
-            }
-            parts {
-              uri
-              label
-            }
-            functions {
-              uri
-              label
-            }
-            requirements {
-              uri
-              label
-            }
-            interfaces {
-              uri
-              label
-            }
-          }
-        }
-`;
-
-export const ONE_SYSTEM_SLOT = gql`
-       query oneSystemSlot($datasetId: Int!, $uri: ID) {
-          oneSystemSlot(datasetId: $datasetId, uri: $uri) {
-            datasetId
-            uri
-            label
-            assembly {
-              uri
-            }
-            parts {
-              uri
-            }
-            functions {
-              uri
-            }
-            requirements {
-              uri
-            }
-            interfaces {
-              uri
-            }
-          }
-        }
-`;
-
-export const CREATE_SYSTEM_SLOT = gql`
-  mutation createSystemSlot($datasetId: Int!, $uri: String!, $label: String!) {
-    createSystemSlot (datasetId: $datasetId, uri: $uri, label: $label) {
-      datasetId
-      uri
-      label
-    }
-  }
-`;
-
-export const UPDATE_SYSTEM_SLOT = gql`
-      mutation updateSystemSlot($systemSlotInput: SystemSlotInput!) {
-        updateSystemSlot (systemSlot: $systemSlotInput) {
-          datasetId
-          uri
-          label
-          assembly {
-            uri
-            label
-          }
-          parts {
-            uri
-            label
-          }
-          functions {
-            uri
-            label
-         }
-          requirements {
-            uri
-            label
-         }
-          interfaces {
-            uri
-            label
-          }
-        }
-      }
-`;
-
-export const DELETE_SYSTEM_SLOT = gql`
-  mutation deleteSystemSlot($datasetId: Int!, $uri: String!) {
-    deleteSystemSlot (datasetId: $datasetId, uri: $uri) {
-      datasetId
-      uri
-      label
-    }
-  }
-`;
 
 export const ALL_FUNCTIONS = gql`
        query allFunctions($datasetId: Int!) {
@@ -216,6 +112,64 @@ export const ALL_HAMBURGERS = gql`
               uri
               label
             }
+            portRealisations {
+              uri
+              label
+              assembly {
+                uri
+                label
+              }
+              parts {
+                uri
+                label
+              }
+              systemInterface {
+                uri
+                label
+              }
+            }
+          }
+        }
+`;
+
+export const ONE_HAMBURGER = gql`
+       query oneHamburger($datasetId: Int!, $uri: String!) {
+          oneHamburger(datasetId: $datasetId, uri: $uri) {
+            datasetId
+            uri
+            label
+            assembly {
+              uri
+              label
+              portRealisations {
+                uri
+                label
+              }
+            }
+            parts {
+              uri
+              label
+              portRealisations {
+                uri
+                label
+              }
+            }
+            portRealisations {
+              uri
+              label
+              assembly {
+                uri
+                label
+              }
+              parts {
+                uri
+                label
+              }
+              systemInterface {
+                uri
+                label
+              }
+            }
           }
         }
 `;
@@ -252,6 +206,10 @@ export const UPDATE_HAMBURGER = gql`
             uri
             label
           }
+          portRealisations {
+            uri
+            label
+          }
         }
       }
 `;
@@ -264,6 +222,17 @@ export const DELETE_HAMBURGER = gql`
       label
     }
   }
+`;
+
+export const ALL_NUMERIC_PROPERTIES = gql`
+       query allNumericProperties($datasetId: Int!) {
+          allNumericProperties(datasetId: $datasetId) {
+            datasetId
+            uri
+            label
+            datatypeValue
+          }
+        }
 `;
 
 export const ALL_PERFORMANCES = gql`
@@ -330,6 +299,44 @@ export const DELETE_PERFORMANCE = gql`
   }
 `;
 
+export const CREATE_PORT_REALISATION = gql`
+  mutation createPortRealisation($datasetId: Int!, $uri: String!, $label: String!) {
+    createPortRealisation (datasetId: $datasetId, uri: $uri, label: $label) {
+      datasetId
+      uri
+      label
+    }
+  }
+`;
+
+export const UPDATE_PORT_REALISATION = gql`
+      mutation updatePortRealisation($portRealisationInput: PortRealisationInput!) {
+        updatePortRealisation (portRealisationInput: $portRealisationInput) {
+          datasetId
+          uri
+          label
+          assembly {
+            uri
+            label
+          }
+          parts {
+            uri
+            label
+          }
+        }
+      }
+`;
+
+export const DELETE_PORT_REALISATION = gql`
+  mutation deletePortRealisation($datasetId: Int!, $uri: String!) {
+    deletePortRealisation(datasetId: $datasetId, uri: $uri) {
+      datasetId
+      uri
+      label
+    }
+  }
+`;
+
 export const ALL_REALISATION_MODULES = gql`
    query allRealisationModules($datasetId: Int!) {
           allRealisationModules(datasetId: $datasetId) {
@@ -345,6 +352,10 @@ export const ALL_REALISATION_MODULES = gql`
         label
       }
       performances {
+        uri
+        label
+      }
+      hamburgers {
         uri
         label
       }
@@ -480,6 +491,14 @@ export const ALL_SYSTEM_INTERFACES = gql`
               uri
               label
             }
+            systemSlot0 {
+              uri
+              label
+            }
+            systemSlot1 {
+              uri
+              label
+            }
             requirements {
               uri
               label
@@ -488,13 +507,161 @@ export const ALL_SYSTEM_INTERFACES = gql`
         }
 `;
 
-export const ALL_NUMERIC_PROPERTIES = gql`
-       query allNumericProperties($datasetId: Int!) {
-          allNumericProperties(datasetId: $datasetId) {
+export const CREATE_SYSTEM_INTERFACE = gql`
+  mutation createSystemInterface($datasetId: Int!, $uri: String!, $label: String!) {
+    createSystemInterface (datasetId: $datasetId, uri: $uri, label: $label) {
+      datasetId
+      uri
+      label
+    }
+  }
+`;
+
+export const UPDATE_SYSTEM_INTERFACE = gql`
+      mutation updateSystemInterface($systemInterfaceInput: SystemInterfaceInput!) {
+        updateSystemInterface (systemInterfaceInput: $systemInterfaceInput) {
+          datasetId
+          uri
+          label
+          assembly {
+            uri
+            label
+          }
+          parts {
+            uri
+            label
+          }
+          systemSlot0 {
+            uri
+            label
+          }
+          systemSlot1 {
+            uri
+            label
+          }
+          requirements {
+            uri
+            label
+          }
+        }
+     }
+`;
+
+export const DELETE_SYSTEM_INTERFACE = gql`
+  mutation deleteSystemInterface($datasetId: Int!, $uri: String!) {
+    deleteSystemInterface (datasetId: $datasetId, uri: $uri) {
+      datasetId
+      uri
+      label
+    }
+  }
+`;
+
+export const ALL_SYSTEM_SLOTS = gql`
+       query allSystemSlots($datasetId: Int!) {
+          allSystemSlots(datasetId: $datasetId) {
             datasetId
             uri
             label
-            datatypeValue
+            assembly {
+              uri
+              label
+            }
+            parts {
+              uri
+              label
+            }
+            functions {
+              uri
+              label
+            }
+            requirements {
+              uri
+              label
+            }
+            interfaces {
+              uri
+              label
+            }
+            hamburgers {
+              uri
+              label
+            }
           }
         }
+`;
+
+export const ONE_SYSTEM_SLOT = gql`
+       query oneSystemSlot($datasetId: Int!, $uri: ID) {
+          oneSystemSlot(datasetId: $datasetId, uri: $uri) {
+            datasetId
+            uri
+            label
+            assembly {
+              uri
+            }
+            parts {
+              uri
+            }
+            functions {
+              uri
+            }
+            requirements {
+              uri
+            }
+            interfaces {
+              uri
+            }
+          }
+        }
+`;
+
+export const CREATE_SYSTEM_SLOT = gql`
+  mutation createSystemSlot($datasetId: Int!, $uri: String!, $label: String!) {
+    createSystemSlot (datasetId: $datasetId, uri: $uri, label: $label) {
+      datasetId
+      uri
+      label
+    }
+  }
+`;
+
+export const UPDATE_SYSTEM_SLOT = gql`
+      mutation updateSystemSlot($systemSlotInput: SystemSlotInput!) {
+        updateSystemSlot (systemSlotInput: $systemSlotInput) {
+          datasetId
+          uri
+          label
+          assembly {
+            uri
+            label
+          }
+          parts {
+            uri
+            label
+          }
+          functions {
+            uri
+            label
+          }
+          requirements {
+            uri
+            label
+          }
+          interfaces {
+            uri
+            label
+          }
+        }
+      }
+`;
+
+export const DELETE_SYSTEM_SLOT = gql`
+  mutation deleteSystemSlot($datasetId: Int!, $uri: String!) {
+    deleteSystemSlot (datasetId: $datasetId, uri: $uri) {
+      datasetId
+      uri
+      label
+    }
+  }
 `;

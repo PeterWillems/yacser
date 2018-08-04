@@ -14,16 +14,21 @@
 </div>
 <div *ngIf="editMode && iri && list">
   <table class="table">
-    <tr *ngFor="let item of value; let i = index; ">
+    <tr *ngFor="let item of value; ">
       <td>{{item.uri.substring(item.uri.indexOf('#'))}}</td>
       <td>{{item.label}}</td>
-      <td>
-        <button type="button" (click)="remove(i)"
+      <td *ngIf="options">
+        <button type="button" (click)="remove(item)"
                 class="btn btn-sm"><span class="fa fa-remove fa-lg"></span>
         </button>
       </td>
+      <td *ngIf="!options">
+        <button type="button" (click)="delete(item)"
+                class="btn btn-sm"><span class="fa fa-trash fa-lg"></span>
+        </button>
+      </td>
     </tr>
-    <tr>
+    <tr *ngIf="options">
       <td colspan="2">
         <select class="form-control" [(ngModel)]="selectedOption">
           <option *ngFor="let option of options" [ngValue]="option" [selected]="option===selectedOption">
@@ -37,8 +42,38 @@
         </button>
       </td>
     </tr>
+    <tr *ngIf="!options">
+      <td colspan="3" style="align-content: center">
+        <button type="button" (click)="create()"
+                class="btn btn-sm"><span class="fa fa-asterisk fa-lg"></span>
+        </button>
+      </td>
+    </tr>
   </table>
 </div>
-<div *ngIf="!editMode && iri" (dblclick)="onEditModeChanged()">{{label}}&nbsp;
+<div *ngIf="!editMode && iri && list" (dblclick)="onEditModeChanged()">
+  <ng-container *ngIf="!route">
+    <a *ngFor="let object of value; let last = last; let first = first"
+       href="#" (click)="!!onLocalLink(object)">
+      {{first?'[ ':''}}{{object.label}}{{!last?', ':''}}{{last?' ]':''}}
+    </a>&nbsp;</ng-container>
+  <ng-container *ngIf="route && route!=='#'">
+    <a *ngFor="let object of value;let last = last; let first = first" [routerLink]="[route,{id: object.uri}]">
+      {{first?'[ ':''}}{{object.label}}{{!last?', ':''}}{{last?' ]':''}}
+    </a>&nbsp;</ng-container>
+  <ng-container *ngIf="route && route==='#'">
+    <span *ngFor="let object of value;let last = last; let first = first">
+      {{first?'[ ':''}}{{object.label}}{{!last?', ':''}}{{last?' ]':''}}
+    </span>&nbsp;</ng-container>
+</div>
+<div *ngIf="!editMode && iri && !list" (dblclick)="onEditModeChanged()">
+  <ng-container *ngIf="!route">
+    <a href="#" (click)="!!onLocalLink(value)">
+      {{label}}&nbsp;
+    </a></ng-container>
+  <ng-container *ngIf="route && route!=='#'">
+    <a [routerLink]="[route,{id: value}]">{{label}}&nbsp;</a></ng-container>
+  <ng-container *ngIf="route && route==='#'">
+    <span>{{label}}&nbsp;</span></ng-container>
 </div>
 

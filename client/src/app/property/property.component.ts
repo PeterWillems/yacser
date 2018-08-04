@@ -14,8 +14,13 @@ export class PropertyComponent implements OnInit, OnChanges {
   @Input() options: SeObject[];
   selectedOption: SeObject;
   @Input() list: boolean;
+  @Input() route: string;
+  @Input() disabled: boolean;
   @Output() sessionStarted = new EventEmitter();
   @Output() sessionEnded = new EventEmitter();
+  @Output() selectedObject = new EventEmitter<SeObject>();
+  @Output() createObjectRequested = new EventEmitter();
+  @Output() deleteObjectRequested = new EventEmitter();
   private _sessionRunning: boolean;
 
   constructor() {
@@ -23,6 +28,7 @@ export class PropertyComponent implements OnInit, OnChanges {
     this.iri = false;
     this._sessionRunning = false;
     this.list = false;
+    this.disabled = false;
   }
 
   ngOnInit() {
@@ -42,13 +48,17 @@ export class PropertyComponent implements OnInit, OnChanges {
       if (this.editMode) {
         this._sessionRunning = true;
       }
+    } else if (changes['value']) {
+      console.log('property:ngOnChanges value ' + <SeObject[]>changes['value'].previousValue + ' ' + <SeObject[]>changes['value'].currentValue);
     }
   }
 
   onEditModeChanged(): void {
-    this.editMode = !this.editMode;
-    this._sessionRunning = true;
-    this.sessionStarted.emit(this.editMode);
+    if (!this.disabled) {
+      this.editMode = !this.editMode;
+      this._sessionRunning = true;
+      this.sessionStarted.emit(this.editMode);
+    }
   }
 
   onKey(event: any) {
@@ -79,6 +89,10 @@ export class PropertyComponent implements OnInit, OnChanges {
     }
   }
 
+  onLocalLink(object: SeObject): void {
+    this.selectedObject.emit(object);
+  }
+
   showList(list: Array<SeObject>): string {
     let showString = '';
     if (list) {
@@ -104,10 +118,10 @@ export class PropertyComponent implements OnInit, OnChanges {
     return uri_list;
   }
 
-  remove(index: number): void {
+  remove(object: SeObject): void {
     const tmpValues = <SeObject[]>[];
     for (let i = 0; i < this.value.length; i++) {
-      if (i !== index) {
+      if (this.value[i].uri !== object.uri) {
         tmpValues.push(this.value[i]);
       }
     }
@@ -124,5 +138,17 @@ export class PropertyComponent implements OnInit, OnChanges {
     tmpValues.push(this.selectedOption);
     this.value = tmpValues;
     this.selectedOption = null;
+  }
+
+  create(): void {
+    this.createObjectRequested.emit();
+  }
+
+  delete(object: SeObject): void {
+    this.deleteObjectRequested.emit(object);
+  }
+
+  trackByFn(index: number, item: SeObject) {
+    return item.uri; // or item.id
   }
 }

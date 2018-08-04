@@ -40,6 +40,7 @@
           <app-property [editMode]="propertyEdited=='assembly'" [iri]="true" [options]="allRequirements"
                         [label]="selectedRequirement.assembly?selectedRequirement.assembly.label:' '"
                         [value]="selectedRequirement.assembly?selectedRequirement.assembly.uri:null"
+                        [route]="'/requirements'"
                         (sessionStarted)="onSessionStarted('assembly')"
                         (sessionEnded)="onSessionEnded($event, 'assembly')"></app-property>
         </td>
@@ -56,6 +57,7 @@
           <app-property [editMode]="propertyEdited=='parts'" [iri]="true" [list]="true" [options]="allRequirements"
                         [label]="showList(selectedRequirement.parts)"
                         [value]="selectedRequirement.parts"
+                        [route]="'/requirements'"
                         (sessionStarted)="onSessionStarted('parts')"
                         (sessionEnded)="onSessionEnded($event, 'parts')"></app-property>
         </td>
@@ -70,15 +72,15 @@
       <tr>
         <td>min value</td>
         <td>
-          <app-property [editMode]="propertyEdited=='min value'" [iri]="true" [options]="allNumericProperties"
+          <app-property [editMode]="propertyEdited=='minValue'" [iri]="true" [options]="allNumericProperties"
                         [label]="selectedRequirement.minValue?selectedRequirement.minValue.label:' '"
                         [value]="selectedRequirement.minValue?selectedRequirement.minValue.uri:null"
-                        (sessionStarted)="onSessionStarted('min value')"
-                        (sessionEnded)="onSessionEnded($event, 'min value')"></app-property>
+                        (sessionStarted)="onSessionStarted('minValue')"
+                        (sessionEnded)="onSessionEnded($event, 'minValue')"></app-property>
         </td>
         <td>
-          <button type="button" (click)="onSessionStarted('min value')"
-                  [class]="propertyEdited=='min value'?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
+          <button type="button" (click)="onSessionStarted('minValue')"
+                  [class]="propertyEdited=='minValue'?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
             class="fa fa-edit fa-lg"></span>
           </button>
         </td>
@@ -86,15 +88,15 @@
       <tr>
         <td>max value</td>
         <td>
-          <app-property [editMode]="propertyEdited=='max value'" [iri]="true" [options]="allNumericProperties"
+          <app-property [editMode]="propertyEdited=='maxValue'" [iri]="true" [options]="allNumericProperties"
                         [label]="selectedRequirement.maxValue?selectedRequirement.maxValue.label:' '"
                         [value]="selectedRequirement.maxValue?selectedRequirement.maxValue.uri:null"
-                        (sessionStarted)="onSessionStarted('max value')"
-                        (sessionEnded)="onSessionEnded($event, 'max value')"></app-property>
+                        (sessionStarted)="onSessionStarted('maxValue')"
+                        (sessionEnded)="onSessionEnded($event, 'maxValue')"></app-property>
         </td>
         <td>
-          <button type="button" (click)="onSessionStarted('max value')"
-                  [class]="propertyEdited=='max value'?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
+          <button type="button" (click)="onSessionStarted('maxValue')"
+                  [class]="propertyEdited=='maxValue'?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
             class="fa fa-edit fa-lg"></span>
           </button>
         </td>

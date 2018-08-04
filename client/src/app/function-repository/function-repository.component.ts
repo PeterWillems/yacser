@@ -3,9 +3,10 @@ import {DatasetService} from '../dataset.service';
 import {FunctionService} from '../function.service';
 import {RequirementService} from '../requirement.service';
 import {SystemInterfaceService} from '../system-interface.service';
-import {Dataset, Function, FunctionInput, Requirement, SystemInterface} from '../types';
+import {Dataset, Function, FunctionInput, Requirement, SystemInterface, SystemSlot} from '../types';
 import {SeObjectRepositoryComponent} from '../se-object-repository.component';
 import {Subscription} from 'apollo-client/util/Observable';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-function-repository',
@@ -23,7 +24,9 @@ export class FunctionRepositoryComponent extends SeObjectRepositoryComponent imp
     private _datasetService: DatasetService,
     private _functionService: FunctionService,
     private _requirementService: RequirementService,
-    private _systemInterfaceService: SystemInterfaceService) {
+    private _systemInterfaceService: SystemInterfaceService,
+    private route: ActivatedRoute,
+    private router: Router) {
     super();
   }
 
@@ -32,7 +35,7 @@ export class FunctionRepositoryComponent extends SeObjectRepositoryComponent imp
     if (this.selectedDataset) {
       this._functionService.allFunctionsUpdated.subscribe((functions) => {
         this.allFunctions = functions;
-        this.selectedFunction = <Function>this.resetSelected(this._functionService.selectedFunction, functions);
+        this.route.params.subscribe(params => this.setSelectedFunction(params['id']));
       });
       this._functionService.queryAllFunctions(this.selectedDataset.datasetId);
       this._requirementService.allRequirementsUpdated.subscribe((requirements) => this.allRequirements = requirements);
@@ -45,6 +48,21 @@ export class FunctionRepositoryComponent extends SeObjectRepositoryComponent imp
   onSelect(index: number): void {
     this.selectedFunction = this.allFunctions[index];
     this._functionService.selectedFunction = this.selectedFunction;
+    this.router.navigate(['/functions', {id: this.selectedFunction.uri}]);
+  }
+
+  setSelectedFunction(functionUri: string) {
+    if (functionUri) {
+      for (let index = 0; index < this.allFunctions.length; index++) {
+        if (this.allFunctions[index].uri === functionUri) {
+          this.selectedFunction = this.allFunctions[index];
+          this._functionService.selectedFunction = this.selectedFunction;
+          break;
+        }
+      }
+    } else {
+      this.selectedFunction = <Function>this.resetSelected(this._functionService.selectedFunction, this.allFunctions);
+    }
   }
 
   onCreate(): void {
