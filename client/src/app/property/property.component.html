@@ -56,15 +56,18 @@
     <a *ngFor="let object of value; let last = last; let first = first"
        href="#" (click)="!!onLocalLink(object)">
       {{first?'[ ':''}}{{object.label}}{{!last?', ':''}}{{last?' ]':''}}
-    </a>&nbsp;</ng-container>
+    </a>&nbsp;
+  </ng-container>
   <ng-container *ngIf="route && route!=='#'">
     <a *ngFor="let object of value;let last = last; let first = first" [routerLink]="[route,{id: object.uri}]">
       {{first?'[ ':''}}{{object.label}}{{!last?', ':''}}{{last?' ]':''}}
-    </a>&nbsp;</ng-container>
+    </a>&nbsp;
+  </ng-container>
   <ng-container *ngIf="route && route==='#'">
     <span *ngFor="let object of value;let last = last; let first = first">
       {{first?'[ ':''}}{{object.label}}{{!last?', ':''}}{{last?' ]':''}}
-    </span>&nbsp;</ng-container>
+    </span>&nbsp;
+  </ng-container>
 </div>
 <div *ngIf="!editMode && iri && !list" (dblclick)="onEditModeChanged()">
   <ng-container *ngIf="!route">

@@ -88,6 +88,35 @@
         </td>
       </tr>
       <tr>
+        <td>ports</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='ports'" [iri]="true" [list]="true"
+                        [label]="showList(selectedRealisationModule.ports)"
+                        [value]="selectedRealisationModule.ports"
+                        (sessionStarted)="onSessionStarted('ports')"
+                        (sessionEnded)="onSessionEnded($event, 'ports')"
+                        (selectedObject)="onSelectedObject($event)"
+                        (createObjectRequested)="onCreateObjectRequested($event)"
+                        (deleteObjectRequested)="onDeleteObjectRequested($event)">
+          </app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('ports')"
+                  [class]="propertyEdited=='ports'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="selectedPort">
+        <td></td>
+        <td>
+          <app-realisation-port [selectedRealisationPort]="selectedPort"
+          [assemblyOptions]="portAssemblyOptions"
+          [partOptions]="portPartOptions"></app-realisation-port>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
         <td>hamburgers</td>
         <td class="disabled-property">
           <app-property [editMode]="false" [iri]="true" [list]="true" [disabled]="true"

@@ -85,10 +85,26 @@ export interface RealisationModule extends SeObject {
   assembly: RealisationModule;
   parts: RealisationModule[];
   performances: Performance[];
+  ports: RealisationPort[];
   hamburgers: Hamburger[];
 }
 
 export class RealisationModuleInput {
+  parts: string[];
+  performances: string[];
+  ports: string[];
+
+  constructor(public datasetId: number, public uri: string, public label: string, public assembly: string) {
+  }
+}
+
+export interface RealisationPort extends SeObject {
+  assembly: RealisationPort;
+  parts: RealisationPort[];
+  performances: Performance[];
+}
+
+export class RealisationPortInput {
   parts: string[];
   performances: string[];
 
@@ -160,6 +176,7 @@ export interface Query {
   allSystemInterfaces: SystemInterface[];
   allSystemSlots: SystemSlot[];
   oneHamburger: Hamburger;
+  oneRealisationModule: RealisationModule;
   oneSystemSlot: SystemSlot;
 }
 
@@ -169,6 +186,7 @@ export interface Mutation {
   createPerformance: Performance;
   createPortRealisation: PortRealisation;
   createRealisationModule: RealisationModule;
+  createRealisationPort: RealisationPort;
   createRequirement: Requirement;
   createSystemInterface: SystemInterface;
   createSystemSlot: SystemSlot;

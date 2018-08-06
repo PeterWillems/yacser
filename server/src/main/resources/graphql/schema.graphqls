@@ -57,7 +57,17 @@ type RealisationModule {
 	assembly: RealisationModule
 	parts: [RealisationModule]
 	performances: [Performance]
+	ports: [RealisationPort]
 	hamburgers: [Hamburger]
+}
+
+type RealisationPort {
+	datasetId: Int!
+	uri: String!
+	label: String!
+	assembly: RealisationPort
+	parts: [RealisationPort]
+	performances: [Performance]
 }
 
 type Requirement {
@@ -105,6 +115,8 @@ type Query {
   allSystemSlots(datasetId: Int!): [SystemSlot]
   oneHamburger(datasetId: Int!, uri: String!): Hamburger
   onePortRealisation(datasetId: Int!, uri: String!): PortRealisation
+  oneRealisationModule(datasetId: Int!, uri: String!): RealisationModule
+  oneRealisationPort(datasetId: Int!, uri: String!): RealisationPort
   oneSystemSlot(datasetId: Int!, uri: String!): SystemSlot
 }
 
@@ -156,6 +168,16 @@ input RealisationModuleInput {
 	assembly: String
 	parts: [String]
 	performances: [String]
+	ports: [String]
+}
+
+input RealisationPortInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	assembly: String
+	parts: [String]
+	performances: [String]
 }
 
 input RequirementInput {
@@ -196,6 +218,7 @@ type Mutation {
   createPerformance(datasetId: Int!, uri: String!, label: String!): Performance
   createPortRealisation(datasetId: Int!, uri: String!, label: String!): PortRealisation
   createRealisationModule(datasetId: Int!, uri: String!, label: String!): RealisationModule
+  createRealisationPort(datasetId: Int!, uri: String!, label: String!): RealisationPort
   createRequirement(datasetId: Int!, uri: String!, label: String!): Requirement
   createSystemInterface(datasetId: Int!, uri: String!, label: String!): SystemInterface
   createSystemSlot(datasetId: Int!, uri: String!, label: String!): SystemSlot
@@ -204,6 +227,7 @@ type Mutation {
   updatePerformance(performanceInput: PerformanceInput!): Performance
   updatePortRealisation(portRealisationInput: PortRealisationInput!): PortRealisation
   updateRealisationModule(realisationModuleInput: RealisationModuleInput!): RealisationModule
+  updateRealisationPort(realisationPortInput: RealisationPortInput!): RealisationPort
   updateRequirement(requirementInput: RequirementInput): Requirement
   updateSystemInterface(systemInterfaceInput: SystemInterfaceInput!): SystemInterface
   updateSystemSlot(systemSlotInput: SystemSlotInput!): SystemSlot
@@ -212,6 +236,7 @@ type Mutation {
   deletePerformance(datasetId: Int!, uri: String!): Performance
   deletePortRealisation(datasetId: Int!, uri: String!): PortRealisation
   deleteRealisationModule(datasetId: Int!, uri: String!): RealisationModule
+  deleteRealisationPort(datasetId: Int!, uri: String!): RealisationPort
   deleteRequirement(datasetId: Int!, uri: String!): Requirement
   deleteSystemInterface(datasetId: Int!, uri: String!): SystemInterface
   deleteSystemSlot(datasetId: Int!, uri: String!): SystemSlot

@@ -323,6 +323,10 @@ export const UPDATE_PORT_REALISATION = gql`
             uri
             label
           }
+          systemInterface {
+            uri
+            label
+          }
         }
       }
 `;
@@ -355,12 +359,66 @@ export const ALL_REALISATION_MODULES = gql`
         uri
         label
       }
+      ports {
+        uri
+        label
+        assembly {
+          uri
+          label
+        }
+        parts {
+          uri
+          label
+        }
+      }
       hamburgers {
         uri
         label
       }
     }
   }
+`;
+
+export const ONE_REALISATION_MODULE = gql`
+       query oneRealisationModule($datasetId: Int!, $uri: String!) {
+          oneRealisationModule(datasetId: $datasetId, uri: $uri) {
+            datasetId
+            uri
+            label
+            assembly {
+              uri
+              label
+              ports {
+                uri
+                label
+              }
+            }
+            parts {
+              uri
+              label
+              ports {
+                uri
+                label
+              }
+            }
+            ports {
+              uri
+              label
+              assembly {
+                uri
+                label
+              }
+              parts {
+                uri
+                label
+              }
+              performances {
+                uri
+                label
+              }
+            }
+          }
+        }
 `;
 
 export const CREATE_REALISATION_MODULE = gql`
@@ -398,6 +456,48 @@ export const UPDATE_REALISATION_MODULE = gql`
 export const DELETE_REALISATION_MODULE = gql`
   mutation deleteRealisationModule($datasetId: Int!, $uri: String!) {
     deleteRealisationModule (datasetId: $datasetId, uri: $uri) {
+      datasetId
+      uri
+      label
+    }
+  }
+`;
+
+export const CREATE_REALISATION_PORT = gql`
+  mutation createRealisationPort($datasetId: Int!, $uri: String!, $label: String!) {
+    createRealisationPort (datasetId: $datasetId, uri: $uri, label: $label) {
+      datasetId
+      uri
+      label
+    }
+  }
+`;
+
+export const UPDATE_REALISATION_PORT = gql`
+      mutation updateRealisationPort($realisationPortInput: RealisationPortInput!) {
+        updateRealisationPort (realisationPortInput: $realisationPortInput) {
+          datasetId
+          uri
+          label
+          assembly {
+            uri
+            label
+          }
+          parts {
+            uri
+            label
+          }
+          performances {
+            uri
+            label
+          }
+        }
+      }
+`;
+
+export const DELETE_REALISATION_PORT = gql`
+  mutation deleteRealisationPort($datasetId: Int!, $uri: String!) {
+    deleteRealisationPort(datasetId: $datasetId, uri: $uri) {
       datasetId
       uri
       label

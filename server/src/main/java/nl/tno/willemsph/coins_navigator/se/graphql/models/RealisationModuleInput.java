@@ -9,6 +9,8 @@ public class RealisationModuleInput {
 	private String label;
 	private String assembly;
 	private List<String> parts;
+	private List<String> performances;
+	private List<String> ports;
 
 	public RealisationModuleInput() {
 	}
@@ -56,6 +58,22 @@ public class RealisationModuleInput {
 
 	public void setParts(List<String> parts) {
 		this.parts = parts;
+	}
+
+	public List<String> getPerformances() {
+		return performances;
+	}
+
+	public void setPerformances(List<String> performances) {
+		this.performances = performances;
+	}
+
+	public List<String> getPorts() {
+		return ports;
+	}
+
+	public void setPorts(List<String> ports) {
+		this.ports = ports;
 	}
 
 }

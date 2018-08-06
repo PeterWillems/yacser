@@ -67,6 +67,20 @@ public class RealisationModuleRepository {
 			}
 			putRealisationModule.setParts(parts);
 		}
+		if (realisationModuleInput.getPerformances() != null) {
+			List<URI> performances = new ArrayList<>();
+			for (String performance : realisationModuleInput.getPerformances()) {
+				performances.add(new URI(performance));
+			}
+			putRealisationModule.setPerformances(performances);
+		}
+		if (realisationModuleInput.getPorts() != null) {
+			List<URI> ports = new ArrayList<>();
+			for (String port : realisationModuleInput.getPorts()) {
+				ports.add(new URI(port));
+			}
+			putRealisationModule.setPorts(ports);
+		}
 
 		GetRealisationModule updatedRealisationModule = seService.updateRealisationModule(
 				realisationModuleInput.getDatasetId(), getRealisationModule.getLocalName(), putRealisationModule);

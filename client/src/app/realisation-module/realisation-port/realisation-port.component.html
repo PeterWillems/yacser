@@ -1,0 +1,93 @@
+<div class="card">
+  <div class="card-header">
+    <h6 class="card-title">RealisationPort: "{{selectedRealisationPort.label}}"</h6></div>
+  <div class="card-body">
+    <table class="table table-hover table-bordered table-sm">
+      <thead class="thead-light">
+      <tr class="table-record">
+        <th>property</th>
+        <th>value</th>
+        <th><span class="fa fa-edit fa-lg"></span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>label</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='label'" [value]="selectedRealisationPort.label"
+                        (sessionStarted)="onSessionStarted('label')"
+                        (sessionEnded)="onSessionEnded($event, 'label')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('label')"
+                  [class]="propertyEdited=='label'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>uri</td>
+        <td class="disabled-property">{{selectedRealisationPort.uri}}</td>
+        <td>
+          <button type="button" [disabled]="true"
+                  class="btn  btn-sm"><span class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>assembly</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='assembly'" [iri]="true" [options]="assemblyOptions"
+                        [label]="selectedRealisationPort.assembly?selectedRealisationPort.assembly.label:' '"
+                        [value]="selectedRealisationPort.assembly?selectedRealisationPort.assembly.uri:null"
+                        [route]="'#'"
+                        (sessionStarted)="onSessionStarted('assembly')"
+                        (sessionEnded)="onSessionEnded($event, 'assembly')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('assembly')"
+                  [class]="propertyEdited=='assembly'?'btn btn-primary  btn-sm':'btn  btn-sm'">
+            <span class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>parts</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='parts'" [iri]="true" [list]="true" [options]="partOptions"
+                        [label]="showList(selectedRealisationPort.parts)"
+                        [value]="selectedRealisationPort.parts"
+                        [route]="'#'"
+                        (sessionStarted)="onSessionStarted('parts')"
+                        (sessionEnded)="onSessionEnded($event, 'parts')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('parts')"
+                  [class]="propertyEdited=='parts'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>performances</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='performances'" [iri]="true" [list]="true" [options]="partOptions"
+                        [label]="showList(selectedRealisationPort.performances)"
+                        [value]="selectedRealisationPort.performances"
+                        [route]="'#'"
+                        (sessionStarted)="onSessionStarted('performances')"
+                        (sessionEnded)="onSessionEnded($event, 'performances')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('performances')"
+                  [class]="propertyEdited=='performances'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+

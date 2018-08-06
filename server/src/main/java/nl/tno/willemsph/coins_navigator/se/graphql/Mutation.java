@@ -17,6 +17,8 @@ import nl.tno.willemsph.coins_navigator.se.graphql.models.PortRealisation;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.PortRealisationInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationModule;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationModuleInput;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationPort;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationPortInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Requirement;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RequirementInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemInterface;
@@ -28,6 +30,7 @@ import nl.tno.willemsph.coins_navigator.se.graphql.repositories.HamburgerReposit
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PerformanceRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PortRealisationRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationModuleRepository;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationPortRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RequirementRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemInterfaceRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemSlotRepository;
@@ -40,19 +43,22 @@ public class Mutation implements GraphQLMutationResolver {
 	private final PerformanceRepository performanceRepository;
 	private final PortRealisationRepository portRealisationRepository;
 	private final RealisationModuleRepository realisationModuleRepository;
+	private final RealisationPortRepository realisationPortRepository;
 	private final RequirementRepository requirementRepository;
 	private final SystemInterfaceRepository systemInterfaceRepository;
 	private final SystemSlotRepository systemSlotRepository;
 
 	public Mutation(FunctionRepository functionRepository, HamburgerRepository hamburgerRepository,
 			PerformanceRepository performanceRepository, PortRealisationRepository portRealisationRepository,
-			RealisationModuleRepository realisationModuleRepository, RequirementRepository requirementRepository,
+			RealisationModuleRepository realisationModuleRepository,
+			RealisationPortRepository realisationPortRepository, RequirementRepository requirementRepository,
 			SystemInterfaceRepository systemInterfaceRepository, SystemSlotRepository systemSlotRepository) {
 		this.functionRepository = functionRepository;
 		this.hamburgerRepository = hamburgerRepository;
 		this.performanceRepository = performanceRepository;
 		this.portRealisationRepository = portRealisationRepository;
 		this.realisationModuleRepository = realisationModuleRepository;
+		this.realisationPortRepository = realisationPortRepository;
 		this.requirementRepository = requirementRepository;
 		this.systemInterfaceRepository = systemInterfaceRepository;
 		this.systemSlotRepository = systemSlotRepository;
@@ -95,17 +101,18 @@ public class Mutation implements GraphQLMutationResolver {
 	/*
 	 * PORT REALISATIONS
 	 */
-	public PortRealisation createPortRealisation(int datasetId, String uri, String label) throws URISyntaxException, IOException {
+	public PortRealisation createPortRealisation(int datasetId, String uri, String label)
+			throws URISyntaxException, IOException {
 		PortRealisation newPortRealisation = new PortRealisation(datasetId, uri, label);
 		portRealisationRepository.savePortRealisation(newPortRealisation);
 		return newPortRealisation;
 	}
-	
+
 	public PortRealisation updatePortRealisation(PortRealisationInput portRealisationInput)
 			throws URISyntaxException, IOException {
 		return portRealisationRepository.updateOne(portRealisationInput);
 	}
-	
+
 	public PortRealisation deletePortRealisation(int datasetId, String uri) throws URISyntaxException, IOException {
 		return portRealisationRepository.deleteOne(datasetId, uri);
 	}
@@ -145,6 +152,25 @@ public class Mutation implements GraphQLMutationResolver {
 
 	public RealisationModule deleteRealisationModule(int datasetId, String uri) throws URISyntaxException, IOException {
 		return realisationModuleRepository.deleteOne(datasetId, uri);
+	}
+
+	/*
+	 * REALISATION PORTS
+	 */
+	public RealisationPort createRealisationPort(int datasetId, String uri, String label)
+			throws URISyntaxException, IOException {
+		RealisationPort newRealisationPort = new RealisationPort(datasetId, uri, label);
+		realisationPortRepository.saveRealisationPort(newRealisationPort);
+		return newRealisationPort;
+	}
+
+	public RealisationPort updateRealisationPort(RealisationPortInput realisationPortInput)
+			throws URISyntaxException, IOException {
+		return realisationPortRepository.updateOne(realisationPortInput);
+	}
+
+	public RealisationPort deleteRealisationPort(int datasetId, String uri) throws URISyntaxException, IOException {
+		return realisationPortRepository.deleteOne(datasetId, uri);
 	}
 
 	/*

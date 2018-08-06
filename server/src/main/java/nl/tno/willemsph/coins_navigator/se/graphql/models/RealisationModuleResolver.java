@@ -15,6 +15,7 @@ import nl.tno.willemsph.coins_navigator.se.SeService;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.HamburgerRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PerformanceRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationModuleRepository;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationPortRepository;
 import nl.tno.willemsph.coins_navigator.se.model.GetHamburger;
 import nl.tno.willemsph.coins_navigator.se.model.GetRealisationModule;
 
@@ -22,6 +23,8 @@ import nl.tno.willemsph.coins_navigator.se.model.GetRealisationModule;
 public class RealisationModuleResolver implements GraphQLResolver<RealisationModule> {
 	@Autowired
 	private RealisationModuleRepository realisationModuleRepository;
+	@Autowired
+	private RealisationPortRepository realisationPortRepository;
 	@Autowired
 	private PerformanceRepository performanceRepository;
 	@Autowired
@@ -65,6 +68,20 @@ public class RealisationModuleResolver implements GraphQLResolver<RealisationMod
 			}
 		}
 		return performances;
+	}
+	
+	public List<RealisationPort> getPorts(RealisationModule realisationModule) throws URISyntaxException, IOException {
+		List<RealisationPort> ports = null;
+		GetRealisationModule getRealisationModule = seService.getRealisationModule(realisationModule.getDatasetId(),
+				realisationModule.getUri().getFragment());
+		List<URI> portUris = getRealisationModule.getPorts();
+		if (portUris != null && portUris.size() > 0) {
+			ports = new ArrayList<>();
+			for (URI requirementUri : portUris) {
+				ports.add(realisationPortRepository.findOne(realisationModule.getDatasetId(), requirementUri.toString()));
+			}
+		}
+		return ports;
 	}
 	
 	public List<Hamburger> getHamburgers(RealisationModule realisationModule) throws URISyntaxException, IOException {

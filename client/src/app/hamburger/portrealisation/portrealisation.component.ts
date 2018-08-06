@@ -24,7 +24,7 @@ export class PortrealisationComponent extends SeObjectComponent implements OnIni
 
   ngOnInit() {
     this._systemInterfaceService.allSystemInterfacesUpdated
-      .subscribe((systemIntefaces) => this.allSystemInterfaces = systemIntefaces);
+      .subscribe((systemInterfaces) => this.allSystemInterfaces = systemInterfaces);
     this._systemInterfaceService.queryAllSystemInterfaces(this._datasetService.getSelectedDataset().datasetId);
   }
 

@@ -151,12 +151,7 @@ export class HamburgerService {
         datasetId: portRealisationInput.datasetId,
         uri: portRealisationInput.uri,
         label: portRealisationInput.label
-      },
-      // refetchQueries: [{
-      //   query: ALL_HAMBURGERS, variables: {
-      //     datasetId: portRealisationInput.datasetId
-      //   }
-      // }]
+      }
     }).subscribe((value) => this.portRealisationCreated.emit(value.data.createPortRealisation));
   }
 

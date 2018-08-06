@@ -86,7 +86,7 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
     } else {
       this.selectedPortRealisation = <PortRealisation>seObject;
       this.portRealisationAssemblyOptions = null;
-      this.portRealisationPartOptions = null;
+      this.portRealisationPartOptions = [];
 
       // query the selected Port Realisation
       const subscription = <Subscription>this._hamburgerService.oneHamburgerUpdated.subscribe(oneHamburger => {

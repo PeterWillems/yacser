@@ -1,7 +1,14 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {Mutation, Query, Requirement, RequirementInput} from './types';
-import {ALL_REQUIREMENTS, CREATE_REQUIREMENT, DELETE_REQUIREMENT, UPDATE_REQUIREMENT} from './graphql';
+import {
+  ALL_REQUIREMENTS,
+  ALL_SYSTEM_INTERFACES,
+  ALL_SYSTEM_SLOTS,
+  CREATE_REQUIREMENT,
+  DELETE_REQUIREMENT,
+  UPDATE_REQUIREMENT
+} from './graphql';
 
 
 @Injectable({
