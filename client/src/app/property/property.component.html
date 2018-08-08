@@ -69,7 +69,7 @@
     </span>&nbsp;
   </ng-container>
 </div>
-<div *ngIf="!editMode && iri && !list" (dblclick)="onEditModeChanged()">
+<div *ngIf="!editMode && iri && !list" (dblclick)="options?onEditModeChanged():''">
   <ng-container *ngIf="!route">
     <a href="#" (click)="!!onLocalLink(value)">
       {{label}}&nbsp;

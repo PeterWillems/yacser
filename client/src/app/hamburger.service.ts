@@ -171,7 +171,8 @@ export class HamburgerService {
           label: portRealisationInput.label,
           assembly: portRealisationInput.assembly,
           parts: portRealisationInput.parts,
-          systemInterface: portRealisationInput.systemInterface
+          interface: portRealisationInput.interface,
+          port: portRealisationInput.port
         }
       },
       refetchQueries: [{
@@ -213,8 +214,11 @@ export class HamburgerService {
         portRealisationInput.parts.push(selectedPortRealisation.parts[index].uri);
       }
     }
-    if (selectedPortRealisation.systemInterface) {
-      portRealisationInput.systemInterface = selectedPortRealisation.systemInterface.uri;
+    if (selectedPortRealisation.interface) {
+      portRealisationInput.interface = selectedPortRealisation.interface.uri;
+    }
+    if (selectedPortRealisation.port) {
+      portRealisationInput.port = selectedPortRealisation.port.uri;
     }
 
     return portRealisationInput;

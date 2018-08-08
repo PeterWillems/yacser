@@ -1,6 +1,7 @@
 package nl.tno.willemsph.coins_navigator.se.graphql.models;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,18 @@ public class NumericPropertyResolver implements GraphQLResolver<NumericProperty>
 		GetNumericProperty getNumericProperty = seService.getNumericProperty(numericProperty.getDatasetId(),
 				numericProperty.getUri().getFragment());
 		return getNumericProperty.getDatatypeValue();
+	}
+
+	public URI getType(NumericProperty numericProperty) throws URISyntaxException, IOException {
+		GetNumericProperty getNumericProperty = seService.getNumericProperty(numericProperty.getDatasetId(),
+				numericProperty.getUri().getFragment());
+		return getNumericProperty.getType();
+	}
+	
+	public URI getUnit(NumericProperty numericProperty) throws URISyntaxException, IOException {
+		GetNumericProperty getNumericProperty = seService.getNumericProperty(numericProperty.getDatasetId(),
+				numericProperty.getUri().getFragment());
+		return getNumericProperty.getUnit();
 	}
 
 }

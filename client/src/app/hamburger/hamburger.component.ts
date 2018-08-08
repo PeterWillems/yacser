@@ -1,5 +1,14 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {Hamburger, HamburgerInput, PortRealisation, PortRealisationInput, RealisationModule, SeObject, SystemSlot} from '../types';
+import {
+  Hamburger,
+  HamburgerInput,
+  PortRealisation,
+  PortRealisationInput,
+  RealisationModule,
+  RealisationPort,
+  SeObject, SystemInterface,
+  SystemSlot
+} from '../types';
 import {SeObjectComponent} from '../se-object-component';
 import {HamburgerService} from '../hamburger.service';
 import {SystemSlotService} from '../system-slot.service';
@@ -19,6 +28,8 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
   selectedPortRealisation: PortRealisation;
   portRealisationAssemblyOptions: PortRealisation[];
   portRealisationPartOptions: PortRealisation[];
+  systemInterfaceInterfaceOptions: SystemInterface[];
+  realisationPortPortOptions: RealisationPort[];
 
   constructor(private _hamburgerService: HamburgerService,
               private _systemSlotService: SystemSlotService,
@@ -87,6 +98,7 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
       this.selectedPortRealisation = <PortRealisation>seObject;
       this.portRealisationAssemblyOptions = null;
       this.portRealisationPartOptions = [];
+      this.realisationPortPortOptions = [];
 
       // query the selected Port Realisation
       const subscription = <Subscription>this._hamburgerService.oneHamburgerUpdated.subscribe(oneHamburger => {
@@ -103,6 +115,12 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
               }
             }
           }
+        }
+        if (oneHamburger.functionalUnit) {
+          this.systemInterfaceInterfaceOptions = oneHamburger.functionalUnit.interfaces;
+        }
+        if (oneHamburger.technicalSolution) {
+          this.realisationPortPortOptions = oneHamburger.technicalSolution.ports;
         }
         subscription.unsubscribe();
       });

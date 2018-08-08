@@ -29,7 +29,7 @@ public class GetRequirement extends GetSeObject {
 		queryStr.append("{");
 		queryStr.append("  GRAPH ?graph { ");
 		queryStr.append("      ?requirement se:minValue ?min_value . ");
-		queryStr.append("      ?min_value coins2:datatypeValue ?value . ");
+		queryStr.append("      OPTIONAL { ?min_value coins2:datatypeValue ?value . } ");
 		queryStr.append("  }");
 		queryStr.append("}");
 
@@ -66,7 +66,7 @@ public class GetRequirement extends GetSeObject {
 		queryStr.append("{");
 		queryStr.append("  GRAPH ?graph { ");
 		queryStr.append("      ?requirement se:maxValue ?max_value . ");
-		queryStr.append("      ?max_value coins2:datatypeValue ?value . ");
+		queryStr.append("      OPTIONAL { ?max_value coins2:datatypeValue ?value . } ");
 		queryStr.append("  }");
 		queryStr.append("}");
 

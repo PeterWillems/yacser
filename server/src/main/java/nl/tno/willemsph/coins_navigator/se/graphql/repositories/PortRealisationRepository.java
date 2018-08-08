@@ -66,11 +66,11 @@ public class PortRealisationRepository {
 			}
 			putPortRealisation.setParts(parts);
 		}
-		if (portRealisationInput.getSystemInterface() != null) {
-			putPortRealisation.setSystemInterface(new URI(portRealisationInput.getSystemInterface()));
+		if (portRealisationInput.getInterface() != null) {
+			putPortRealisation.setSystemInterface(new URI(portRealisationInput.getInterface()));
 		}
-		if (portRealisationInput.getRealisationPort() != null) {
-			putPortRealisation.setRealisationPort(new URI(portRealisationInput.getRealisationPort()));
+		if (portRealisationInput.getPort() != null) {
+			putPortRealisation.setRealisationPort(new URI(portRealisationInput.getPort()));
 		}
 
 		GetPortRealisation updatedPortRealisation = seService.updatePortRealisation(portRealisationInput.getDatasetId(),

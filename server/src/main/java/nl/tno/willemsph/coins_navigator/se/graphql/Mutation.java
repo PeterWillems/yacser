@@ -11,6 +11,8 @@ import nl.tno.willemsph.coins_navigator.se.graphql.models.Function;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.FunctionInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Hamburger;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.HamburgerInput;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.NumericProperty;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.NumericPropertyInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Performance;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.PerformanceInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.PortRealisation;
@@ -27,6 +29,7 @@ import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlot;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlotInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.FunctionRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.HamburgerRepository;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.NumericPropertyRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PerformanceRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PortRealisationRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationModuleRepository;
@@ -40,6 +43,7 @@ public class Mutation implements GraphQLMutationResolver {
 
 	private final FunctionRepository functionRepository;
 	private final HamburgerRepository hamburgerRepository;
+	private final NumericPropertyRepository numericPropertyRepository;
 	private final PerformanceRepository performanceRepository;
 	private final PortRealisationRepository portRealisationRepository;
 	private final RealisationModuleRepository realisationModuleRepository;
@@ -49,12 +53,14 @@ public class Mutation implements GraphQLMutationResolver {
 	private final SystemSlotRepository systemSlotRepository;
 
 	public Mutation(FunctionRepository functionRepository, HamburgerRepository hamburgerRepository,
-			PerformanceRepository performanceRepository, PortRealisationRepository portRealisationRepository,
+			NumericPropertyRepository numericPropertyRepository, PerformanceRepository performanceRepository,
+			PortRealisationRepository portRealisationRepository,
 			RealisationModuleRepository realisationModuleRepository,
 			RealisationPortRepository realisationPortRepository, RequirementRepository requirementRepository,
 			SystemInterfaceRepository systemInterfaceRepository, SystemSlotRepository systemSlotRepository) {
 		this.functionRepository = functionRepository;
 		this.hamburgerRepository = hamburgerRepository;
+		this.numericPropertyRepository = numericPropertyRepository;
 		this.performanceRepository = performanceRepository;
 		this.portRealisationRepository = portRealisationRepository;
 		this.realisationModuleRepository = realisationModuleRepository;
@@ -96,6 +102,24 @@ public class Mutation implements GraphQLMutationResolver {
 
 	public Hamburger deleteHamburger(int datasetId, String uri) throws URISyntaxException, IOException {
 		return hamburgerRepository.deleteOne(datasetId, uri);
+	}
+
+	/*
+	 * NUMERIC PROPERTY
+	 */
+	public NumericProperty createNumericProperty(int datasetId, String uri, String label)
+			throws URISyntaxException, IOException {
+		NumericProperty newNumericProperty = new NumericProperty(datasetId, uri, label);
+		numericPropertyRepository.saveNumericProperty(newNumericProperty);
+		return newNumericProperty;
+	}
+	
+	public NumericProperty updateNumericProperty(NumericPropertyInput numericPropertyInput) throws URISyntaxException, IOException {
+		return numericPropertyRepository.updateOne(numericPropertyInput);
+	}
+
+	public NumericProperty deleteNumericProperty(int datasetId, String uri) throws URISyntaxException, IOException {
+		return numericPropertyRepository.deleteOne(datasetId, uri);
 	}
 
 	/*

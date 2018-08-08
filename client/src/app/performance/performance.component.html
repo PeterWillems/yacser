@@ -70,18 +70,26 @@
       <tr>
         <td>value</td>
         <td>
-          <app-property [editMode]="propertyEdited=='value'" [iri]="true" [options]="allNumericProperties"
+          <app-property [editMode]="propertyEdited=='value'" [iri]="true"
                         [label]="selectedPerformance.value?selectedPerformance.value.label:' '"
-                        [value]="selectedPerformance.value?selectedPerformance.value.uri:null"
+                        [value]="selectedPerformance.value"
+                        (selectedObject)="onSelectedObject($event)"
                         (sessionStarted)="onSessionStarted('value')"
                         (sessionEnded)="onSessionEnded($event, 'value')"></app-property>
         </td>
         <td>
-          <button type="button" (click)="onSessionStarted('value')"
-                  [class]="propertyEdited=='value'?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
-            class="fa fa-edit fa-lg"></span>
+          <button type="button" (click)="selectedPerformance.value?onDeleteObjectRequested():onCreateObjectRequested()"
+                  class="btn  btn-sm"><span
+            [class]="selectedPerformance.value?'fa fa-trash fa-lg':'fa fa-asterisk fa-lg'"></span>
           </button>
         </td>
+      </tr>
+      <tr *ngIf="selectedNumericProperty">
+        <td></td>
+        <td>
+          <app-numeric-property [selectedNumericProperty]="selectedNumericProperty"></app-numeric-property>
+        </td>
+        <td></td>
       </tr>
       </tbody>
     </table>

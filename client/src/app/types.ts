@@ -50,6 +50,15 @@ export interface NumericProperty {
   uri: string;
   label: string;
   datatypeValue: number;
+  type: string;
+  unit: string;
+}
+
+export class NumericPropertyInput {
+  datatypeValue: number;
+
+  constructor(public datasetId: number, public uri: string, public label: string) {
+  }
 }
 
 export interface Performance extends SeObject {
@@ -69,13 +78,14 @@ export class PerformanceInput {
 export interface PortRealisation extends SeObject {
   assembly: PortRealisation;
   parts: PortRealisation[];
-  systemInterface: SystemInterface;
-//  realisationPort: RealisationPort;
+  interface: SystemInterface;
+  port: RealisationPort;
 }
 
 export class PortRealisationInput {
   parts: string[];
-  systemInterface: string;
+  interface: string;
+  port: string;
 
   constructor(public datasetId: number, public uri: string, public label: string, public assembly: string) {
   }

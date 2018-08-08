@@ -107,10 +107,18 @@ export const ALL_HAMBURGERS = gql`
             functionalUnit {
               uri
               label
+              interfaces {
+                uri
+                label
+              }
             }
             technicalSolution {
               uri
               label
+              ports {
+                uri
+                label
+              }
             }
             portRealisations {
               uri
@@ -123,7 +131,11 @@ export const ALL_HAMBURGERS = gql`
                 uri
                 label
               }
-              systemInterface {
+              interface {
+                uri
+                label
+              }
+              port {
                 uri
                 label
               }
@@ -154,6 +166,22 @@ export const ONE_HAMBURGER = gql`
                 label
               }
             }
+            functionalUnit {
+              uri
+              label
+              interfaces {
+                uri
+                label
+              }
+            }
+            technicalSolution {
+              uri
+              label
+              ports {
+                uri
+                label
+              }
+            }
             portRealisations {
               uri
               label
@@ -165,7 +193,11 @@ export const ONE_HAMBURGER = gql`
                 uri
                 label
               }
-              systemInterface {
+              interface {
+                uri
+                label
+              }
+              port {
                 uri
                 label
               }
@@ -231,8 +263,45 @@ export const ALL_NUMERIC_PROPERTIES = gql`
             uri
             label
             datatypeValue
+            type
+            unit
           }
         }
+`;
+
+export const CREATE_NUMERIC_PROPERTY = gql`
+  mutation createNumericProperty($datasetId: Int!, $uri: String!, $label: String!) {
+    createNumericProperty (datasetId: $datasetId, uri: $uri, label: $label) {
+      datasetId
+      uri
+      label
+    }
+  }
+`;
+
+export const UPDATE_NUMERIC_PROPERTY = gql`
+      mutation updateNumericProperty($numericPropertyInput: NumericPropertyInput!) {
+        updateNumericProperty (numericPropertyInput: $numericPropertyInput) {
+          datasetId
+          uri
+          label
+          datatypeValue
+          type
+          unit
+        }
+      }
+`;
+export const DELETE_NUMERIC_PROPERTY = gql`
+  mutation deleteNumericProperty($datasetId: Int!, $uri: String!) {
+    deleteNumericProperty (datasetId: $datasetId, uri: $uri) {
+      datasetId
+      uri
+      label
+      datatypeValue
+      type
+      unit
+    }
+  }
 `;
 
 export const ALL_PERFORMANCES = gql`
@@ -252,6 +321,9 @@ export const ALL_PERFORMANCES = gql`
             value {
               uri
               label
+              datatypeValue
+              type
+              unit
             }
           }
         }
@@ -284,6 +356,9 @@ export const UPDATE_PERFORMANCE = gql`
           value {
             uri
             label
+            datatypeValue
+            type
+            unit
           }
         }
       }
@@ -323,7 +398,11 @@ export const UPDATE_PORT_REALISATION = gql`
             uri
             label
           }
-          systemInterface {
+          interface {
+            uri
+            label
+          }
+          port {
             uri
             label
           }
@@ -522,10 +601,16 @@ export const ALL_REQUIREMENTS = gql`
             minValue {
               uri
               label
+              datatypeValue
+              type
+              unit
             }
             maxValue {
               uri
               label
+              datatypeValue
+              type
+              unit
             }
           }
         }
@@ -558,10 +643,16 @@ export const UPDATE_REQUIREMENT = gql`
           minValue {
             uri
             label
+            datatypeValue
+            type
+            unit
           }
           maxValue {
             uri
             label
+            datatypeValue
+            type
+            unit
           }
         }
       }

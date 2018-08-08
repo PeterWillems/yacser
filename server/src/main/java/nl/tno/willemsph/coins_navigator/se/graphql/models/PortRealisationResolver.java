@@ -13,6 +13,7 @@ import com.coxautodev.graphql.tools.GraphQLResolver;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.PortRealisationRepository;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RealisationPortRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemInterfaceRepository;
 import nl.tno.willemsph.coins_navigator.se.model.GetPortRealisation;
 
@@ -23,18 +24,23 @@ public class PortRealisationResolver implements GraphQLResolver<PortRealisation>
 	@Autowired
 	private PortRealisationRepository portRealisationRepository;
 	@Autowired
+	private RealisationPortRepository realisationPortRepository;
+	@Autowired
 	private SeService seService;
 
 	public PortRealisation getAssembly(PortRealisation portRealisation) throws URISyntaxException, IOException {
-		GetPortRealisation getPortRealisation = seService.getPortRealisation(portRealisation.getDatasetId(), portRealisation.getUri().getFragment());
+		GetPortRealisation getPortRealisation = seService.getPortRealisation(portRealisation.getDatasetId(),
+				portRealisation.getUri().getFragment());
 		URI assemblyUri = getPortRealisation.getAssembly();
-		return assemblyUri != null ? portRealisationRepository.findOne(portRealisation.getDatasetId(), assemblyUri.toString())
+		return assemblyUri != null
+				? portRealisationRepository.findOne(portRealisation.getDatasetId(), assemblyUri.toString())
 				: null;
 	}
 
 	public List<PortRealisation> getParts(PortRealisation portRealisation) throws URISyntaxException, IOException {
 		List<PortRealisation> parts = null;
-		GetPortRealisation getPortRealisation = seService.getPortRealisation(portRealisation.getDatasetId(), portRealisation.getUri().getFragment());
+		GetPortRealisation getPortRealisation = seService.getPortRealisation(portRealisation.getDatasetId(),
+				portRealisation.getUri().getFragment());
 		List<URI> partUris = getPortRealisation.getParts();
 		if (partUris != null && partUris.size() > 0) {
 			parts = new ArrayList<>();
@@ -45,11 +51,20 @@ public class PortRealisationResolver implements GraphQLResolver<PortRealisation>
 		return parts;
 	}
 
-	public SystemInterface getSystemInterface(PortRealisation portRealisation) throws URISyntaxException, IOException {
-		GetPortRealisation getPortRealisation = seService.getPortRealisation(portRealisation.getDatasetId(), portRealisation.getUri().getFragment());
-		URI systemInterfaceUri = getPortRealisation.getSystemInterface();
-		return systemInterfaceUri != null
-				? systemInterfaceRepository.findOne(portRealisation.getDatasetId(), systemInterfaceUri.toString())
+	public SystemInterface getInterface(PortRealisation portRealisation) throws URISyntaxException, IOException {
+		GetPortRealisation getPortRealisation = seService.getPortRealisation(portRealisation.getDatasetId(),
+				portRealisation.getUri().getFragment());
+		URI interfaceUri = getPortRealisation.getSystemInterface();
+		return interfaceUri != null
+				? systemInterfaceRepository.findOne(portRealisation.getDatasetId(), interfaceUri.toString())
+				: null;
+	}
+
+	public RealisationPort getPort(PortRealisation portRealisation) throws URISyntaxException, IOException {
+		GetPortRealisation getPortRealisation = seService.getPortRealisation(portRealisation.getDatasetId(),
+				portRealisation.getUri().getFragment());
+		URI portUri = getPortRealisation.getRealisationPort();
+		return portUri != null ? realisationPortRepository.findOne(portRealisation.getDatasetId(), portUri.toString())
 				: null;
 	}
 

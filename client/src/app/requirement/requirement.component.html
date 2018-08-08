@@ -72,34 +72,45 @@
       <tr>
         <td>min value</td>
         <td>
-          <app-property [editMode]="propertyEdited=='minValue'" [iri]="true" [options]="allNumericProperties"
+          <app-property [editMode]="propertyEdited=='minValue'" [iri]="true"
                         [label]="selectedRequirement.minValue?selectedRequirement.minValue.label:' '"
-                        [value]="selectedRequirement.minValue?selectedRequirement.minValue.uri:null"
+                        [value]="selectedRequirement.minValue"
+                        (selectedObject)="onSelectedObject($event)"
                         (sessionStarted)="onSessionStarted('minValue')"
                         (sessionEnded)="onSessionEnded($event, 'minValue')"></app-property>
         </td>
         <td>
-          <button type="button" (click)="onSessionStarted('minValue')"
-                  [class]="propertyEdited=='minValue'?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
-            class="fa fa-edit fa-lg"></span>
+          <button type="button"
+                  (click)="selectedRequirement.minValue?onDeleteObjectRequested('minValue'):onCreateObjectRequested('minValue')"
+                  class="btn  btn-sm"><span
+            [class]="selectedRequirement.minValue?'fa fa-trash fa-lg':'fa fa-asterisk fa-lg'"></span>
           </button>
         </td>
       </tr>
       <tr>
         <td>max value</td>
         <td>
-          <app-property [editMode]="propertyEdited=='maxValue'" [iri]="true" [options]="allNumericProperties"
+          <app-property [editMode]="propertyEdited=='maxValue'" [iri]="true"
                         [label]="selectedRequirement.maxValue?selectedRequirement.maxValue.label:' '"
-                        [value]="selectedRequirement.maxValue?selectedRequirement.maxValue.uri:null"
+                        [value]="selectedRequirement.maxValue"
+                        (selectedObject)="onSelectedObject($event)"
                         (sessionStarted)="onSessionStarted('maxValue')"
                         (sessionEnded)="onSessionEnded($event, 'maxValue')"></app-property>
         </td>
         <td>
-          <button type="button" (click)="onSessionStarted('maxValue')"
-                  [class]="propertyEdited=='maxValue'?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
-            class="fa fa-edit fa-lg"></span>
+          <button type="button"
+                  (click)="selectedRequirement.maxValue?onDeleteObjectRequested('maxValue'):onCreateObjectRequested('maxValue')"
+                  class="btn  btn-sm"><span
+            [class]="selectedRequirement.maxValue?'fa fa-trash fa-lg':'fa fa-asterisk fa-lg'"></span>
           </button>
         </td>
+      </tr>
+      <tr *ngIf="selectedNumericProperty">
+        <td></td>
+        <td>
+          <app-numeric-property [selectedNumericProperty]="selectedNumericProperty"></app-numeric-property>
+        </td>
+        <td></td>
       </tr>
       </tbody>
     </table>

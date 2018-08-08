@@ -8,6 +8,8 @@ public class NumericProperty {
 	private URI uri;
 	private String label;
 	private Double datatypeValue;
+	private URI type;
+	private URI unit;
 
 	public NumericProperty(int datasetId, String uriString, String labelString) throws URISyntaxException {
 		this.datasetId = datasetId;
@@ -45,6 +47,22 @@ public class NumericProperty {
 
 	public void setDatatypeValue(Double datatypeValue) {
 		this.datatypeValue = datatypeValue;
+	}
+
+	public URI getType() {
+		return type;
+	}
+
+	public void setType(URI type) {
+		this.type = type;
+	}
+
+	public URI getUnit() {
+		return unit;
+	}
+
+	public void setUnit(URI unit) {
+		this.unit = unit;
 	}
 
 }

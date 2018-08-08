@@ -30,6 +30,8 @@ type NumericProperty {
 	uri: String!
 	label: String!
 	datatypeValue: Float
+	type: String
+	unit: String
 }
 
 type Performance {
@@ -47,7 +49,8 @@ type PortRealisation {
 	label: String!
 	assembly: PortRealisation
 	parts: [PortRealisation]
-	systemInterface: SystemInterface
+	interface: SystemInterface
+	port: RealisationPort
 }
 
 type RealisationModule {
@@ -143,6 +146,13 @@ input HamburgerInput {
 	portRealisations: [String]
 }
 
+input NumericPropertyInput {
+	datasetId: Int!
+	uri: String!
+	label: String
+	datatypeValue: Float
+}
+
 input PerformanceInput {
 	datasetId: Int!
 	uri: String!
@@ -158,7 +168,8 @@ input PortRealisationInput {
 	label: String
 	assembly: String
 	parts: [String]
-	systemInterface: String
+	interface: String
+	port: String
 }
 
 input RealisationModuleInput {
@@ -215,6 +226,7 @@ input SystemSlotInput {
 type Mutation {
   createFunction(datasetId: Int!, uri: String!, label: String!): Function
   createHamburger(datasetId: Int!, uri: String!, label: String!): Hamburger
+  createNumericProperty(datasetId: Int!, uri: String!, label: String!): NumericProperty
   createPerformance(datasetId: Int!, uri: String!, label: String!): Performance
   createPortRealisation(datasetId: Int!, uri: String!, label: String!): PortRealisation
   createRealisationModule(datasetId: Int!, uri: String!, label: String!): RealisationModule
@@ -224,6 +236,7 @@ type Mutation {
   createSystemSlot(datasetId: Int!, uri: String!, label: String!): SystemSlot
   updateFunction(functionInput: FunctionInput!): Function
   updateHamburger(hamburgerInput: HamburgerInput!): Hamburger
+  updateNumericProperty(numericPropertyInput: NumericPropertyInput!): NumericProperty
   updatePerformance(performanceInput: PerformanceInput!): Performance
   updatePortRealisation(portRealisationInput: PortRealisationInput!): PortRealisation
   updateRealisationModule(realisationModuleInput: RealisationModuleInput!): RealisationModule
@@ -233,6 +246,7 @@ type Mutation {
   updateSystemSlot(systemSlotInput: SystemSlotInput!): SystemSlot
   deleteFunction(datasetId: Int!, uri: String!): Function
   deleteHamburger(datasetId: Int!, uri: String!): Hamburger
+  deleteNumericProperty(datasetId: Int!, uri: String!): NumericProperty
   deletePerformance(datasetId: Int!, uri: String!): Performance
   deletePortRealisation(datasetId: Int!, uri: String!): PortRealisation
   deleteRealisationModule(datasetId: Int!, uri: String!): RealisationModule

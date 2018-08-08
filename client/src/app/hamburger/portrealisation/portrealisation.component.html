@@ -69,18 +69,35 @@
         </td>
       </tr>
       <tr>
-        <td>system interface</td>
+        <td>interface</td>
         <td>
-          <app-property [editMode]="propertyEdited=='systemInterface'" [iri]="true" [options]="allSystemInterfaces"
-                        [label]="selectedPortRealisation.systemInterface?selectedPortRealisation.systemInterface.label:' '"
-                        [value]="selectedPortRealisation.systemInterface?selectedPortRealisation.systemInterface.uri:null"
+          <app-property [editMode]="propertyEdited=='interface'" [iri]="true" [options]="interfaceOptions"
+                        [label]="selectedPortRealisation.interface?selectedPortRealisation.interface.label:' '"
+                        [value]="selectedPortRealisation.interface?selectedPortRealisation.interface.uri:null"
                         [route]="'#'"
-                        (sessionStarted)="onSessionStarted('systemInterface')"
-                        (sessionEnded)="onSessionEnded($event, 'systemInterface')"></app-property>
+                        (sessionStarted)="onSessionStarted('interface')"
+                        (sessionEnded)="onSessionEnded($event, 'interface')"></app-property>
         </td>
         <td>
-          <button type="button" (click)="onSessionStarted('systemInterface')"
-                  [class]="propertyEdited=='systemInterface'?'btn btn-primary  btn-sm':'btn  btn-sm'">
+          <button type="button" (click)="onSessionStarted('interface')"
+                  [class]="propertyEdited=='interface'?'btn btn-primary  btn-sm':'btn  btn-sm'">
+            <span class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>port</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='port'" [iri]="true" [options]="portOptions"
+                        [label]="selectedPortRealisation.port?selectedPortRealisation.port.label:' '"
+                        [value]="selectedPortRealisation.port?selectedPortRealisation.port.uri:null"
+                        [route]="'#'"
+                        (sessionStarted)="onSessionStarted('port')"
+                        (sessionEnded)="onSessionEnded($event, 'port')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('port')"
+                  [class]="propertyEdited=='port'?'btn btn-primary  btn-sm':'btn  btn-sm'">
             <span class="fa fa-edit fa-lg"></span>
           </button>
         </td>

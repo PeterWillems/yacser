@@ -25,11 +25,11 @@ public class GetPerformance extends GetSeObject {
 		ParameterizedSparqlString queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
 		queryStr.setIri("graph", getDatasetUri());
 		queryStr.setIri("performance", getUri().toString());
-		queryStr.append("SELECT ?value ?datatype_value ");
+		queryStr.append("SELECT ?value ");
 		queryStr.append("{");
 		queryStr.append("  GRAPH ?graph { ");
 		queryStr.append("      ?performance se:value ?value . ");
-		queryStr.append("      ?value coins2:datatypeValue ?datatype_value . ");
+		queryStr.append("      OPTIONAL { ?value coins2:datatypeValue ?datatype_value . } ");
 		queryStr.append("  }");
 		queryStr.append("}");
 
@@ -41,20 +41,48 @@ public class GetPerformance extends GetSeObject {
 		}
 		return valueUri;
 	}
-
-	public void updateValue(URI value) throws IOException, URISyntaxException {
+	
+	public void deleteValue() throws IOException, URISyntaxException {
 		ParameterizedSparqlString queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
 		queryStr.setIri("graph", getDatasetUri());
 		queryStr.setIri("performance", getUri().toString());
-		queryStr.append("  DELETE { GRAPH ?graph { ?performance se:value ?value . }} ");
-		if (value != null) {
-			queryStr.setIri("the_value", value.toString());
-			queryStr.append("  INSERT { GRAPH ?graph { ?performance se:value ?the_value . }} ");
-		}
-		queryStr.append("WHERE { GRAPH ?graph { OPTIONAL { ?performance se:value ?value . }} ");
-		queryStr.append("}");
+
+		queryStr.append("  DELETE { ");
+		queryStr.append("    GRAPH ?graph { ");
+		queryStr.append("      ?performance se:value ?value . ");
+		queryStr.append("    } ");
+		queryStr.append("  } ");
+		queryStr.append("  WHERE { ");
+		queryStr.append("    GRAPH ?graph { ");
+		queryStr.append("      { ");
+		queryStr.append("        ?performance se:value ?value . ");
+		queryStr.append("      } ");
+		queryStr.append("    }");
+		queryStr.append("  }");
 
 		getEmbeddedServer().update(queryStr);
+	}
+
+	public void insertValue(URI value) throws IOException, URISyntaxException {
+		if (value != null) {
+			ParameterizedSparqlString queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
+			queryStr.setIri("graph", getDatasetUri());
+			queryStr.setIri("performance", getUri().toString());
+			queryStr.setIri("value", value.toString());
+			queryStr.append("  INSERT { ");
+			queryStr.append("    GRAPH ?graph { ");
+			queryStr.append("      ?performance se:value ?value . ");
+			queryStr.append("    } ");
+			queryStr.append("  }");
+			queryStr.append("WHERE { } ");
+
+			getEmbeddedServer().update(queryStr);
+		}
+	}
+	
+	public void updateValue(URI value) throws IOException, URISyntaxException {
+		deleteValue();
+		insertValue(value);
 	}
 
 	public void delete() throws IOException, URISyntaxException {

@@ -36,6 +36,7 @@ export class RequirementRepositoryComponent extends SeObjectRepositoryComponent 
   }
 
   setSelectedRequirement(requirementUri: string) {
+    console.log('setSelectedRequirement requirementUri=' + requirementUri);
     if (requirementUri) {
       for (let index = 0; index < this.allRequirements.length; index++) {
         if (this.allRequirements[index].uri === requirementUri) {
@@ -50,6 +51,7 @@ export class RequirementRepositoryComponent extends SeObjectRepositoryComponent 
   }
 
   onSelect(index: number): void {
+    console.log('onSelect index=' + index);
     this.selectedRequirement = this.allRequirements[index];
     this._requirementService.selectedRequirement = this.selectedRequirement;
     this.router.navigate(['/requirements', {id: this.selectedRequirement.uri}]);

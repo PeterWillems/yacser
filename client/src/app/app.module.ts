@@ -25,6 +25,7 @@ import {SysteminterfaceComponent} from './systeminterface/systeminterface.compon
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {PortrealisationComponent} from './hamburger/portrealisation/portrealisation.component';
 import { RealisationPortComponent } from './realisation-module/realisation-port/realisation-port.component';
+import { NumericPropertyComponent } from './numeric-property/numeric-property.component';
 
 const appRoutes: Routes = [
     {path: '', redirectTo: '/datasets', pathMatch: 'full'},
@@ -63,6 +64,7 @@ const appRoutes: Routes = [
     SysteminterfaceComponent,
     PortrealisationComponent,
     RealisationPortComponent,
+    NumericPropertyComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,75 @@
+<div class="card">
+  <div class="card-header">
+    <h6 class="card-title">Numeric Property: "{{selectedNumericProperty.label}}"</h6></div>
+  <div class="card-body">
+    <table class="table table-hover table-bordered table-sm">
+      <thead class="thead-light">
+      <tr class="table-record">
+        <th>property</th>
+        <th>value</th>
+        <th><span class="fa fa-edit fa-lg"></span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>label</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='label'" [value]="selectedNumericProperty.label"
+                        (sessionStarted)="onSessionStarted('label')"
+                        (sessionEnded)="onSessionEnded($event, 'label')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('label')"
+                  [class]="propertyEdited=='label'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>uri</td>
+        <td class="disabled-property">{{selectedNumericProperty.uri}}</td>
+        <td>
+          <button type="button" [disabled]="true"
+                  class="btn  btn-sm"><span class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>datatype value</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='datatypeValue'"
+                        [value]="selectedNumericProperty.datatypeValue"
+                        (sessionStarted)="onSessionStarted('datatypeValue')"
+                        (sessionEnded)="onSessionEnded($event, 'datatypeValue')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('datatypeValue')"
+                  [class]="propertyEdited=='datatypeValue'?'btn btn-primary  btn-sm':'btn  btn-sm'">
+            <span class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>type</td>
+        <td class="disabled-property">{{selectedNumericProperty.type}}</td>
+        <td>
+          <button type="button" [disabled]="true"
+                  class="btn  btn-sm"><span class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>unit</td>
+        <td class="disabled-property">{{selectedNumericProperty.unit}}</td>
+        <td>
+          <button type="button" [disabled]="true"
+                  class="btn  btn-sm"><span class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+

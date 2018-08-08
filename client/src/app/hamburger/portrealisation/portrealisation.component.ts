@@ -1,9 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {PortRealisation, SystemInterface} from '../../types';
+import {PortRealisation, RealisationPort, SystemInterface} from '../../types';
 import {SeObjectComponent} from '../../se-object-component';
 import {HamburgerService} from '../../hamburger.service';
 import {SystemInterfaceService} from '../../system-interface.service';
 import {DatasetService} from '../../dataset.service';
+import {RealisationModuleService} from '../../realisation-module.service';
 
 @Component({
   selector: 'app-portrealisation',
@@ -14,18 +15,16 @@ export class PortrealisationComponent extends SeObjectComponent implements OnIni
   @Input() selectedPortRealisation: PortRealisation;
   @Input() assemblyOptions: PortRealisation[];
   @Input() partOptions: PortRealisation[];
-  allSystemInterfaces: SystemInterface[];
+  @Input() interfaceOptions: SystemInterface[];
+  @Input() portOptions: RealisationPort[];
+
 
   constructor(private _hamburgerService: HamburgerService,
-              private _systemInterfaceService: SystemInterfaceService,
               private _datasetService: DatasetService) {
     super();
   }
 
   ngOnInit() {
-    this._systemInterfaceService.allSystemInterfacesUpdated
-      .subscribe((systemInterfaces) => this.allSystemInterfaces = systemInterfaces);
-    this._systemInterfaceService.queryAllSystemInterfaces(this._datasetService.getSelectedDataset().datasetId);
   }
 
   onSessionEnded(propertyValue: string, propertyLabel: string) {

@@ -9,8 +9,8 @@ public class PortRealisationInput {
 	private String label;
 	private String assembly;
 	private List<String> parts;
-	private String systemInterface;
-	private String realisationPort;
+	private String _interface;
+	private String port;
 
 	public PortRealisationInput() {
 	}
@@ -60,20 +60,20 @@ public class PortRealisationInput {
 		this.parts = parts;
 	}
 
-	public String getSystemInterface() {
-		return systemInterface;
+	public String getInterface() {
+		return _interface;
 	}
 
-	public void setSystemInterface(String systemInterface) {
-		this.systemInterface = systemInterface;
+	public void setInterface(String _interface) {
+		this._interface = _interface;
 	}
 
-	public String getRealisationPort() {
-		return realisationPort;
+	public String getPort() {
+		return port;
 	}
 
-	public void setRealisationPort(String realisationPort) {
-		this.realisationPort = realisationPort;
+	public void setPort(String port) {
+		this.port = port;
 	}
 
 }
