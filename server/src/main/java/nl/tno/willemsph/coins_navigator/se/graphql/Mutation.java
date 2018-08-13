@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Function;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.FunctionInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Hamburger;
@@ -79,8 +80,8 @@ public class Mutation implements GraphQLMutationResolver {
 		return newFunction;
 	}
 
-	public Function updateFunction(FunctionInput functionInput) throws URISyntaxException, IOException {
-		return functionRepository.updateOne(functionInput);
+	public Function updateFunction(FunctionInput functionInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
+		return functionRepository.updateOne(functionInput, coinsObjectInput);
 	}
 
 	public Function deleteFunction(int datasetId, String uri) throws URISyntaxException, IOException {
@@ -113,8 +114,9 @@ public class Mutation implements GraphQLMutationResolver {
 		numericPropertyRepository.saveNumericProperty(newNumericProperty);
 		return newNumericProperty;
 	}
-	
-	public NumericProperty updateNumericProperty(NumericPropertyInput numericPropertyInput) throws URISyntaxException, IOException {
+
+	public NumericProperty updateNumericProperty(NumericPropertyInput numericPropertyInput)
+			throws URISyntaxException, IOException {
 		return numericPropertyRepository.updateOne(numericPropertyInput);
 	}
 
@@ -207,8 +209,9 @@ public class Mutation implements GraphQLMutationResolver {
 		return newRequirement;
 	}
 
-	public Requirement updateRequirement(RequirementInput requirementInput) throws URISyntaxException, IOException {
-		return requirementRepository.updateOne(requirementInput);
+	public Requirement updateRequirement(RequirementInput requirementInput, CoinsObjectInput coinsObjectInput)
+			throws URISyntaxException, IOException {
+		return requirementRepository.updateOne(requirementInput, coinsObjectInput);
 	}
 
 	public Requirement deleteRequirement(int datasetId, String uri) throws URISyntaxException, IOException {
@@ -224,8 +227,9 @@ public class Mutation implements GraphQLMutationResolver {
 		return newSystemSlot;
 	}
 
-	public SystemSlot updateSystemSlot(SystemSlotInput systemSlotInput) throws URISyntaxException, IOException {
-		return systemSlotRepository.updateOne(systemSlotInput);
+	public SystemSlot updateSystemSlot(SystemSlotInput systemSlotInput, CoinsObjectInput coinsObjectInput)
+			throws URISyntaxException, IOException {
+		return systemSlotRepository.updateOne(systemSlotInput, coinsObjectInput);
 	}
 
 	public SystemSlot deleteSystemSlot(int datasetId, String uri) throws URISyntaxException, IOException {

@@ -3,9 +3,15 @@ package nl.tno.willemsph.coins_navigator.se.model;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.jena.query.ParameterizedSparqlString;
 
@@ -15,6 +21,7 @@ import nl.tno.willemsph.coins_navigator.se.SeService;
 import nl.tno.willemsph.sparql.EmbeddedServer;
 
 public class GetSeObject {
+
 	private SeService seService;
 	private int datasetId;
 	private URI uri;
@@ -302,6 +309,7 @@ public class GetSeObject {
 	}
 
 	public void update(PutSeObject putSeObject) throws IOException, URISyntaxException {
+		updateCoinsObject(putSeObject.getCoinsObject());
 		updateLabel(putSeObject.getLabel());
 		updateAssembly(putSeObject.getAssembly());
 		deleteParts();
@@ -341,11 +349,14 @@ public class GetSeObject {
 		queryStr.setIri("SeObject", EmbeddedServer.SE + getClass().getSimpleName().substring(3));
 		queryStr.setIri("graph", getDatasetUri());
 		queryStr.setLiteral("label", label);
+		queryStr.setLiteral("now", Calendar.getInstance());
 		queryStr.append("INSERT {");
 		queryStr.append("  GRAPH ?graph {");
 		queryStr.append("    ?se_object rdf:type ?SeObject .");
 		queryStr.append("    ?se_object rdf:type coins2:CoinsContainerObject .");
 		queryStr.append("    ?se_object rdfs:label ?label .");
+		queryStr.append("    ?se_object coins2:name ?label .");
+		queryStr.append("    ?se_object coins2:creationDate ?now .");
 		queryStr.append("  }");
 		queryStr.append("}");
 		queryStr.append("WHERE {");
@@ -356,5 +367,87 @@ public class GetSeObject {
 
 	public String containsRelation() {
 		return EmbeddedServer.COINS2 + "ContainsRelation";
+	}
+
+	public CoinsObject getCoinsObject() throws IOException, URISyntaxException {
+		ParameterizedSparqlString queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
+		queryStr.setIri("graph", getDatasetUri());
+		queryStr.setIri("se_object", this.uri.toString());
+		queryStr.append("SELECT ?name ?userID ?description ?creationDate ");
+		queryStr.append("{");
+		queryStr.append("  GRAPH ?graph { ");
+		queryStr.append("    OPTIONAL {");
+		queryStr.append("      ?se_object coins2:name ?name .");
+		queryStr.append("    }");
+		queryStr.append("    OPTIONAL {");
+		queryStr.append("      ?se_object coins2:userID ?userID .");
+		queryStr.append("    }");
+		queryStr.append("    OPTIONAL {");
+		queryStr.append("      ?se_object coins2:description ?description .");
+		queryStr.append("    }");
+		queryStr.append("    OPTIONAL {");
+		queryStr.append("      ?se_object coins2:creationDate ?creationDate .");
+		queryStr.append("    }");
+		queryStr.append("  }");
+		queryStr.append("}");
+
+		JsonNode responseNodes = getEmbeddedServer().query(queryStr);
+		CoinsObject coinsObject = new CoinsObject();
+		if (responseNodes.size() > 0) {
+			JsonNode nameNode = responseNodes.get(0).get("name");
+			coinsObject.setName(nameNode != null ? nameNode.get("value").asText() : null);
+			JsonNode userIDNode = responseNodes.get(0).get("userID");
+			coinsObject.setUserID(userIDNode != null ? userIDNode.get("value").asText() : null);
+			JsonNode descriptionNode = responseNodes.get(0).get("description");
+			coinsObject.setDescription(descriptionNode != null ? descriptionNode.get("value").asText() : null);
+			JsonNode creationDateNode = responseNodes.get(0).get("creationDate");
+			// coinsObject.setCreationDate(
+			// creationDateNode != null ?
+			// Date.from(Instant.parse(creationDateNode.get("value").asText())) : null);
+			coinsObject.setCreationDate(creationDateNode != null ? creationDateNode.get("value").asText() : null);
+		}
+		return coinsObject;
+	}
+
+	public void updateCoinsObject(CoinsObject coinsObject) throws IOException, URISyntaxException {
+		if (coinsObject != null) {
+			ParameterizedSparqlString queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
+			queryStr.setIri("graph", getDatasetUri());
+			queryStr.setIri("subject", getUri().toString());
+			queryStr.append("  DELETE { GRAPH ?graph { ");
+			queryStr.append("    ?subject coins2:name ?name . ");
+			queryStr.append("    ?subject coins2:userID ?userID . ");
+			queryStr.append("    ?subject coins2:description ?description . ");
+			queryStr.append("    ?subject coins2:creationDate ?creationDate . ");
+			queryStr.append("  }} ");
+			queryStr.append("  INSERT { GRAPH ?graph { ");
+			if (coinsObject.getName() != null) {
+				queryStr.setLiteral("new_name", coinsObject.getName());
+				queryStr.append("    ?subject coins2:name ?new_name . ");
+			}
+			if (coinsObject.getUserID() != null) {
+				queryStr.setLiteral("new_userID", coinsObject.getUserID());
+				queryStr.append("    ?subject coins2:userID ?new_userID . ");
+			}
+			if (coinsObject.getDescription() != null) {
+				queryStr.setLiteral("new_description", coinsObject.getDescription());
+				queryStr.append("    ?subject coins2:description ?new_description . ");
+			}
+			if (coinsObject.getCreationDate() != null) {
+				Calendar dateTime = DatatypeConverter.parseDateTime(coinsObject.getCreationDate());
+				queryStr.setLiteral("new_creationDate", dateTime);
+				queryStr.append("    ?subject coins2:creationDate ?new_creationDate . ");
+			}
+			queryStr.append("  }} ");
+			queryStr.append("WHERE { GRAPH ?graph { ");
+			queryStr.append("  OPTIONAL { ?subject coins2:name ?name . }");
+			queryStr.append("  OPTIONAL { ?subject coins2:userID ?userID . }");
+			queryStr.append("  OPTIONAL { ?subject coins2:description ?description . }");
+			queryStr.append("  OPTIONAL { ?subject coins2:creationDate ?creationDate . }");
+			queryStr.append("  } ");
+			queryStr.append("}");
+
+			getEmbeddedServer().update(queryStr);
+		}
 	}
 }

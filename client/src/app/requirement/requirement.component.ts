@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {NumericProperty, Requirement, SeObject} from '../types';
+import {CoinsObject, CoinsObjectInput, NumericProperty, Requirement} from '../types';
 import {SeObjectComponent} from '../se-object-component';
 import {RequirementService} from '../requirement.service';
 import {NumericPropertyService} from '../numeric-property.service';
@@ -13,8 +13,8 @@ import {Subscription} from 'apollo-client/util/Observable';
 export class RequirementComponent extends SeObjectComponent implements OnInit, OnChanges {
   @Input() selectedRequirement: Requirement;
   allRequirements: Requirement[];
-  // allNumericProperties: NumericProperty[];
   selectedNumericProperty: NumericProperty;
+  selectedCoinsObject: CoinsObject;
 
   constructor(private _requirementService: RequirementService,
               private _numericPropertyService: NumericPropertyService) {
@@ -24,9 +24,6 @@ export class RequirementComponent extends SeObjectComponent implements OnInit, O
   ngOnInit() {
     this._requirementService.allRequirementsUpdated.subscribe((requirements) => this.allRequirements = requirements);
     this._requirementService.queryAllRequirements(this.selectedRequirement.datasetId);
-    // this._numericPropertyService.allNumericPropertiesUpdated
-    //   .subscribe((numericProperties) => this.allNumericProperties = numericProperties);
-    // this._numericPropertyService.queryAllNumericProperties(this.selectedRequirement.datasetId);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -48,19 +45,35 @@ export class RequirementComponent extends SeObjectComponent implements OnInit, O
           this.selectedNumericProperty = null;
         }
       }
+      if (this.selectedCoinsObject) {
+        this.selectedCoinsObject = this.selectedRequirement.coins;
+      }
     }
   }
 
-  onSelectedObject(seObject: SeObject): void {
-    console.log('RequirementComponent:onSelectedObject');
-    if (this.selectedNumericProperty && this.selectedNumericProperty.uri === seObject.uri) {
-      this.selectedNumericProperty = null;
-    } else {
-      this.selectedNumericProperty = <NumericProperty>seObject;
+  onSelectedObject(object: any, label: string): void {
+    console.log('RequirementComponent:onSelectedObject ' + label);
+    switch (label) {
+      case 'minValue':
+      case 'maxValue':
+        if (this.selectedNumericProperty && this.selectedNumericProperty.uri === object.uri) {
+          this.selectedNumericProperty = null;
+        } else {
+          this.selectedNumericProperty = <NumericProperty>object;
+        }
+        break;
+      case 'coins':
+        if (this.selectedCoinsObject) {
+          this.selectedCoinsObject = null;
+        } else {
+          this.selectedCoinsObject = <CoinsObject>object;
+        }
+        console.log('RequirementComponent:onSelectedObject this.selectedCoinsObject ' + this.selectedCoinsObject);
+        break;
     }
   }
 
-  onSessionEnded(propertyValue: string, propertyLabel: string) {
+  onSessionEnded(propertyValue: any, propertyLabel: string) {
     console.log('onSessionEnded value: ' + (propertyValue ? propertyValue : '<null>') + ' propertyLabel: ' + propertyLabel);
     switch (propertyLabel) {
       case 'label':
@@ -85,9 +98,12 @@ export class RequirementComponent extends SeObjectComponent implements OnInit, O
         break;
     }
     const requirementInput = this._requirementService.cloneRequirementInput(this.selectedRequirement);
+    const coinsObjectInput = propertyLabel === 'coins' ? propertyValue
+      : new CoinsObjectInput(this.selectedRequirement.coins.name,
+        this.selectedRequirement.coins.userID, this.selectedRequirement.coins.description, this.selectedRequirement.coins.creationDate);
     requirementInput[propertyLabel] = (propertyValue ? propertyValue : null);
     console.log('propertyLabel=' + propertyLabel + ' ' + (requirementInput[propertyLabel] ? requirementInput[propertyLabel] : '<null>'));
-    this._requirementService.mutateRequirement(requirementInput);
+    this._requirementService.mutateRequirement(requirementInput, coinsObjectInput);
     this.propertyEdited = null;
   }
 
@@ -96,7 +112,8 @@ export class RequirementComponent extends SeObjectComponent implements OnInit, O
       console.log('numericPropertyCreated');
       const requirementInput = this._requirementService.cloneRequirementInput(this.selectedRequirement);
       requirementInput[label] = numericProperty.uri;
-      this._requirementService.mutateRequirement(requirementInput);
+      this._requirementService.mutateRequirement(requirementInput, new CoinsObjectInput(this.selectedRequirement.coins.name,
+        this.selectedRequirement.coins.userID, this.selectedRequirement.coins.description, this.selectedRequirement.coins.creationDate));
       subscription.unsubscribe();
     });
     console.log('onCreateObjectRequested datasetId=' + this.selectedRequirement.datasetId);
@@ -108,7 +125,8 @@ export class RequirementComponent extends SeObjectComponent implements OnInit, O
       console.log('numericPropertyDeleted');
       const requirementInput = this._requirementService.cloneRequirementInput(this.selectedRequirement);
       requirementInput[label] = null;
-      this._requirementService.mutateRequirement(requirementInput);
+      this._requirementService.mutateRequirement(requirementInput, new CoinsObjectInput(this.selectedRequirement.coins.name,
+        this.selectedRequirement.coins.userID, this.selectedRequirement.coins.description, this.selectedRequirement.coins.creationDate));
       subscription.unsubscribe();
     });
     this._numericPropertyService.deleteNumericProperty(this.selectedRequirement.datasetId, this.selectedRequirement[label].uri);

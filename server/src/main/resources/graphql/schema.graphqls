@@ -1,9 +1,17 @@
+type CoinsObject {
+	name: String
+	userID: String
+	description: String
+	creationDate: String
+}
+
 type Dataset {
   datasetId: Int!
   filepath: String!
 }
 
 type Function {
+	coins: CoinsObject
 	datasetId: Int!
 	uri: String!
 	label: String!
@@ -74,6 +82,7 @@ type RealisationPort {
 }
 
 type Requirement {
+	coins: CoinsObject
 	datasetId: Int!
 	uri: String!
 	label: String!
@@ -95,6 +104,7 @@ type SystemInterface {
 }
 
 type SystemSlot {
+	coins: CoinsObject
 	datasetId: Int!
 	uri: String!
 	label: String!
@@ -123,6 +133,12 @@ type Query {
   oneSystemSlot(datasetId: Int!, uri: String!): SystemSlot
 }
 
+input CoinsObjectInput {
+	name: String
+	userID: String
+	description: String
+	creationDate: String
+}
 
 input FunctionInput {
 	datasetId: Int!
@@ -234,16 +250,16 @@ type Mutation {
   createRequirement(datasetId: Int!, uri: String!, label: String!): Requirement
   createSystemInterface(datasetId: Int!, uri: String!, label: String!): SystemInterface
   createSystemSlot(datasetId: Int!, uri: String!, label: String!): SystemSlot
-  updateFunction(functionInput: FunctionInput!): Function
+  updateFunction(functionInput: FunctionInput!, coinsObjectInput: CoinsObjectInput): Function
   updateHamburger(hamburgerInput: HamburgerInput!): Hamburger
   updateNumericProperty(numericPropertyInput: NumericPropertyInput!): NumericProperty
   updatePerformance(performanceInput: PerformanceInput!): Performance
   updatePortRealisation(portRealisationInput: PortRealisationInput!): PortRealisation
   updateRealisationModule(realisationModuleInput: RealisationModuleInput!): RealisationModule
   updateRealisationPort(realisationPortInput: RealisationPortInput!): RealisationPort
-  updateRequirement(requirementInput: RequirementInput): Requirement
+  updateRequirement(requirementInput: RequirementInput, coinsObjectInput: CoinsObjectInput): Requirement
   updateSystemInterface(systemInterfaceInput: SystemInterfaceInput!): SystemInterface
-  updateSystemSlot(systemSlotInput: SystemSlotInput!): SystemSlot
+  updateSystemSlot(systemSlotInput: SystemSlotInput!, coinsObjectInput: CoinsObjectInput): SystemSlot
   deleteFunction(datasetId: Int!, uri: String!): Function
   deleteHamburger(datasetId: Int!, uri: String!): Hamburger
   deleteNumericProperty(datasetId: Int!, uri: String!): NumericProperty

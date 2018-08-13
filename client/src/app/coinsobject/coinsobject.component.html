@@ -1,0 +1,75 @@
+<div class="card">
+  <div class="card-header">
+    <h6 class="card-title">COINS Object: "{{selectedCoinsObject.name}}"</h6></div>
+  <div class="card-body">
+    <table class="table table-hover table-bordered table-sm">
+      <thead class="thead-light">
+      <tr class="table-record">
+        <th>property</th>
+        <th>value</th>
+        <th><span class="fa fa-edit fa-lg"></span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>name</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='name'" [value]="selectedCoinsObject.name"
+                        (sessionStarted)="onSessionStarted('name')"
+                        (sessionEnded)="onSessionEnded($event, 'name')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('name')"
+                  [class]="propertyEdited=='name'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>userID</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='userID'" [value]="selectedCoinsObject.userID"
+                        (sessionStarted)="onSessionStarted('userID')"
+                        (sessionEnded)="onSessionEnded($event, 'userID')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('userID')"
+                  [class]="propertyEdited=='userID'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>description</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='description'" [value]="selectedCoinsObject.description"
+                        (sessionStarted)="onSessionStarted('description')"
+                        (sessionEnded)="onSessionEnded($event, 'description')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('description')"
+                  [class]="propertyEdited=='description'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>creation date</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='creationDate'" [value]="format(selectedCoinsObject.creationDate)"
+                        (sessionStarted)="onSessionStarted('creationDate')"
+                        (sessionEnded)="onSessionEnded($event, 'creationDate')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('creationDate')"
+                  [class]="propertyEdited=='creationDate'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+

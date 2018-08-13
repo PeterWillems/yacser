@@ -1,9 +1,22 @@
+export class CoinsObject {
+  name: string;
+  userID: string;
+  description: string;
+  creationDate: string;
+}
+
+export class CoinsObjectInput {
+  constructor(public name: string, public userID: string, public description: string, public creationDate: string) {
+  }
+}
+
 export interface Dataset {
   datasetId: number;
   filepath: string;
 }
 
 export interface SeObject {
+  coins: CoinsObject;
   label: string;
   datasetId: number;
   uri: string;

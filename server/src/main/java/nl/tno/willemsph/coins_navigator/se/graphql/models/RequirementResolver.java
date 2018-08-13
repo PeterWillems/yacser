@@ -64,5 +64,17 @@ public class RequirementResolver implements GraphQLResolver<Requirement> {
 				? numericPropertyRepository.findOne(requirement.getDatasetId(), maxValueUri.toString())
 				: null;
 	}
+	
+	public CoinsObject getCoins(Requirement requirement) throws URISyntaxException, IOException {
+		GetRequirement getRequirement = seService.getRequirement(requirement.getDatasetId(),
+				requirement.getUri().getFragment());
+		nl.tno.willemsph.coins_navigator.se.model.CoinsObject getCoinsObject = getRequirement.getCoinsObject();
+		CoinsObject coinsObject = new CoinsObject();
+		coinsObject.setName(getCoinsObject.getName());
+		coinsObject.setUserID(getCoinsObject.getUserID());
+		coinsObject.setDescription(getCoinsObject.getDescription());
+		coinsObject.setCreationDate(getCoinsObject.getCreationDate());
+		return coinsObject;
+	}
 
 }

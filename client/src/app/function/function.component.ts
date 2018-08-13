@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Function, Requirement, SystemInterface} from '../types';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {CoinsObject, CoinsObjectInput, Function, NumericProperty, Requirement, SystemInterface} from '../types';
 import {FunctionService} from '../function.service';
 import {RequirementService} from '../requirement.service';
 import {SeObjectComponent} from '../se-object-component';
@@ -10,11 +10,12 @@ import {SystemInterfaceService} from '../system-interface.service';
   templateUrl: './function.component.html',
   styleUrls: ['./function.component.css']
 })
-export class FunctionComponent extends SeObjectComponent implements OnInit {
+export class FunctionComponent extends SeObjectComponent implements OnInit, OnChanges {
   @Input() selectedFunction: Function;
   allFunctions: Function[];
   allRequirements: Requirement[];
   allSystemInterfaces: SystemInterface[];
+  selectedCoinsObject: CoinsObject;
 
   constructor(private _functionService: FunctionService,
               private _requirementService: RequirementService,
@@ -31,7 +32,29 @@ export class FunctionComponent extends SeObjectComponent implements OnInit {
     this._systemInterfaceService.queryAllSystemInterfaces(this.selectedFunction.datasetId);
   }
 
-  onSessionEnded(propertyValue: string, propertyLabel: string) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedFunction']) {
+      if (this.selectedCoinsObject) {
+        this.selectedCoinsObject = this.selectedFunction.coins;
+      }
+    }
+  }
+
+  onSelectedObject(object: any, label: string): void {
+    console.log('RequirementComponent:onSelectedObject ' + label);
+    switch (label) {
+      case 'coins':
+        if (this.selectedCoinsObject) {
+          this.selectedCoinsObject = null;
+        } else {
+          this.selectedCoinsObject = <CoinsObject>object;
+        }
+        console.log('RequirementComponent:onSelectedObject this.selectedCoinsObject ' + this.selectedCoinsObject);
+        break;
+    }
+  }
+
+  onSessionEnded(propertyValue: any, propertyLabel: string) {
     console.log('onSessionEnded value: ' + (propertyValue ? propertyValue : '<null>') + ' propertyLabel: ' + propertyLabel);
     switch (propertyLabel) {
       case 'label':
@@ -56,9 +79,12 @@ export class FunctionComponent extends SeObjectComponent implements OnInit {
         break;
     }
     const functionInput = this._functionService.cloneFunctionInput(this.selectedFunction);
+    const coinsObjectInput = propertyLabel === 'coins' ? propertyValue
+      : new CoinsObjectInput(this.selectedFunction.coins.name,
+        this.selectedFunction.coins.userID, this.selectedFunction.coins.description, this.selectedFunction.coins.creationDate);
     functionInput[propertyLabel] = (propertyValue ? propertyValue : null);
     console.log('propertyLabel=' + propertyLabel + ' ' + (functionInput[propertyLabel] ? functionInput[propertyLabel] : '<null>'));
-    this._functionService.mutateFunction(functionInput);
+    this._functionService.mutateFunction(functionInput, coinsObjectInput);
     this.propertyEdited = null;
   }
 }

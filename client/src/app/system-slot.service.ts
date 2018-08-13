@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {Mutation, Query, SeObject, SystemSlot, SystemSlotInput} from './types';
+import {CoinsObjectInput, Mutation, Query, SeObject, SystemSlot, SystemSlotInput} from './types';
 import {
   ALL_SYSTEM_INTERFACES,
   ALL_SYSTEM_SLOTS,
@@ -66,8 +66,8 @@ export class SystemSlotService {
     }).subscribe((value) => this.systemSlotCreated.emit(value.data.createSystemSlot));
   }
 
-  public mutateSystemSlot(systemSlot: SystemSlotInput) {
-    console.log('mutateSystemSlot: ' + 'label=' + systemSlot.label);
+  public mutateSystemSlot(systemSlot: SystemSlotInput, coinsObject: CoinsObjectInput) {
+    console.log('mutateSystemSlot: ' + 'label=' + systemSlot.label + ' userID=' + coinsObject.userID);
     this.apollo.mutate<Mutation>({
       mutation: UPDATE_SYSTEM_SLOT, variables: {
         systemSlotInput: {
@@ -79,6 +79,12 @@ export class SystemSlotService {
           functions: systemSlot.functions,
           requirements: systemSlot.requirements,
           interfaces: systemSlot.interfaces
+        },
+        coinsObjectInput: {
+          name: coinsObject.name,
+          userID: coinsObject.userID,
+          description: coinsObject.description,
+          creationDate: coinsObject.creationDate
         }
       },
       // update: (proxy, {data: {updateSystemSlot}}) => {

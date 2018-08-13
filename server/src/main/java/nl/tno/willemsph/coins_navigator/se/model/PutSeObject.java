@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 public class PutSeObject {
+	private CoinsObject coinsObject;
 	private URI uri;
 	private String label;
 	private URI assembly;
@@ -11,6 +12,14 @@ public class PutSeObject {
 	private String localName;
 
 	public PutSeObject() {
+	}
+
+	public CoinsObject getCoinsObject() {
+		return coinsObject;
+	}
+
+	public void setCoinsObject(CoinsObject coinsObject) {
+		this.coinsObject = coinsObject;
 	}
 
 	public URI getUri() {

@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {Mutation, Query, Requirement, RequirementInput} from './types';
+import {CoinsObjectInput, Mutation, Query, Requirement, RequirementInput, SystemSlotInput} from './types';
 import {
   ALL_REQUIREMENTS,
   ALL_SYSTEM_INTERFACES,
@@ -52,7 +52,7 @@ export class RequirementService {
     }).subscribe((value) => this.requirementCreated.emit(value.data.createRequirement));
   }
 
-  public mutateRequirement(requirementInput: RequirementInput) {
+  public mutateRequirement(requirementInput: RequirementInput, coinsObject: CoinsObjectInput) {
     console.log('mutateRequirement: ' + 'label=' + requirementInput.label);
     this.apollo.mutate<Mutation>({
       mutation: UPDATE_REQUIREMENT,
@@ -65,6 +65,12 @@ export class RequirementService {
           parts: requirementInput.parts,
           minValue: requirementInput.minValue,
           maxValue: requirementInput.maxValue
+        },
+        coinsObjectInput: {
+          name: coinsObject.name,
+          userID: coinsObject.userID,
+          description: coinsObject.description,
+          creationDate: coinsObject.creationDate
         }
       },
       refetchQueries: [{

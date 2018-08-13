@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlot;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlotInput;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsObject;
 import nl.tno.willemsph.coins_navigator.se.model.GetSystemSlot;
 import nl.tno.willemsph.coins_navigator.se.model.PutSystemSlot;
 
@@ -47,7 +49,8 @@ public class SystemSlotRepository {
 		return new SystemSlot(datasetId, slot.getUri().toString(), slot.getLabel());
 	}
 
-	public SystemSlot updateOne(SystemSlotInput systemSlotInput) throws URISyntaxException, IOException {
+	public SystemSlot updateOne(SystemSlotInput systemSlotInput, CoinsObjectInput coinsObjectInput)
+			throws URISyntaxException, IOException {
 		URI uri = new URI(systemSlotInput.getUri());
 		GetSystemSlot getSystemSlot = seService.getSystemSlot(systemSlotInput.getDatasetId(), uri.getFragment());
 		PutSystemSlot putSystemSlot = new PutSystemSlot();
@@ -84,13 +87,17 @@ public class SystemSlotRepository {
 			}
 			putSystemSlot.setInterfaces(interfaces);
 		}
+		if (coinsObjectInput != null) {
+			putSystemSlot.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
+		}
 
 		GetSystemSlot updatedSystemSlot = seService.updateSystemSlot(systemSlotInput.getDatasetId(),
 				getSystemSlot.getLocalName(), putSystemSlot);
 		return new SystemSlot(systemSlotInput.getDatasetId(), updatedSystemSlot.getUri().toString(),
 				updatedSystemSlot.getLabel());
 	}
-	
+
 	public SystemSlot deleteOne(int datasetId, String uri) throws URISyntaxException, IOException {
 		String systemSlotLocalName = (new URI(uri)).getFragment();
 		GetSystemSlot getSystemSlot = seService.getSystemSlot(datasetId, systemSlotLocalName);

@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Function;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.FunctionInput;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsObject;
 import nl.tno.willemsph.coins_navigator.se.model.GetFunction;
 import nl.tno.willemsph.coins_navigator.se.model.PutFunction;
 
@@ -47,7 +49,7 @@ public class FunctionRepository {
 		return new Function(datasetId, function.getUri().toString(), function.getLabel());
 	}
 
-	public Function updateOne(FunctionInput functionInput) throws URISyntaxException, IOException {
+	public Function updateOne(FunctionInput functionInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
 		URI uri = new URI(functionInput.getUri());
 		GetFunction getFunction = seService.getFunction(functionInput.getDatasetId(), uri.getFragment());
 		PutFunction putFunction = new PutFunction();
@@ -75,6 +77,10 @@ public class FunctionRepository {
 		}
 		if (functionInput.getOutput() != null) {
 			putFunction.setOutput(new URI(functionInput.getOutput()));
+		}
+		if (coinsObjectInput != null) {
+			putFunction.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
 		}
 
 		GetFunction updatedFunction = seService.updateFunction(functionInput.getDatasetId(), getFunction.getLocalName(),

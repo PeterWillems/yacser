@@ -48,12 +48,11 @@ export class PropertyComponent implements OnInit, OnChanges {
       if (this.editMode) {
         this._sessionRunning = true;
       }
-    } else if (changes['value']) {
-      console.log('property:ngOnChanges value ' + <SeObject[]>changes['value'].previousValue + ' ' + <SeObject[]>changes['value'].currentValue);
     }
   }
 
   onEditModeChanged(): void {
+    console.log('PropertyComponent:onEditModeChanged');
     if (!this.disabled) {
       this.editMode = !this.editMode;
       this._sessionRunning = true;
@@ -146,9 +145,5 @@ export class PropertyComponent implements OnInit, OnChanges {
 
   delete(object: SeObject): void {
     this.deleteObjectRequested.emit(object);
-  }
-
-  trackByFn(index: number, item: SeObject) {
-    return item.uri; // or item.id
   }
 }

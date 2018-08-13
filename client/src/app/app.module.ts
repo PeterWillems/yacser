@@ -26,6 +26,7 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 import {PortrealisationComponent} from './hamburger/portrealisation/portrealisation.component';
 import { RealisationPortComponent } from './realisation-module/realisation-port/realisation-port.component';
 import { NumericPropertyComponent } from './numeric-property/numeric-property.component';
+import { CoinsobjectComponent } from './coinsobject/coinsobject.component';
 
 const appRoutes: Routes = [
     {path: '', redirectTo: '/datasets', pathMatch: 'full'},
@@ -65,6 +66,7 @@ const appRoutes: Routes = [
     PortrealisationComponent,
     RealisationPortComponent,
     NumericPropertyComponent,
+    CoinsobjectComponent,
   ],
   imports: [
     BrowserModule,

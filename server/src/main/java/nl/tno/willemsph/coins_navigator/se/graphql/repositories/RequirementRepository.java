@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Requirement;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RequirementInput;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsObject;
 import nl.tno.willemsph.coins_navigator.se.model.GetRequirement;
 import nl.tno.willemsph.coins_navigator.se.model.PutRequirement;
 
@@ -48,7 +50,7 @@ public class RequirementRepository {
 		return new Requirement(datasetId, requirement.getUri().toString(), requirement.getLabel());
 	}
 
-	public Requirement updateOne(RequirementInput requirementInput) throws URISyntaxException, IOException {
+	public Requirement updateOne(RequirementInput requirementInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
 		URI uri = new URI(requirementInput.getUri());
 		GetRequirement getRequirement = seService.getRequirement(requirementInput.getDatasetId(), uri.getFragment());
 		PutRequirement putRequirement = new PutRequirement();
@@ -70,6 +72,11 @@ public class RequirementRepository {
 		if (requirementInput.getMaxValue() != null) {
 			putRequirement.setMaxValue(new URI(requirementInput.getMaxValue()));
 		}
+		if (coinsObjectInput != null) {
+			putRequirement.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
+		}
+
 
 		GetRequirement updatedRequirement = seService.updateRequirement(requirementInput.getDatasetId(),
 				getRequirement.getLocalName(), putRequirement);

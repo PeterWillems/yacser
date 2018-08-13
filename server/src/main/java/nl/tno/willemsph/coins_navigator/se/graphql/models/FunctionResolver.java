@@ -16,6 +16,7 @@ import nl.tno.willemsph.coins_navigator.se.graphql.repositories.FunctionReposito
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RequirementRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemInterfaceRepository;
 import nl.tno.willemsph.coins_navigator.se.model.GetFunction;
+import nl.tno.willemsph.coins_navigator.se.model.GetRequirement;
 
 @Component
 public class FunctionResolver implements GraphQLResolver<Function> {
@@ -72,5 +73,15 @@ public class FunctionResolver implements GraphQLResolver<Function> {
 			}
 		}
 		return requirements;
+	}
+	public CoinsObject getCoins(Function function) throws URISyntaxException, IOException {
+		GetFunction getFunction = seService.getFunction(function.getDatasetId(), function.getUri().getFragment());
+		nl.tno.willemsph.coins_navigator.se.model.CoinsObject getCoinsObject = getFunction.getCoinsObject();
+		CoinsObject coinsObject = new CoinsObject();
+		coinsObject.setName(getCoinsObject.getName());
+		coinsObject.setUserID(getCoinsObject.getUserID());
+		coinsObject.setDescription(getCoinsObject.getDescription());
+		coinsObject.setCreationDate(getCoinsObject.getCreationDate());
+		return coinsObject;
 	}
 }

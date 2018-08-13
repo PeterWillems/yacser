@@ -112,4 +112,16 @@ public class SystemSlotResolver implements GraphQLResolver<SystemSlot> {
 		}
 		return hamburgers;
 	}
+
+	public CoinsObject getCoins(SystemSlot systemSlot) throws URISyntaxException, IOException {
+		GetSystemSlot getSystemSlot = seService.getSystemSlot(systemSlot.getDatasetId(),
+				systemSlot.getUri().getFragment());
+		nl.tno.willemsph.coins_navigator.se.model.CoinsObject getCoinsObject = getSystemSlot.getCoinsObject();
+		CoinsObject coinsObject = new CoinsObject();
+		coinsObject.setName(getCoinsObject.getName());
+		coinsObject.setUserID(getCoinsObject.getUserID());
+		coinsObject.setDescription(getCoinsObject.getDescription());
+		coinsObject.setCreationDate(getCoinsObject.getCreationDate());
+		return coinsObject;
+	}
 }

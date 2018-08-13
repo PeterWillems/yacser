@@ -67,12 +67,12 @@ export class PerformanceComponent extends SeObjectComponent implements OnInit, O
     this.propertyEdited = null;
   }
 
-  onSelectedObject(seObject: SeObject): void {
+  onSelectedObject(object: any): void {
     console.log('PerformanceComponent:onSelectedObject');
-    if (this.selectedNumericProperty && this.selectedNumericProperty.uri === seObject.uri) {
+    if (this.selectedNumericProperty && this.selectedNumericProperty.uri === object.uri) {
       this.selectedNumericProperty = null;
     } else {
-      this.selectedNumericProperty = <NumericProperty>seObject;
+      this.selectedNumericProperty = <NumericProperty>object;
     }
   }
 

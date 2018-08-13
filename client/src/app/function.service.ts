@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {Query, Function, FunctionInput, Mutation, Requirement, RequirementInput} from './types';
+import {Query, Function, FunctionInput, Mutation, Requirement, RequirementInput, CoinsObjectInput} from './types';
 import {ALL_FUNCTIONS, CREATE_FUNCTION, DELETE_FUNCTION, UPDATE_FUNCTION} from './graphql';
 
 @Injectable({
@@ -44,7 +44,7 @@ export class FunctionService {
     }).subscribe((value) => this.functionCreated.emit(value.data.createFunction));
   }
 
-  public mutateFunction(functionInput: FunctionInput) {
+  public mutateFunction(functionInput: FunctionInput, coinsObject: CoinsObjectInput) {
     console.log('mutateFunction: ' + 'label=' + functionInput.label);
     this.apollo.mutate<Mutation>({
       mutation: UPDATE_FUNCTION, variables: {
@@ -57,6 +57,12 @@ export class FunctionService {
           requirements: functionInput.requirements,
           input: functionInput.input,
           output: functionInput.output
+        },
+        coinsObjectInput: {
+          name: coinsObject.name,
+          userID: coinsObject.userID,
+          description: coinsObject.description,
+          creationDate: coinsObject.creationDate
         }
       },
       refetchQueries: [{

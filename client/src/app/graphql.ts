@@ -16,6 +16,12 @@ export const ALL_FUNCTIONS = gql`
             datasetId
             uri
             label
+            coins {
+              name
+              userID
+              description
+              creationDate
+            }
             assembly {
               uri
               label
@@ -51,8 +57,8 @@ export const CREATE_FUNCTION = gql`
 `;
 
 export const UPDATE_FUNCTION = gql`
-      mutation updateFunction($functionInput: FunctionInput!) {
-        updateFunction (functionInput: $functionInput) {
+      mutation updateFunction($functionInput: FunctionInput!, $coinsObjectInput: CoinsObjectInput!) {
+        updateFunction (functionInput: $functionInput, coinsObjectInput: $coinsObjectInput) {
           datasetId
           uri
           label
@@ -590,6 +596,12 @@ export const ALL_REQUIREMENTS = gql`
             datasetId
             uri
             label
+            coins {
+              name
+              userID
+              description
+              creationDate
+            }
             assembly {
               uri
               label
@@ -627,8 +639,8 @@ export const CREATE_REQUIREMENT = gql`
 `;
 
 export const UPDATE_REQUIREMENT = gql`
-      mutation updateRequirement($requirementInput: RequirementInput!) {
-        updateRequirement (requirementInput: $requirementInput) {
+      mutation updateRequirement($requirementInput: RequirementInput!, $coinsObjectInput: CoinsObjectInput!) {
+        updateRequirement (requirementInput: $requirementInput, coinsObjectInput: $coinsObjectInput) {
           datasetId
           uri
           label
@@ -754,6 +766,12 @@ export const ALL_SYSTEM_SLOTS = gql`
             datasetId
             uri
             label
+            coins {
+              name
+              userID
+              description
+              creationDate
+            }
             assembly {
               uri
               label
@@ -818,8 +836,8 @@ export const CREATE_SYSTEM_SLOT = gql`
 `;
 
 export const UPDATE_SYSTEM_SLOT = gql`
-      mutation updateSystemSlot($systemSlotInput: SystemSlotInput!) {
-        updateSystemSlot (systemSlotInput: $systemSlotInput) {
+      mutation updateSystemSlot($systemSlotInput: SystemSlotInput!, $coinsObjectInput: CoinsObjectInput!) {
+        updateSystemSlot (systemSlotInput: $systemSlotInput, coinsObjectInput: $coinsObjectInput) {
           datasetId
           uri
           label
