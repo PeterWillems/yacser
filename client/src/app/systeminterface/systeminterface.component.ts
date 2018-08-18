@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Requirement, SystemInterface, SystemInterfaceInput, SystemSlot} from '../types';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {CoinsObject, CoinsObjectInput, Requirement, SystemInterface, SystemInterfaceInput, SystemSlot} from '../types';
 import {SeObjectComponent} from '../se-object-component';
 import {SystemInterfaceService} from '../system-interface.service';
 import {SystemSlotService} from '../system-slot.service';
@@ -10,11 +10,12 @@ import {RequirementService} from '../requirement.service';
   templateUrl: './systeminterface.component.html',
   styleUrls: ['./systeminterface.component.css']
 })
-export class SysteminterfaceComponent extends SeObjectComponent implements OnInit {
+export class SysteminterfaceComponent extends SeObjectComponent implements OnInit, OnChanges {
   @Input() selectedSystemInterface: SystemInterface;
   allSystemInterfaces: SystemInterface[];
   allSystemSlots: SystemSlot[];
   allRequirements: Requirement[];
+  selectedCoinsObject: CoinsObject;
 
   constructor(private _systemInterfaceService: SystemInterfaceService,
               private _systemSlotService: SystemSlotService,
@@ -34,7 +35,27 @@ export class SysteminterfaceComponent extends SeObjectComponent implements OnIni
     this._requirementService.queryAllRequirements(this.selectedSystemInterface.datasetId);
   }
 
-  onSessionEnded(propertyValue: string, propertyLabel: string) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedSystemInterface']) {
+      if (this.selectedCoinsObject) {
+        this.selectedCoinsObject = this.selectedSystemInterface.coins;
+      }
+    }
+  }
+
+  onSelectedObject(object: any, label: string): void {
+    switch (label) {
+      case 'coins':
+        if (this.selectedCoinsObject) {
+          this.selectedCoinsObject = null;
+        } else {
+          this.selectedCoinsObject = <CoinsObject>object;
+        }
+        break;
+    }
+  }
+
+  onSessionEnded(propertyValue: any, propertyLabel: string) {
     console.log('onSessionEnded value: ' + (propertyValue ? propertyValue : '<null>') + ' propertyLabel: ' + propertyLabel);
     switch (propertyLabel) {
       case 'label':
@@ -59,10 +80,16 @@ export class SysteminterfaceComponent extends SeObjectComponent implements OnIni
         break;
     }
     const systemInterfaceInput = <SystemInterfaceInput>this._systemInterfaceService.cloneSystemInterfaceInput(this.selectedSystemInterface);
+    const coinsObjectInput = propertyLabel === 'coins' ? propertyValue
+      : new CoinsObjectInput(
+        this.selectedSystemInterface.coins.name,
+        this.selectedSystemInterface.coins.userID,
+        this.selectedSystemInterface.coins.description,
+        this.selectedSystemInterface.coins.creationDate);
     systemInterfaceInput[propertyLabel] = (propertyValue ? propertyValue : null);
     console.log('propertyLabel=' + propertyLabel + ' '
       + (systemInterfaceInput[propertyLabel] ? systemInterfaceInput[propertyLabel] : '<null>'));
-    this._systemInterfaceService.mutateSystemInterface(systemInterfaceInput);
+    this._systemInterfaceService.mutateSystemInterface(systemInterfaceInput, coinsObjectInput);
     this.propertyEdited = null;
   }
 

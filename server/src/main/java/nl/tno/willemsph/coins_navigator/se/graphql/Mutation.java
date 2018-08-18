@@ -246,9 +246,9 @@ public class Mutation implements GraphQLMutationResolver {
 		return newSystemInterface;
 	}
 
-	public SystemInterface updateSystemInterface(SystemInterfaceInput systemInterfaceInput)
+	public SystemInterface updateSystemInterface(SystemInterfaceInput systemInterfaceInput, CoinsObjectInput coinsObjectInput)
 			throws URISyntaxException, IOException {
-		return systemInterfaceRepository.updateOne(systemInterfaceInput);
+		return systemInterfaceRepository.updateOne(systemInterfaceInput, coinsObjectInput);
 	}
 
 	public SystemInterface deleteSystemInterface(int datasetId, String uri) throws URISyntaxException, IOException {

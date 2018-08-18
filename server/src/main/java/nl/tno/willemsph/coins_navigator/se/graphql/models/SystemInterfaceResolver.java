@@ -83,4 +83,16 @@ public class SystemInterfaceResolver implements GraphQLResolver<SystemInterface>
 		}
 		return requirements;
 	}
+
+	public CoinsObject getCoins(SystemInterface systemInterface) throws URISyntaxException, IOException {
+		GetSystemInterface getSystemInterface = seService.getSystemInterface(systemInterface.getDatasetId(),
+				systemInterface.getUri().getFragment());
+		nl.tno.willemsph.coins_navigator.se.model.CoinsObject getCoinsObject = getSystemInterface.getCoinsObject();
+		CoinsObject coinsObject = new CoinsObject();
+		coinsObject.setName(getCoinsObject.getName());
+		coinsObject.setUserID(getCoinsObject.getUserID());
+		coinsObject.setDescription(getCoinsObject.getDescription());
+		coinsObject.setCreationDate(getCoinsObject.getCreationDate());
+		return coinsObject;
+	}
 }

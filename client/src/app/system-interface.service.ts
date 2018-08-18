@@ -1,7 +1,8 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {Mutation, Query, SystemInterface, SystemInterfaceInput} from './types';
+import {CoinsObjectInput, Mutation, Query, Requirement, RequirementInput, SystemInterface, SystemInterfaceInput} from './types';
 import {
+  ALL_FUNCTIONS,
   ALL_SYSTEM_INTERFACES, ALL_SYSTEM_SLOTS,
   CREATE_SYSTEM_INTERFACE, DELETE_SYSTEM_INTERFACE, UPDATE_SYSTEM_INTERFACE,
 } from './graphql';
@@ -27,7 +28,13 @@ export class SystemInterfaceService {
         datasetId: datasetId
       }
     })
-      .valueChanges.subscribe((value => this.allSystemInterfacesUpdated.emit(value.data.allSystemInterfaces))
+      .valueChanges.subscribe((value => {
+        const systemInterfaces = <SystemInterface[]>[];
+        for (let i = 0; i < value.data.allSystemInterfaces.length; i++) {
+          systemInterfaces.push(value.data.allSystemInterfaces[i]);
+        }
+        this.allSystemInterfacesUpdated.emit(systemInterfaces);
+      })
     );
   }
 
@@ -49,7 +56,7 @@ export class SystemInterfaceService {
     }).subscribe((value) => this.systemInterfaceCreated.emit(value.data.createSystemInterface));
   }
 
-  public mutateSystemInterface(systemInterfaceInput: SystemInterfaceInput) {
+  public mutateSystemInterface(systemInterfaceInput: SystemInterfaceInput, coinsObject: CoinsObjectInput) {
     console.log('mutateSystemInterface: ' + 'label=' + systemInterfaceInput.label);
     this.apollo.mutate<Mutation>({
       mutation: UPDATE_SYSTEM_INTERFACE, variables: {
@@ -62,6 +69,12 @@ export class SystemInterfaceService {
           systemSlot0: systemInterfaceInput.systemSlot0,
           systemSlot1: systemInterfaceInput.systemSlot1,
           requirements: systemInterfaceInput.requirements
+        },
+        coinsObjectInput: {
+          name: coinsObject.name,
+          userID: coinsObject.userID,
+          description: coinsObject.description,
+          creationDate: coinsObject.creationDate
         }
       },
       refetchQueries: [{
@@ -70,6 +83,10 @@ export class SystemInterfaceService {
         }
       }, {
         query: ALL_SYSTEM_SLOTS, variables: {
+          datasetId: systemInterfaceInput.datasetId
+        }
+      }, {
+        query: ALL_FUNCTIONS, variables: {
           datasetId: systemInterfaceInput.datasetId
         }
       }]
@@ -87,6 +104,14 @@ export class SystemInterfaceService {
       },
       refetchQueries: [{
         query: ALL_SYSTEM_INTERFACES, variables: {
+          datasetId: datasetId
+        }
+      }, {
+        query: ALL_SYSTEM_SLOTS, variables: {
+          datasetId: datasetId
+        }
+      }, {
+        query: ALL_FUNCTIONS, variables: {
           datasetId: datasetId
         }
       }]

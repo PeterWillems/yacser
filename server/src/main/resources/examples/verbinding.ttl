@@ -1,0 +1,516 @@
+@base          <http://www.coinsweb.nl/coins2/reffrm/se/example> .
+@prefix :      <http://www.coinsweb.nl/coins2/reffrm/se/example#> .
+@prefix se:    <http://www.coinsweb.nl/coins2/reffrm/se#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix coins2: <http://www.coinsweb.nl/cbim-2.0.rdf#> .
+
+:ContainsRelation_5f37208e-21c3-4520-ac16-2b959938c6d5
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_bf3db539-c4f2-4a39-a560-a0b7eeef03b5 ;
+        coins2:hasPart      :Requirement_04c7cbff-b9f5-43bc-89af-cdabca3e10c6 .
+
+:Function_9dfbf517-3c2a-481f-bf0f-34c2759510be
+        a                    se:Function , coins2:CoinsContainerObject ;
+        rdfs:label           "Dragen /  Wegconstructie" ;
+        coins2:creationDate  "2018-08-10T10:18:20.525Z"^^xsd:dateTime ;
+        coins2:name          "Dragen /  Wegconstructie" ;
+        se:hasRequirement    :Requirement_65d373ff-182e-4a43-806d-09648fa70903 , :Requirement_4f4f34ee-b998-4eda-9d3e-e38d7356db49 .
+
+:ContainsRelation_245ab79b-3e91-4c3d-9671-332c950df4fb
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_bf3db539-c4f2-4a39-a560-a0b7eeef03b5 ;
+        coins2:hasPart      :Requirement_e9fb5988-ed1c-4ab4-8d9e-10404961c6c9 .
+
+:Function_7f21d504-f938-4522-a9fc-807658631686
+        a                    se:Function , coins2:CoinsContainerObject ;
+        rdfs:label           "Doorstromen" ;
+        coins2:creationDate  "2018-08-10T10:14:34.273Z"^^xsd:dateTime ;
+        coins2:name          "Doorstromen " ;
+        se:hasRequirement    :Requirement_78e97402-7367-494f-802b-7266b2d74b48 , :Requirement_82e1ca33-eb93-47fc-b8b2-77e7332b6779 , :Requirement_d88f0401-1a36-4942-be96-9edbee6f1227 .
+
+:ContainsRelation_d0aac130-33ae-4499-87c7-71f3f9e7a1f2
+        a                   coins2:CoinsContainerObject , se:ContainsRequirement ;
+        coins2:hasAssembly  :Requirement_5b432cfa-6f39-460b-adac-1f239ed8d970 ;
+        coins2:hasPart      :Requirement_1242668a-f476-46a3-a471-b0c245b39b34 .
+
+:SystemSlot_15f24db2-5b67-477d-bdeb-dbe4427a83c5
+        a                    se:SystemSlot , coins2:CoinsContainerObject ;
+        rdfs:label           "Verharding" ;
+        coins2:creationDate  "2018-08-10T10:19:59.915Z" ;
+        coins2:name          "Verharding" ;
+        se:hasRequirement    :Requirement_3ec92f91-4d46-47dc-b5fc-1cc1b636b4a1 , :Requirement_8348c1b2-522f-4ccb-8762-2b428a83b8be .
+
+:Requirement_f1e5b2ce-4055-4f7e-a110-1e4617d36552
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.2 Dragen belastingen, algemeen" ;
+        coins2:creationDate  "2018-08-10T10:39:18.864Z" ;
+        coins2:description   "De verbinding dient alle mogelijke belastingen op afdoende wijze aan de bodem af te dragen zodat geen belemmeringen voor het wegverkeer ontstaan." ;
+        coins2:name          "Dragen belastingen, algemeen" ;
+        coins2:userID        "1.2" .
+
+:ContainsRelation_f7ec4829-e333-4ec1-8c53-124e9a70ab4b
+        a                   coins2:CoinsContainerObject , se:ContainsRequirement ;
+        coins2:hasAssembly  :Requirement_f1e5b2ce-4055-4f7e-a110-1e4617d36552 ;
+        coins2:hasPart      :Requirement_5b432cfa-6f39-460b-adac-1f239ed8d970 .
+
+:ContainsRelation_fbe3831f-3938-44f7-902c-3a2b6b647c37
+        a                   coins2:CoinsContainerObject , se:ContainsRequirement ;
+        coins2:hasAssembly  :Requirement_7fd1bba8-de5a-441a-ba32-1539aa72ab05 ;
+        coins2:hasPart      :Requirement_0afa1c4d-9aad-4401-b07d-69ea5f5abae7 .
+
+:ContainsRelation_c6d21709-ac6d-4c61-a0f0-1d86431c466f
+        a                   coins2:CoinsContainerObject , se:ContainsRequirement ;
+        coins2:hasAssembly  :Requirement_4bac49c1-16af-4529-81f3-18ab16ac7381 ;
+        coins2:hasPart      :Requirement_d968c972-0de6-4791-b49c-c8acfb1da294 .
+
+:Requirement_d968c972-0de6-4791-b49c-c8acfb1da294
+        a                    coins2:CoinsContainerObject , se:Requirement ;
+        rdfs:label           "2.1 Kruisen door wegverkeer, conflictvrij" ;
+        coins2:creationDate  "2018-08-13T08:51:46.623Z"^^xsd:dateTime ;
+        coins2:description   "De verbinding dient voorzien te zijn van een conflictvrije, bovenlangs kruising van het wegverkeer en fietsverkeer met de Vaart." ;
+        coins2:name          "Kruisen door wegverkeer, conflictvrij" ;
+        coins2:userID        "2.1" .
+
+:Requirement_e9fb5988-ed1c-4ab4-8d9e-10404961c6c9
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.5 Markeren, algemeen" ;
+        coins2:creationDate  "2018-08-10T09:48:59.374Z" ;
+        coins2:description   "De verbinding dient voorzien te zijn van wegmarkering die de te gebruiken rijbanen duidelijk markeren." ;
+        coins2:name          "Markeren, algemeen" ;
+        coins2:userID        "1.1.5 " .
+
+:Requirement_6e61840e-4b4d-4f2b-b223-3a2c745a8394
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.6.1 Openbare verlichting, algemeen" ;
+        coins2:creationDate  "2018-08-10T09:57:07.861Z" ;
+        coins2:description   "Openbare verlichting dient de rijbanen te verlichten. " ;
+        coins2:name          "Openbare verlichting, algemeen" ;
+        coins2:userID        "1.1.6.1 " .
+
+:ContainsRelation_77f58f7b-f0cf-422a-8d45-b6c5cdec0844
+        a                   coins2:CoinsContainerObject , se:ContainsRequirement ;
+        coins2:hasAssembly  :Requirement_7fd1bba8-de5a-441a-ba32-1539aa72ab05 ;
+        coins2:hasPart      :Requirement_3073f604-199f-4c96-ab24-713f999f26d9 .
+
+:ContainsRelation_0128bc66-9524-4dff-b9bd-fa6a8a55154f
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_554bab4d-8505-46f8-9269-c4d029281bf0 ;
+        coins2:hasPart      :Requirement_d67be822-149d-4d95-a3be-c86627fc1063 .
+
+:Requirement_82e1ca33-eb93-47fc-b8b2-77e7332b6779
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.2.1 Doorstromen, rijstroken" ;
+        coins2:creationDate  "2018-08-10T09:09:40.137Z" ;
+        coins2:description   "De verbinding dient uitgevoerd te zijn met 2 rijstroken, 1 rijstrook per rijrichting." ;
+        coins2:name          "Doorstromen, rijstroken" ;
+        coins2:userID        "1.1.2.1" .
+
+:ContainsRelation_fcf5698d-6afe-498f-b26d-d03a86a84ce3
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_f1e5b2ce-4055-4f7e-a110-1e4617d36552 ;
+        coins2:hasPart      :Requirement_20b41f61-b865-47f8-8779-20dce4fc177a .
+
+:Requirement_cab39cd3-deca-4635-a25a-3e80afb140a6
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.3 Doorstromen, wegconstructie" ;
+        coins2:creationDate  "2018-08-10T09:15:16.911Z" ;
+        coins2:description   "De verbinding dient uitgevoerd te zijn met een wegconstructie met verharding." ;
+        coins2:name          "Doorstromen, wegconstructie" ;
+        coins2:userID        "1.1.3" .
+
+:ContainsRelation_ea8b22af-0cc8-43d5-983b-c1b9888bae64
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_20b41f61-b865-47f8-8779-20dce4fc177a ;
+        coins2:hasPart      :Requirement_65d373ff-182e-4a43-806d-09648fa70903 .
+
+:Requirement_d88f0401-1a36-4942-be96-9edbee6f1227
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.1 Doorstromen, 2 richtingen" ;
+        coins2:creationDate  "2018-08-10T09:00:01.005Z" ;
+        coins2:description   "De verbinding dient het mogelijk te maken dat wegverkeer in beide rijrichtingen kan doorstromen." ;
+        coins2:name          "Doorstromen, 2 richtingen" ;
+        coins2:userID        "1.1.1" .
+
+:ContainsRelation_992dd1aa-5b55-4905-a875-b2786e5e1668
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_d67be822-149d-4d95-a3be-c86627fc1063 ;
+        coins2:hasPart      :Requirement_98819b6d-c442-4083-8f22-9a714112649b .
+
+:ContainsRelation_6a2d5bd4-ccd0-4e7b-b9de-8de4f0a77ed8
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_bf3db539-c4f2-4a39-a560-a0b7eeef03b5 ;
+        coins2:hasPart      :Requirement_d874d03a-8f60-4a1b-94c4-4ef959d11d42 .
+
+:ContainsRelation_2eefcf90-2a2c-485d-a77b-f00b5d6b394f
+        a                   coins2:CoinsContainerObject , se:ContainsRequirement ;
+        coins2:hasAssembly  :Requirement_4bac49c1-16af-4529-81f3-18ab16ac7381 ;
+        coins2:hasPart      :Requirement_7fd1bba8-de5a-441a-ba32-1539aa72ab05 .
+
+<>      a                owl:Ontology ;
+        rdfs:comment     "Template model to create new SE models"@en ;
+        owl:imports      <http://www.coinsweb.nl/coins2/reffrm/se> ;
+        owl:versionInfo  "Created with COINS Navigator SE" .
+
+:Requirement_4bac49c1-16af-4529-81f3-18ab16ac7381
+        a                    coins2:CoinsContainerObject , se:Requirement ;
+        rdfs:label           "2 Kuisen omgeving door wegverkeer, topeis" ;
+        coins2:creationDate  "2018-08-13T08:53:48.847Z"^^xsd:dateTime ;
+        coins2:description   "De verbinding dient te zorgen dat het wegverkeer de omgeving ongehinderd doorkruist." ;
+        coins2:name          "Kuisen omgeving door wegverkeer, topeis" ;
+        coins2:userID        "2" .
+
+:Requirement_20b41f61-b865-47f8-8779-20dce4fc177a
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.2.1 Dragen verkeersbelasting, algemeen" ;
+        coins2:creationDate  "2018-08-10T10:36:43.2Z" ;
+        coins2:description   "De verbinding dient de verkeersbelastingen door wegverkeer te dragen." ;
+        coins2:name          "Dragen verkeersbelasting, algemeen" ;
+        coins2:userID        "1.2.1" .
+
+:ContainsRelation_e28083f4-4b37-4d76-bef3-03c21ab2a868
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_cab39cd3-deca-4635-a25a-3e80afb140a6 ;
+        coins2:hasPart      :Requirement_3ec92f91-4d46-47dc-b5fc-1cc1b636b4a1 .
+
+:Requirement_04c7cbff-b9f5-43bc-89af-cdabca3e10c6
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.2 Doorstromen, wegtype" ;
+        coins2:creationDate  "2018-08-10T09:06:07.333Z" ;
+        coins2:description   "De verbinding dient uitgevoerd te zijn als regionale stroomweg 2x1 conform het Handboek Wegontwerp." ;
+        coins2:name          "Doorstromen, wegtype" ;
+        coins2:userID        "1.1.2" .
+
+:Requirement_5b432cfa-6f39-460b-adac-1f239ed8d970
+        a                    coins2:CoinsContainerObject , se:Requirement ;
+        rdfs:label           "1.2.2 Dragen omgevingsbelasting, algemeen" ;
+        coins2:creationDate  "2018-08-10T14:18:11.558Z"^^xsd:dateTime ;
+        coins2:description   "De verbinding dient alle belastingen vanuit de omgeving te dragen" ;
+        coins2:name          "Dragen omgevingsbelasting, algemeen" ;
+        coins2:userID        "1.2.2" .
+
+:ContainsRelation_13315c52-1b33-4905-8a5a-f022ae213223
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_bf3db539-c4f2-4a39-a560-a0b7eeef03b5 ;
+        coins2:hasPart      :Requirement_cab39cd3-deca-4635-a25a-3e80afb140a6 .
+
+:Requirement_96485017-8c46-4da6-99ec-2acae8557a8c
+        a                    coins2:CoinsContainerObject , se:Requirement ;
+        rdfs:label           "2.2.3 Kruisen door wegverkeer, vrije hoogte" ;
+        coins2:creationDate  "2018-08-13T09:06:38.354Z"^^xsd:dateTime ;
+        coins2:description   "De verbinding dient de vaart zodanig te kruisen dat de onderkant van de constructie op een hoogte ligt van minimaal + 1,50 m. boven waterpeil" ;
+        coins2:name          "Kruisen door wegverkeer, vrije hoogte" ;
+        coins2:userID        "2.2.3" .
+
+:Requirement_8348c1b2-522f-4ccb-8762-2b428a83b8be
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.3.2.1 Verharding, deklaag" ;
+        coins2:creationDate  "2018-08-10T09:29:23.237Z" ;
+        coins2:description   "De verharding dient uitgevoerd te zijn met een deklaag van tenminste 50 mm dik" ;
+        coins2:name          "Verharding, deklaag" ;
+        coins2:userID        "1.1.3.2.1" .
+
+:Requirement_73b4eb2a-78a9-4547-ba05-d49385deff1d
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.2.2.1 Dragen omgevingsbelasting, veranderlijk en permanent" ;
+        coins2:creationDate  "2018-08-10T14:27:34.13Z"^^xsd:dateTime ;
+        coins2:description   "De verbinding dient bestand te zijn tegen alle veranderlijke en permanente belastingen vanuit de omgeving conform NEN 6702." ;
+        coins2:name          "Dragen omgevingsbelasting, veranderlijk en permanent" ;
+        coins2:userID        "1.2.2.1" .
+
+:Function_aeb5f5a6-1526-43a8-96c8-23b9de52f758
+        a                    se:Function , coins2:CoinsContainerObject ;
+        rdfs:label           "Aansluiten" ;
+        coins2:creationDate  "2018-08-10T10:24:37.173Z"^^xsd:dateTime ;
+        coins2:name          "Aansluiten " ;
+        se:hasRequirement    :Requirement_3d3483d0-d37d-4060-8184-ec4664139f25 .
+
+:ContainsRelation_37163e1a-6bda-439b-aab4-53a71b2d66e4
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_cab39cd3-deca-4635-a25a-3e80afb140a6 ;
+        coins2:hasPart      :Requirement_8df3554d-b10f-4967-94ff-5b0ac5e2ca5a .
+
+:ContainsRelation_3ee22a37-3ee9-4e99-87e4-5782677c2bfe
+        a                   coins2:CoinsContainerObject , se:ContainsRequirement ;
+        coins2:hasAssembly  :Requirement_7fd1bba8-de5a-441a-ba32-1539aa72ab05 ;
+        coins2:hasPart      :Requirement_96485017-8c46-4da6-99ec-2acae8557a8c .
+
+:ContainsRelation_fedaba6c-1072-405d-afc8-069714548f3c
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_554bab4d-8505-46f8-9269-c4d029281bf0 ;
+        coins2:hasPart      :Requirement_3d3483d0-d37d-4060-8184-ec4664139f25 .
+
+:Requirement_3ec92f91-4d46-47dc-b5fc-1cc1b636b4a1
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.3.1 Verharding, algemeen " ;
+        coins2:creationDate  "2018-08-10T09:24:22.681Z" ;
+        coins2:description   "De verharding dient zodanig uitgevoerd te zijn dat de gedefinieerde verkeersbelastingen kunnen worden gedragen." ;
+        coins2:name          "Verharding, algemeen" ;
+        coins2:userID        "1.1.3.1 " .
+
+:SystemSlot_839436c6-a908-4922-bbad-dc80e7764bf9
+        a                    coins2:CoinsContainerObject , se:SystemSlot ;
+        rdfs:label           "Oeververbinding" ;
+        coins2:creationDate  "2018-08-13T08:36:56.088Z"^^xsd:dateTime ;
+        coins2:name          "Oeververbinding" ;
+        se:hasFunction       :Function_623e0eec-488c-46ec-9fcd-1e9d2de9642c , :Function_922f2e09-fc93-4b67-9c9a-26dc4407f908 .
+
+:ContainsRelation_cb5d8108-0fa5-4dc5-82df-8d488811ef0b
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_04c7cbff-b9f5-43bc-89af-cdabca3e10c6 ;
+        coins2:hasPart      :Requirement_78e97402-7367-494f-802b-7266b2d74b48 .
+
+:ContainsRelation_957964c7-fece-4642-99d8-c25382017e77
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_d874d03a-8f60-4a1b-94c4-4ef959d11d42 ;
+        coins2:hasPart      :Requirement_6e61840e-4b4d-4f2b-b223-3a2c745a8394 .
+
+:Requirement_3d3483d0-d37d-4060-8184-ec4664139f25
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "3.1 Aansluiten, wegconstructie" ;
+        coins2:creationDate  "2018-08-10T10:26:53.124Z" ;
+        coins2:description   "De verbinding dient zodanig aan te sluiten op de aangrenzende wegconstructie dat het wegverkeer zonder enige hinder kan doorstromen." ;
+        coins2:name          "Aansluiten, wegconstructie" ;
+        coins2:userID        "3.1" .
+
+:Function_e0291162-4520-4ad2-9725-94eb6dcd6e2d
+        a                    coins2:CoinsContainerObject , se:Function ;
+        rdfs:label           "Verlichten" ;
+        coins2:creationDate  "2018-08-13T08:34:33.386Z"^^xsd:dateTime ;
+        coins2:name          "Verlichten" ;
+        se:hasRequirement    :Requirement_f933e5ed-7ac5-4225-9441-40f00ff23a01 , :Requirement_cb13a378-a6cb-48a3-b419-8524a29cbc39 .
+
+:Requirement_78e97402-7367-494f-802b-7266b2d74b48
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.2.2 Doorstromen, fietsstroken" ;
+        coins2:creationDate  "2018-08-10T09:13:03.491Z" ;
+        coins2:description   "De verbinding dient uitgevoerd te zijn met 1-zijdig fietsstrook met een breedte van 2 m'." ;
+        coins2:name          "Doorstromen, fietsstroken" ;
+        coins2:userID        "1.1.2.2" .
+
+:Requirement_f933e5ed-7ac5-4225-9441-40f00ff23a01
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.6.1.2 Armaturen, straling" ;
+        coins2:creationDate  "2018-08-10T10:03:15.388Z" ;
+        coins2:description   "Armaturen dienen uitsluitend de wegverharding te verlichten." ;
+        coins2:name          "Armaturen, straling" ;
+        coins2:userID        "1.1.6.1.2 " .
+
+:Requirement_bcd41e68-c3b8-4305-91d0-088d15b66651
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.5.1 Markeren, type wegmarkering" ;
+        coins2:creationDate  "2018-08-10T09:52:08.445Z" ;
+        coins2:description   "De verbinding dient voorzien te zijn van wegmarkering van oplossingsvrij, wit thermoplastisch materiaal. " ;
+        coins2:name          "Markeren, type wegmarkering" ;
+        coins2:userID        "1.1.5.1 " .
+
+:Requirement_1242668a-f476-46a3-a471-b0c245b39b34
+        a                    coins2:CoinsContainerObject , se:Requirement ;
+        rdfs:label           "1.2.2.2 Dragen calamiteitenbelasting, algemeen" ;
+        coins2:creationDate  "2018-08-13T08:45:28.336Z"^^xsd:dateTime ;
+        coins2:description   "De verbinding dient bestand te zijn tegen alle belastingen veroorzaakt door calamiteiten zoals beschreven in NEN6702." ;
+        coins2:name          "Dragen calamiteitenbelasting, algemeen" ;
+        coins2:userID        "1.2.2.2" .
+
+:ContainsRelation_e9c0508d-e0db-4fb3-b14b-1de431a3be8e
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_bf3db539-c4f2-4a39-a560-a0b7eeef03b5 ;
+        coins2:hasPart      :Requirement_d88f0401-1a36-4942-be96-9edbee6f1227 .
+
+:ContainsRelation_1870701d-3028-4fe0-affd-997fcedb3896
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_6e61840e-4b4d-4f2b-b223-3a2c745a8394 ;
+        coins2:hasPart      :Requirement_cb13a378-a6cb-48a3-b419-8524a29cbc39 .
+
+:Requirement_cb13a378-a6cb-48a3-b419-8524a29cbc39
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.6.1.1 Openbare verlichting, verlichtingswaarde" ;
+        coins2:creationDate  "2018-08-10T09:59:31.325Z" ;
+        coins2:description   "Openbare verlichting dient de gehele weg te verlichten met een gemiddelde waarde van 1 CD/m2." ;
+        coins2:name          "Openbare verlichting, verlichtingswaarde" ;
+        coins2:userID        "1.1.6.1.1" .
+
+:SystemSlot_12a94f8d-9601-49f7-aeb8-60d27a2558d3
+        a                    se:SystemSlot , coins2:CoinsContainerObject ;
+        rdfs:label           "Wegconstructie  " ;
+        coins2:creationDate  "2018-08-10T10:10:50.958Z"^^xsd:dateTime ;
+        coins2:name          "Wegconstructie" ;
+        se:hasFunction       :Function_aeb5f5a6-1526-43a8-96c8-23b9de52f758 , :Function_7f21d504-f938-4522-a9fc-807658631686 , :Function_9dfbf517-3c2a-481f-bf0f-34c2759510be ;
+        se:hasRequirement    :Requirement_98819b6d-c442-4083-8f22-9a714112649b , :Requirement_bcd41e68-c3b8-4305-91d0-088d15b66651 .
+
+:ContainsRelation_d9807fa2-47a8-4930-894e-d1433ba2991f
+        a                   coins2:CoinsContainerObject , se:ContainsSystemSlot ;
+        coins2:hasAssembly  :SystemSlot_12a94f8d-9601-49f7-aeb8-60d27a2558d3 ;
+        coins2:hasPart      :SystemSlot_15f24db2-5b67-477d-bdeb-dbe4427a83c5 .
+
+:Function_922f2e09-fc93-4b67-9c9a-26dc4407f908
+        a                    coins2:CoinsContainerObject , se:Function ;
+        rdfs:label           "Dragen / Oeververbinding" ;
+        coins2:creationDate  "2018-08-13T08:40:41.484Z"^^xsd:dateTime ;
+        coins2:name          "Dragen / Oeververbinding" ;
+        se:hasRequirement    :Requirement_1242668a-f476-46a3-a471-b0c245b39b34 , :Requirement_73b4eb2a-78a9-4547-ba05-d49385deff1d , :Requirement_65d373ff-182e-4a43-806d-09648fa70903 , :Requirement_4f4f34ee-b998-4eda-9d3e-e38d7356db49 .
+
+:Requirement_554bab4d-8505-46f8-9269-c4d029281bf0
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "3 Externe raakvlakeisen, algemeen" ;
+        coins2:creationDate  "2018-08-10T10:28:40.956Z" ;
+        coins2:description   "De verbinding dient aan te sluiten op externe raakvlakken." ;
+        coins2:name          "Externe raakvlakeisen, algemeen" ;
+        coins2:userID        "3 " .
+
+:ContainsRelation_998dde86-f3ff-4f2d-a235-7bf761d96267
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_0443deeb-badd-4ae1-905b-fe11a26c90b4 ;
+        coins2:hasPart      :Requirement_bf3db539-c4f2-4a39-a560-a0b7eeef03b5 .
+
+:ContainsRelation_1c042a89-5e7b-401c-8d76-f386c549402c
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_5b432cfa-6f39-460b-adac-1f239ed8d970 ;
+        coins2:hasPart      :Requirement_73b4eb2a-78a9-4547-ba05-d49385deff1d .
+
+:Requirement_3073f604-199f-4c96-ab24-713f999f26d9
+        a                    coins2:CoinsContainerObject , se:Requirement ;
+        rdfs:label           "2.2.2 Kruisen door wegverkeer, nat dwarsprofiel" ;
+        coins2:creationDate  "2018-08-13T09:04:04.613Z"^^xsd:dateTime ;
+        coins2:description   "De verbinding dient een doorstroom profiel te hebben van minimaal 10 m2, met een maximale diepte van 1,5 m'" ;
+        coins2:name          "Kruisen door wegverkeer, nat dwarsprofiel" ;
+        coins2:userID        "2.2.2" .
+
+:ContainsRelation_d7bf8dc3-0182-4112-a83f-828af5d06bd3
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_e9fb5988-ed1c-4ab4-8d9e-10404961c6c9 ;
+        coins2:hasPart      :Requirement_bcd41e68-c3b8-4305-91d0-088d15b66651 .
+
+:Requirement_8df3554d-b10f-4967-94ff-5b0ac5e2ca5a
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.3.2 Verharding, asfalttype" ;
+        coins2:creationDate  "2018-08-10T09:26:56.502Z" ;
+        coins2:description   "De verharding dient uitgevoerd te zijn als een wegverharding in zeer open asfaltbeton (ZOAB)." ;
+        coins2:name          "Verharding, asfalttype" ;
+        coins2:userID        "1.1.3.2" .
+
+:Requirement_98819b6d-c442-4083-8f22-9a714112649b
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "3.2.1 Veiligheid exploitatiefase, eisen bermbeveiliging" ;
+        coins2:creationDate  "2018-08-10T10:46:49.734Z" ;
+        coins2:description   "De bermbeveiliging van De verbinding dient te voldoen aan de eisen in het handboek 'Bermbeveiligingsvoorzieningen', hoofdstuk 8." ;
+        coins2:name          "Veiligheid exploitatiefase, eisen bermbeveiliging" ;
+        coins2:userID        "3.2.1" .
+
+:Function_623e0eec-488c-46ec-9fcd-1e9d2de9642c
+        a                    coins2:CoinsContainerObject , se:Function ;
+        rdfs:label           "Kruisen" ;
+        coins2:creationDate  "2018-08-13T08:49:47.831Z"^^xsd:dateTime ;
+        coins2:name          "Kruisen" ;
+        se:hasRequirement    :Requirement_96485017-8c46-4da6-99ec-2acae8557a8c , :Requirement_d968c972-0de6-4791-b49c-c8acfb1da294 , :Requirement_0afa1c4d-9aad-4401-b07d-69ea5f5abae7 , :Requirement_3073f604-199f-4c96-ab24-713f999f26d9 .
+
+:ContainsRelation_85cf0ad2-27f6-4cdb-9ad1-6f91af7b5339
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_0443deeb-badd-4ae1-905b-fe11a26c90b4 ;
+        coins2:hasPart      :Requirement_f1e5b2ce-4055-4f7e-a110-1e4617d36552 .
+
+:SystemSlot_6f56464b-e638-4250-a8da-4ff026db1fa2
+        a                    coins2:CoinsContainerObject , se:SystemSlot ;
+        rdfs:label           "Openbare verlichting" ;
+        coins2:creationDate  "2018-08-13T08:27:37.217Z"^^xsd:dateTime ;
+        coins2:name          "Openbare verlichting " ;
+        se:hasFunction       :Function_e0291162-4520-4ad2-9725-94eb6dcd6e2d .
+
+:ContainsRelation_89f9e293-3933-48fe-8c71-84da91fc4472
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_20b41f61-b865-47f8-8779-20dce4fc177a ;
+        coins2:hasPart      :Requirement_4f4f34ee-b998-4eda-9d3e-e38d7356db49 .
+
+:ContainsRelation_e837bcb3-1fac-4fde-bc5b-42c08e53ff1a
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_6e61840e-4b4d-4f2b-b223-3a2c745a8394 ;
+        coins2:hasPart      :Requirement_f933e5ed-7ac5-4225-9441-40f00ff23a01 .
+
+:Requirement_a3c0ab04-cede-44b0-b502-155b42705fe6
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.4 Doorstromen, snelheid wegverkeer" ;
+        coins2:creationDate  "2018-08-10T09:45:35.693Z" ;
+        coins2:description   "De verbinding dient geschikt te zijn voor wegverkeer met een maximumsnelheid van 80 km/h." ;
+        coins2:name          "Doorstromen, snelheid wegverkeer" ;
+        coins2:userID        "1.1.4" .
+
+:Requirement_bf3db539-c4f2-4a39-a560-a0b7eeef03b5
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1 Geleiden, algemeen" ;
+        coins2:creationDate  "2018-08-10T08:12:49.532Z" ;
+        coins2:description   "De verbinding dient het wegverkeer op een efficiente, comfortabele en veilige wijze te geleiden." ;
+        coins2:name          "Geleiden, algemeen" ;
+        coins2:userID        "1.1" .
+
+:Requirement_7fd1bba8-de5a-441a-ba32-1539aa72ab05
+        a                    coins2:CoinsContainerObject , se:Requirement ;
+        rdfs:label           "2.2 Kruisen door wegverkeer, functionaliteit" ;
+        coins2:creationDate  "2018-08-13T08:59:56.592Z"^^xsd:dateTime ;
+        coins2:description   "De verbinding dient de Vaart het wegverkeer zodanig te kruisen dat de functionaliteit ervan gehandhaafd blijft." ;
+        coins2:name          "Kruisen door wegverkeer, functionaliteit" ;
+        coins2:userID        "2.2" .
+
+:Requirement_65d373ff-182e-4a43-806d-09648fa70903
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.2.1.1 Dragen verkeersbelasting, verkeersklasse" ;
+        coins2:creationDate  "2018-08-10T10:34:28.255Z" ;
+        coins2:description   "De verbinding dient geschikt te zijn voor wegverkeer met verkeersklasse VOSB 60" ;
+        coins2:name          "Dragen verkeersbelasting, verkeersklasse" ;
+        coins2:userID        "1.2.1.1" .
+
+:Requirement_d67be822-149d-4d95-a3be-c86627fc1063
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "3.2 Aansluiten, bermbeveiliging" ;
+        coins2:creationDate  "2018-08-10T10:48:49.559Z" ;
+        coins2:description   "De verbinding dient zodanig uitgevoerd te zijn dat de bermbeveiliging in horizontale en verticale zin vloeiend doorloopt." ;
+        coins2:name          "Aansluiten, bermbeveiliging" ;
+        coins2:userID        "3.2" .
+
+:ContainsRelation_838ce55f-1e17-4112-8011-6b2af9b25e90
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_bf3db539-c4f2-4a39-a560-a0b7eeef03b5 ;
+        coins2:hasPart      :Requirement_a3c0ab04-cede-44b0-b502-155b42705fe6 .
+
+:Requirement_d874d03a-8f60-4a1b-94c4-4ef959d11d42
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.1.6 Verlichten rijbaan, algemeen" ;
+        coins2:creationDate  "2018-08-10T09:55:06.811Z" ;
+        coins2:description   "De verbinding dient voorzien te zijn van afdoende openbare verlichting voor het verlichten van de rijbanen. " ;
+        coins2:name          "Verlichten rijbaan, algemeen" ;
+        coins2:userID        "1.1.6" .
+
+:Requirement_0443deeb-badd-4ae1-905b-fe11a26c90b4
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1 Faciliteren wegverkeer, topeis" ;
+        coins2:creationDate  "2018-08-10T08:10:07.578Z" ;
+        coins2:description   "De verbinding dient geschikt te zijn voor het faciliteren van wegverkeer en fietsverkeer" ;
+        coins2:name          "Faciliteren wegverkeer, topeis" ;
+        coins2:userID        "1" .
+
+:ContainsRelation_ced52853-7b17-4147-a97a-c3404dc4e137
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_04c7cbff-b9f5-43bc-89af-cdabca3e10c6 ;
+        coins2:hasPart      :Requirement_82e1ca33-eb93-47fc-b8b2-77e7332b6779 .
+
+:Requirement_0afa1c4d-9aad-4401-b07d-69ea5f5abae7
+        a                    coins2:CoinsContainerObject , se:Requirement ;
+        rdfs:label           "2.2.1 Kruisen door wegverkeer, vaargeul" ;
+        coins2:creationDate  "2018-08-13T08:57:44.709Z"^^xsd:dateTime ;
+        coins2:description   "De verbinding dient geschikt te zijn voor het passeren van een maaiboot, de afmeting van de maaiboot zijn 1,0 * 2,5 m. heeft." ;
+        coins2:name          "Kruisen door wegverkeer, vaargeul" ;
+        coins2:userID        "2.2.1" .
+
+:Requirement_4f4f34ee-b998-4eda-9d3e-e38d7356db49
+        a                    se:Requirement , coins2:CoinsContainerObject ;
+        rdfs:label           "1.2.1.2 Dragen verkeersbelasting, zetting overgangsconstructies" ;
+        coins2:creationDate  "2018-08-10T10:42:39.076Z" ;
+        coins2:description   "De verbinding dient ter plaatse van de overgangen tussen kunstwerken en aardebanen in een tijdsbestek van 5 jaar na oplevering niet meer zetting te vertonen dan 10 mm/m van het lengteprofiel." ;
+        coins2:name          "Dragen verkeersbelasting, zetting overgangsconstructies" ;
+        coins2:userID        "1.2.1.2" .
+
+:ContainsRelation_8e2c98fc-a42d-4381-bcb0-3425ccc9aae1
+        a                   se:ContainsRequirement , coins2:CoinsContainerObject ;
+        coins2:hasAssembly  :Requirement_8df3554d-b10f-4967-94ff-5b0ac5e2ca5a ;
+        coins2:hasPart      :Requirement_8348c1b2-522f-4ccb-8762-2b428a83b8be .

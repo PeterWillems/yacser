@@ -93,6 +93,7 @@ type Requirement {
 }
 
 type SystemInterface {
+	coins: CoinsObject
 	datasetId: Int!
 	uri: String!
 	label: String!
@@ -258,7 +259,7 @@ type Mutation {
   updateRealisationModule(realisationModuleInput: RealisationModuleInput!): RealisationModule
   updateRealisationPort(realisationPortInput: RealisationPortInput!): RealisationPort
   updateRequirement(requirementInput: RequirementInput, coinsObjectInput: CoinsObjectInput): Requirement
-  updateSystemInterface(systemInterfaceInput: SystemInterfaceInput!): SystemInterface
+  updateSystemInterface(systemInterfaceInput: SystemInterfaceInput!, coinsObjectInput: CoinsObjectInput): SystemInterface
   updateSystemSlot(systemSlotInput: SystemSlotInput!, coinsObjectInput: CoinsObjectInput): SystemSlot
   deleteFunction(datasetId: Int!, uri: String!): Function
   deleteHamburger(datasetId: Int!, uri: String!): Hamburger

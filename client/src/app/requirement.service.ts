@@ -1,10 +1,8 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {CoinsObjectInput, Mutation, Query, Requirement, RequirementInput, SystemSlotInput} from './types';
+import {CoinsObjectInput, Mutation, Query, Requirement, RequirementInput} from './types';
 import {
   ALL_REQUIREMENTS,
-  ALL_SYSTEM_INTERFACES,
-  ALL_SYSTEM_SLOTS,
   CREATE_REQUIREMENT,
   DELETE_REQUIREMENT,
   UPDATE_REQUIREMENT
@@ -30,7 +28,13 @@ export class RequirementService {
         datasetId: datasetId
       }
     })
-      .valueChanges.subscribe((value => this.allRequirementsUpdated.emit(value.data.allRequirements))
+      .valueChanges.subscribe((value => {
+        const requirements = <Requirement[]>[];
+        for (let i = 0; i < value.data.allRequirements.length; i++) {
+          requirements.push(value.data.allRequirements[i]);
+        }
+        this.allRequirementsUpdated.emit(requirements);
+      })
     );
   }
 

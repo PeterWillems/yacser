@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemInterface;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemInterfaceInput;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsObject;
 import nl.tno.willemsph.coins_navigator.se.model.GetSystemInterface;
 import nl.tno.willemsph.coins_navigator.se.model.PutSystemInterface;
 
@@ -49,7 +51,8 @@ public class SystemInterfaceRepository {
 		return new SystemInterface(datasetId, systemInterface.getUri().toString(), systemInterface.getLabel());
 	}
 
-	public SystemInterface updateOne(SystemInterfaceInput systemInterfaceInput) throws URISyntaxException, IOException {
+	public SystemInterface updateOne(SystemInterfaceInput systemInterfaceInput, CoinsObjectInput coinsObjectInput)
+			throws URISyntaxException, IOException {
 		URI uri = new URI(systemInterfaceInput.getUri());
 		GetSystemInterface getSystemInterface = seService.getSystemInterface(systemInterfaceInput.getDatasetId(),
 				uri.getFragment());
@@ -79,7 +82,11 @@ public class SystemInterfaceRepository {
 			}
 			putSystemInterface.setRequirements(requirements);
 		}
-
+		if (coinsObjectInput != null) {
+			putSystemInterface.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
+		}
+		
 		GetSystemInterface updatedSystemInterface = seService.updateSystemInterface(systemInterfaceInput.getDatasetId(),
 				getSystemInterface.getLocalName(), putSystemInterface);
 		return new SystemInterface(systemInterfaceInput.getDatasetId(), updatedSystemInterface.getUri().toString(),

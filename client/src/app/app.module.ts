@@ -27,6 +27,8 @@ import {PortrealisationComponent} from './hamburger/portrealisation/portrealisat
 import { RealisationPortComponent } from './realisation-module/realisation-port/realisation-port.component';
 import { NumericPropertyComponent } from './numeric-property/numeric-property.component';
 import { CoinsobjectComponent } from './coinsobject/coinsobject.component';
+import { SortableColumnComponent } from './sortable-column/sortable-column.component';
+import { SortableTableDirective } from './sortable-table.directive';
 
 const appRoutes: Routes = [
     {path: '', redirectTo: '/datasets', pathMatch: 'full'},
@@ -67,6 +69,8 @@ const appRoutes: Routes = [
     RealisationPortComponent,
     NumericPropertyComponent,
     CoinsobjectComponent,
+    SortableColumnComponent,
+    SortableTableDirective,
   ],
   imports: [
     BrowserModule,

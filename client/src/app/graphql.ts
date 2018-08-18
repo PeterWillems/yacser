@@ -686,6 +686,12 @@ export const ALL_SYSTEM_INTERFACES = gql`
             datasetId
             uri
             label
+            coins {
+              name
+              userID
+              description
+              creationDate
+            }
             assembly {
               uri
               label
@@ -721,8 +727,8 @@ export const CREATE_SYSTEM_INTERFACE = gql`
 `;
 
 export const UPDATE_SYSTEM_INTERFACE = gql`
-      mutation updateSystemInterface($systemInterfaceInput: SystemInterfaceInput!) {
-        updateSystemInterface (systemInterfaceInput: $systemInterfaceInput) {
+      mutation updateSystemInterface($systemInterfaceInput: SystemInterfaceInput!, $coinsObjectInput: CoinsObjectInput!) {
+        updateSystemInterface (systemInterfaceInput: $systemInterfaceInput, coinsObjectInput: $coinsObjectInput) {
           datasetId
           uri
           label

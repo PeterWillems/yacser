@@ -1,3 +1,8 @@
 .selected {
   background: lightpink;
 }
+
+.repository-body {
+  height: 80vh;
+  overflow-y: auto;
+}

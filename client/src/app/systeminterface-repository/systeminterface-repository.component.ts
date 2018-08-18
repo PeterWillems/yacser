@@ -5,6 +5,7 @@ import {DatasetService} from '../dataset.service';
 import {Subscription} from 'apollo-client/util/Observable';
 import {SystemInterfaceService} from '../system-interface.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ColumnSortedEvent} from '../sort.service';
 
 @Component({
   selector: 'app-systeminterface-repository',
@@ -30,6 +31,7 @@ export class SysteminterfaceRepositoryComponent extends SeObjectRepositoryCompon
     if (this.selectedDataset) {
       this._systemInterfaceService.allSystemInterfacesUpdated.subscribe((systemInterfaces) => {
         this.allSystemInterfaces = systemInterfaces;
+        this.onSorted({sortDirection: 'asc', sortColumn: 'label'});
         this.route.params.subscribe(params => this.setSelectedSystemInterface(params['id']));
       });
       this._systemInterfaceService.queryAllSystemInterfaces(this.selectedDataset.datasetId);
@@ -38,6 +40,10 @@ export class SysteminterfaceRepositoryComponent extends SeObjectRepositoryCompon
 
   setSelectedSystemInterface(systemInterfaceUri: string) {
     if (systemInterfaceUri) {
+      const element = document.getElementById(systemInterfaceUri);
+      if (element && !this.isInViewport(element)) {
+        element.scrollIntoView();
+      }
       for (let index = 0; index < this.allSystemInterfaces.length; index++) {
         if (this.allSystemInterfaces[index].uri === systemInterfaceUri) {
           this.selectedSystemInterface = this.allSystemInterfaces[index];
@@ -74,5 +80,29 @@ export class SysteminterfaceRepositoryComponent extends SeObjectRepositoryCompon
       subscription.unsubscribe();
     });
     this._systemInterfaceService.deleteSystemInterface(this.allSystemInterfaces[index].datasetId, this.allSystemInterfaces[index].uri);
+  }
+
+  onSorted(criteria: ColumnSortedEvent): void {
+    this.allSystemInterfaces = this.allSystemInterfaces.sort((a, b) => {
+      if (criteria.sortDirection === 'desc') {
+        switch (criteria.sortColumn) {
+          case 'label':
+            return (a.label < b.label) ? 1 : -1;
+          case 'localName':
+            return (this.localName(a) < this.localName(b)) ? 1 : -1;
+          case 'assembly':
+            return (this.show(a.assembly) < this.show(b.assembly)) ? 1 : -1;
+        }
+      } else {
+        switch (criteria.sortColumn) {
+          case 'label':
+            return (a.label > b.label) ? 1 : -1;
+          case 'localName':
+            return (this.localName(a) > this.localName(b)) ? 1 : -1;
+          case 'assembly':
+            return (this.show(a.assembly) > this.show(b.assembly)) ? 1 : -1;
+        }
+      }
+    });
   }
 }
