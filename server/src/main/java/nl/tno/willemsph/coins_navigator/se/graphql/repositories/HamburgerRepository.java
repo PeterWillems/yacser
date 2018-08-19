@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Hamburger;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.HamburgerInput;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsObject;
 import nl.tno.willemsph.coins_navigator.se.model.GetHamburger;
 import nl.tno.willemsph.coins_navigator.se.model.PutHamburger;
 
@@ -47,7 +49,7 @@ public class HamburgerRepository {
 		return new Hamburger(datasetId, hamburger.getUri().toString(), hamburger.getLabel());
 	}
 
-	public Hamburger updateOne(HamburgerInput hamburgerInput) throws URISyntaxException, IOException {
+	public Hamburger updateOne(HamburgerInput hamburgerInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
 		URI uri = new URI(hamburgerInput.getUri());
 		GetHamburger getHamburger = seService.getHamburger(hamburgerInput.getDatasetId(), uri.getFragment());
 		PutHamburger putHamburger = new PutHamburger();
@@ -75,6 +77,10 @@ public class HamburgerRepository {
 				parts.add(new URI(part));
 			}
 			putHamburger.setPortRealisations(parts);
+		}
+		if (coinsObjectInput != null) {
+			putHamburger.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
 		}
 
 		GetHamburger updatedHamburger = seService.updateHamburger(hamburgerInput.getDatasetId(),

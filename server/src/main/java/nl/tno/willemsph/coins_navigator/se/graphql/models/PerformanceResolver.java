@@ -55,5 +55,17 @@ public class PerformanceResolver implements GraphQLResolver<Performance> {
 				? numericPropertyRepository.findOne(performance.getDatasetId(), valueUri.toString())
 				: null;
 	}
+	
+	public CoinsObject getCoins(Performance performance) throws URISyntaxException, IOException {
+		GetPerformance getPerformance = seService.getPerformance(performance.getDatasetId(),
+				performance.getUri().getFragment());
+		nl.tno.willemsph.coins_navigator.se.model.CoinsObject getCoinsObject = getPerformance.getCoinsObject();
+		CoinsObject coinsObject = new CoinsObject();
+		coinsObject.setName(getCoinsObject.getName());
+		coinsObject.setUserID(getCoinsObject.getUserID());
+		coinsObject.setDescription(getCoinsObject.getDescription());
+		coinsObject.setCreationDate(getCoinsObject.getCreationDate());
+		return coinsObject;
+	}
 
 }

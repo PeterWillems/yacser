@@ -35,6 +35,30 @@
         </td>
       </tr>
       <tr>
+        <td>coins</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='coins'" [iri]="true"
+                        [label]="selectedPerformance.coins?selectedPerformance.coins.name:' '"
+                        [value]="selectedPerformance.coins"
+                        (selectedObject)="onSelectedObject($event, 'coins')"
+                        (sessionStarted)="onSessionStarted('coins')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSelectedObject(selectedPerformance.coins, 'coins')"
+                  [class]="selectedCoinsObject?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="selectedCoinsObject">
+        <td></td>
+        <td>
+          <app-coinsobject [selectedCoinsObject]="selectedCoinsObject"
+                           (updatedCoinsObject)="onSessionEnded($event, 'coins')"></app-coinsobject>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
         <td>assembly</td>
         <td>
           <app-property [editMode]="propertyEdited=='assembly'" [iri]="true" [options]="allPerformances"
@@ -73,7 +97,7 @@
           <app-property [editMode]="propertyEdited=='value'" [iri]="true"
                         [label]="selectedPerformance.value?selectedPerformance.value.label:' '"
                         [value]="selectedPerformance.value"
-                        (selectedObject)="onSelectedObject($event)"
+                        (selectedObject)="onSelectedObject($event, 'value')"
                         (sessionStarted)="onSessionStarted('value')"
                         (sessionEnded)="onSessionEnded($event, 'value')"></app-property>
         </td>

@@ -102,6 +102,12 @@ export const ALL_HAMBURGERS = gql`
             datasetId
             uri
             label
+            coins {
+              name
+              userID
+              description
+              creationDate
+            }
             assembly {
               uri
               label
@@ -223,8 +229,8 @@ export const CREATE_HAMBURGER = gql`
 `;
 
 export const UPDATE_HAMBURGER = gql`
-      mutation updateHamburger($hamburgerInput: HamburgerInput!) {
-        updateHamburger (hamburgerInput: $hamburgerInput) {
+      mutation updateHamburger($hamburgerInput: HamburgerInput!, $coinsObjectInput: CoinsObjectInput!) {
+        updateHamburger (hamburgerInput: $hamburgerInput, coinsObjectInput: $coinsObjectInput) {
           datasetId
           uri
           label
@@ -316,6 +322,12 @@ export const ALL_PERFORMANCES = gql`
             datasetId
             uri
             label
+            coins {
+              name
+              userID
+              description
+              creationDate
+            }
             assembly {
               uri
               label
@@ -346,8 +358,8 @@ export const CREATE_PERFORMANCE = gql`
 `;
 
 export const UPDATE_PERFORMANCE = gql`
-      mutation updatePerformance($performanceInput: PerformanceInput!) {
-        updatePerformance (performanceInput: $performanceInput) {
+      mutation updatePerformance($performanceInput: PerformanceInput!, $coinsObjectInput: CoinsObjectInput!) {
+        updatePerformance (performanceInput: $performanceInput, coinsObjectInput: $coinsObjectInput) {
           datasetId
           uri
           label
@@ -432,6 +444,12 @@ export const ALL_REALISATION_MODULES = gql`
       datasetId
       uri
       label
+      coins {
+        name
+        userID
+        description
+        creationDate
+        }
       assembly {
         uri
         label
@@ -517,8 +535,8 @@ export const CREATE_REALISATION_MODULE = gql`
 `;
 
 export const UPDATE_REALISATION_MODULE = gql`
-  mutation updateRealisationModule($realisationModuleInput: RealisationModuleInput!) {
-     updateRealisationModule (realisationModuleInput: $realisationModuleInput) {
+  mutation updateRealisationModule($realisationModuleInput: RealisationModuleInput!, $coinsObjectInput: CoinsObjectInput!) {
+     updateRealisationModule (realisationModuleInput: $realisationModuleInput, coinsObjectInput: $coinsObjectInput) {
         datasetId
         uri
         label

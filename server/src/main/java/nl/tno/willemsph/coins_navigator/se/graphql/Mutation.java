@@ -97,8 +97,8 @@ public class Mutation implements GraphQLMutationResolver {
 		return newHamburger;
 	}
 
-	public Hamburger updateHamburger(HamburgerInput hamburgerInput) throws URISyntaxException, IOException {
-		return hamburgerRepository.updateOne(hamburgerInput);
+	public Hamburger updateHamburger(HamburgerInput hamburgerInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
+		return hamburgerRepository.updateOne(hamburgerInput, coinsObjectInput);
 	}
 
 	public Hamburger deleteHamburger(int datasetId, String uri) throws URISyntaxException, IOException {
@@ -153,8 +153,8 @@ public class Mutation implements GraphQLMutationResolver {
 		return newPerformance;
 	}
 
-	public Performance updatePerformance(PerformanceInput performanceInput) throws URISyntaxException, IOException {
-		return performanceRepository.updateOne(performanceInput);
+	public Performance updatePerformance(PerformanceInput performanceInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
+		return performanceRepository.updateOne(performanceInput, coinsObjectInput);
 	}
 
 	public Performance deletePerformance(int datasetId, String uri) throws URISyntaxException, IOException {
@@ -171,9 +171,9 @@ public class Mutation implements GraphQLMutationResolver {
 		return newRealisationModule;
 	}
 
-	public RealisationModule updateRealisationModule(RealisationModuleInput realisationModuleInput)
+	public RealisationModule updateRealisationModule(RealisationModuleInput realisationModuleInput, CoinsObjectInput coinsObjectInput)
 			throws URISyntaxException, IOException {
-		return realisationModuleRepository.updateOne(realisationModuleInput);
+		return realisationModuleRepository.updateOne(realisationModuleInput, coinsObjectInput);
 	}
 
 	public RealisationModule deleteRealisationModule(int datasetId, String uri) throws URISyntaxException, IOException {

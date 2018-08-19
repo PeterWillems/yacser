@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {Mutation, Query, Performance, PerformanceInput} from './types';
+import {Mutation, Query, Performance, PerformanceInput, Hamburger, FunctionInput, CoinsObjectInput} from './types';
 import {
   ALL_PERFORMANCES,
   CREATE_PERFORMANCE,
@@ -29,7 +29,14 @@ export class PerformanceService {
         datasetId: datasetId
       }
     })
-      .valueChanges.subscribe((value) => this.allPerformancesUpdated.emit(value.data.allPerformances));
+      .valueChanges.subscribe(value => {
+        const performances = <Performance[]>[];
+        for (let i = 0; i < value.data.allPerformances.length; i++) {
+          performances.push(value.data.allPerformances[i]);
+        }
+        this.allPerformancesUpdated.emit(performances);
+      }
+    );
   }
 
   public createPerformance(performanceInput: PerformanceInput) {
@@ -50,7 +57,7 @@ export class PerformanceService {
     }).subscribe((value) => this.performanceCreated.emit(value.data.createPerformance));
   }
 
-  public mutatePerformance(performanceInput: PerformanceInput) {
+  public mutatePerformance(performanceInput: PerformanceInput, coinsObject: CoinsObjectInput) {
     console.log('mutatePerformance: ' + 'label=' + performanceInput.label);
     this.apollo.mutate<Mutation>({
       mutation: UPDATE_PERFORMANCE,
@@ -62,6 +69,12 @@ export class PerformanceService {
           assembly: performanceInput.assembly,
           parts: performanceInput.parts,
           value: performanceInput.value
+        },
+        coinsObjectInput: {
+          name: coinsObject.name,
+          userID: coinsObject.userID,
+          description: coinsObject.description,
+          creationDate: coinsObject.creationDate
         }
       },
       refetchQueries: [{

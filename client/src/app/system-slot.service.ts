@@ -1,6 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {CoinsObjectInput, Mutation, Query, SeObject, SystemSlot, SystemSlotInput} from './types';
+import {CoinsObjectInput, Mutation, Query, SeObject, SystemInterface, SystemSlot, SystemSlotInput} from './types';
 import {
   ALL_SYSTEM_INTERFACES,
   ALL_SYSTEM_SLOTS,
@@ -32,7 +32,13 @@ export class SystemSlotService {
         datasetId: datasetId
       }
     })
-      .valueChanges.subscribe((value => this.allSystemSlotsUpdated.emit(value.data.allSystemSlots))
+      .valueChanges.subscribe(value => {
+        const systemSlots = <SystemSlot[]>[];
+        for (let i = 0; i < value.data.allSystemSlots.length; i++) {
+          systemSlots.push(value.data.allSystemSlots[i]);
+        }
+        this.allSystemSlotsUpdated.emit(systemSlots);
+      }
     );
   }
 

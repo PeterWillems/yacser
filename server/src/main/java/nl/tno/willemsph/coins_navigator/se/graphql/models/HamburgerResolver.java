@@ -81,5 +81,16 @@ public class HamburgerResolver implements GraphQLResolver<Hamburger> {
 		}
 		return portRealisations;
 	}
+	
+	public CoinsObject getCoins(Hamburger hamburger) throws URISyntaxException, IOException {
+		GetHamburger getHamburger = seService.getHamburger(hamburger.getDatasetId(), hamburger.getUri().getFragment());
+		nl.tno.willemsph.coins_navigator.se.model.CoinsObject getCoinsObject = getHamburger.getCoinsObject();
+		CoinsObject coinsObject = new CoinsObject();
+		coinsObject.setName(getCoinsObject.getName());
+		coinsObject.setUserID(getCoinsObject.getUserID());
+		coinsObject.setDescription(getCoinsObject.getDescription());
+		coinsObject.setCreationDate(getCoinsObject.getCreationDate());
+		return coinsObject;
+	}
 
 }

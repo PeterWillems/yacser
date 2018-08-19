@@ -3,18 +3,18 @@
     <div class="card border-primary">
       <div class="card-header">
         <h5 class="card-title">Realisation Modules</h5></div>
-      <div class="card-body">
-        <table class="table table-hover table-bordered table-sm">
+      <div class="card-body repository-body">
+        <table class="table table-hover table-bordered table-sm" sortable-table (sorted)="onSorted($event)">
           <thead class="thead-light">
           <tr class="table-record">
-            <th>label</th>
-            <th>local name</th>
-            <th>assembly</th>
+            <th sortable-column="label">label</th>
+            <th sortable-column="localName">local name</th>
+            <th sortable-column="assembly">assembly</th>
             <th></th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let realisationModuleItem of allRealisationModules; let i = index" class="table-record" (click)="onSelect(i)"
+          <tr [id]="realisationModuleItem.uri" *ngFor="let realisationModuleItem of allRealisationModules; let i = index" class="table-record" (click)="onSelect(i)"
               [class]="realisationModuleItem == selectedRealisationModule?'selected':''">
             <td>{{realisationModuleItem.label}}</td>
             <td>{{localName(realisationModuleItem)}}</td>

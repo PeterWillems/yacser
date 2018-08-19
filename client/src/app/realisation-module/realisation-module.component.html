@@ -35,6 +35,30 @@
         </td>
       </tr>
       <tr>
+        <td>coins</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='coins'" [iri]="true"
+                        [label]="selectedRealisationModule.coins?selectedRealisationModule.coins.name:' '"
+                        [value]="selectedRealisationModule.coins"
+                        (selectedObject)="onSelectedObject($event, 'coins')"
+                        (sessionStarted)="onSessionStarted('coins')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSelectedObject(selectedRealisationModule.coins, 'coins')"
+                  [class]="selectedCoinsObject?'btn btn-primary  btn-sm':'btn  btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="selectedCoinsObject">
+        <td></td>
+        <td>
+          <app-coinsobject [selectedCoinsObject]="selectedCoinsObject"
+                           (updatedCoinsObject)="onSessionEnded($event, 'coins')"></app-coinsobject>
+        </td>
+        <td></td>
+      </tr>
+      <tr>
         <td>assembly</td>
         <td>
           <app-property [editMode]="propertyEdited=='assembly'" [iri]="true" [options]="allRealisationModules"
@@ -95,7 +119,7 @@
                         [value]="selectedRealisationModule.ports"
                         (sessionStarted)="onSessionStarted('ports')"
                         (sessionEnded)="onSessionEnded($event, 'ports')"
-                        (selectedObject)="onSelectedObject($event)"
+                        (selectedObject)="onSelectedObject($event, 'ports')"
                         (createObjectRequested)="onCreateObjectRequested($event)"
                         (deleteObjectRequested)="onDeleteObjectRequested($event)">
           </app-property>
@@ -111,8 +135,8 @@
         <td></td>
         <td>
           <app-realisation-port [selectedRealisationPort]="selectedPort"
-          [assemblyOptions]="portAssemblyOptions"
-          [partOptions]="portPartOptions"></app-realisation-port>
+                                [assemblyOptions]="portAssemblyOptions"
+                                [partOptions]="portPartOptions"></app-realisation-port>
         </td>
         <td></td>
       </tr>

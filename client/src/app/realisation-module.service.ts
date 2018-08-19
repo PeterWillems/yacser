@@ -1,7 +1,9 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {
-  Mutation, PortRealisation,
+  CoinsObjectInput,
+  FunctionInput,
+  Mutation, Performance, PortRealisation,
   PortRealisationInput,
   Query,
   RealisationModule,
@@ -44,7 +46,14 @@ export class RealisationModuleService {
         datasetId: datasetId
       }
     })
-      .valueChanges.subscribe((value) => this.allRealisationModulesUpdated.emit(value.data.allRealisationModules));
+      .valueChanges.subscribe(value => {
+        const realisationModules = <RealisationModule[]>[];
+        for (let i = 0; i < value.data.allRealisationModules.length; i++) {
+          realisationModules.push(value.data.allRealisationModules[i]);
+        }
+        this.allRealisationModulesUpdated.emit(realisationModules);
+      }
+    );
   }
 
   public queryOneRealisationModule(datasetId: number, uri: string) {
@@ -77,7 +86,7 @@ export class RealisationModuleService {
     }).subscribe((value) => this.realisationModuleCreated.emit(value.data.createRealisationModule));
   }
 
-  public mutateRealisationModule(realisationModuleInput: RealisationModuleInput) {
+  public mutateRealisationModule(realisationModuleInput: RealisationModuleInput, coinsObject: CoinsObjectInput) {
     console.log('mutateRealisationModule: ' + 'label=' + realisationModuleInput.label);
     this.apollo.mutate<Mutation>({
       mutation: UPDATE_REALISATION_MODULE,
@@ -90,6 +99,12 @@ export class RealisationModuleService {
           parts: realisationModuleInput.parts,
           performances: realisationModuleInput.performances,
           ports: realisationModuleInput.ports
+        },
+        coinsObjectInput: {
+          name: coinsObject.name,
+          userID: coinsObject.userID,
+          description: coinsObject.description,
+          creationDate: coinsObject.creationDate
         }
       },
       refetchQueries: [{

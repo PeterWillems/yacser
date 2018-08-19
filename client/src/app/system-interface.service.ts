@@ -28,13 +28,13 @@ export class SystemInterfaceService {
         datasetId: datasetId
       }
     })
-      .valueChanges.subscribe((value => {
+      .valueChanges.subscribe(value => {
         const systemInterfaces = <SystemInterface[]>[];
         for (let i = 0; i < value.data.allSystemInterfaces.length; i++) {
           systemInterfaces.push(value.data.allSystemInterfaces[i]);
         }
         this.allSystemInterfacesUpdated.emit(systemInterfaces);
-      })
+      }
     );
   }
 

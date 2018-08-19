@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {NumericProperty, Performance, PortRealisation, PortRealisationInput, SeObject} from '../types';
+import {CoinsObject, CoinsObjectInput, NumericProperty, Performance, PortRealisation, PortRealisationInput, SeObject} from '../types';
 import {SeObjectComponent} from '../se-object-component';
 import {PerformanceService} from '../performance.service';
 import {NumericPropertyService} from '../numeric-property.service';
@@ -13,6 +13,7 @@ import {Subscription} from 'apollo-client/util/Observable';
 export class PerformanceComponent extends SeObjectComponent implements OnInit, OnChanges {
   @Input() selectedPerformance: Performance;
   allPerformances: Performance[];
+  selectedCoinsObject: CoinsObject;
   allNumericProperties: NumericProperty[];
   selectedNumericProperty: NumericProperty;
 
@@ -38,10 +39,13 @@ export class PerformanceComponent extends SeObjectComponent implements OnInit, O
           this.selectedNumericProperty = null;
         }
       }
+      if (this.selectedCoinsObject) {
+        this.selectedCoinsObject = this.selectedPerformance.coins;
+      }
     }
   }
 
-  onSessionEnded(propertyValue: string, propertyLabel: string) {
+  onSessionEnded(propertyValue: any, propertyLabel: string) {
     console.log('onSessionEnded value: ' + (propertyValue ? propertyValue : '<null>') + ' propertyLabel: ' + propertyLabel);
     switch (propertyLabel) {
       case 'label':
@@ -61,18 +65,33 @@ export class PerformanceComponent extends SeObjectComponent implements OnInit, O
         break;
     }
     const performanceInput = this._performanceService.clonePerformanceInput(this.selectedPerformance);
+    const coinsObjectInput = propertyLabel === 'coins' ? propertyValue
+      : new CoinsObjectInput(this.selectedPerformance.coins.name,
+        this.selectedPerformance.coins.userID, this.selectedPerformance.coins.description, this.selectedPerformance.coins.creationDate);
     performanceInput[propertyLabel] = (propertyValue ? propertyValue : null);
     console.log('propertyLabel=' + propertyLabel + ' ' + (performanceInput[propertyLabel] ? performanceInput[propertyLabel] : '<null>'));
-    this._performanceService.mutatePerformance(performanceInput);
+    this._performanceService.mutatePerformance(performanceInput, coinsObjectInput);
     this.propertyEdited = null;
   }
 
-  onSelectedObject(object: any): void {
-    console.log('PerformanceComponent:onSelectedObject');
-    if (this.selectedNumericProperty && this.selectedNumericProperty.uri === object.uri) {
-      this.selectedNumericProperty = null;
-    } else {
-      this.selectedNumericProperty = <NumericProperty>object;
+  onSelectedObject(object: any, label: string): void {
+    console.log('PerformanceComponent:onSelectedObject ' + label);
+    switch (label) {
+      case 'coins':
+        if (this.selectedCoinsObject) {
+          this.selectedCoinsObject = null;
+        } else {
+          this.selectedCoinsObject = <CoinsObject>object;
+        }
+        console.log('RequirementComponent:onSelectedObject this.selectedCoinsObject ' + this.selectedCoinsObject);
+        break;
+      case 'value':
+        if (this.selectedNumericProperty && this.selectedNumericProperty.uri === object.uri) {
+          this.selectedNumericProperty = null;
+        } else {
+          this.selectedNumericProperty = <NumericProperty>object;
+        }
+        break;
     }
   }
 
@@ -81,7 +100,8 @@ export class PerformanceComponent extends SeObjectComponent implements OnInit, O
       console.log('numericPropertyCreated');
       const performanceInput = this._performanceService.clonePerformanceInput(this.selectedPerformance);
       performanceInput.value = numericProperty.uri;
-      this._performanceService.mutatePerformance(performanceInput);
+      this._performanceService.mutatePerformance(performanceInput, new CoinsObjectInput(this.selectedPerformance.coins.name,
+        this.selectedPerformance.coins.userID, this.selectedPerformance.coins.description, this.selectedPerformance.coins.creationDate));
       subscription.unsubscribe();
     });
     console.log('onCreateObjectRequested datasetId=' + this.selectedPerformance.datasetId);
@@ -93,7 +113,8 @@ export class PerformanceComponent extends SeObjectComponent implements OnInit, O
       console.log('numericPropertyDeleted');
       const performanceInput = this._performanceService.clonePerformanceInput(this.selectedPerformance);
       performanceInput.value = null;
-      this._performanceService.mutatePerformance(performanceInput);
+      this._performanceService.mutatePerformance(performanceInput, new CoinsObjectInput(this.selectedPerformance.coins.name,
+        this.selectedPerformance.coins.userID, this.selectedPerformance.coins.description, this.selectedPerformance.coins.creationDate));
       subscription.unsubscribe();
     });
     this._numericPropertyService.deleteNumericProperty(this.selectedPerformance.datasetId, this.selectedPerformance.value.uri);

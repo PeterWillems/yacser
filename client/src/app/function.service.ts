@@ -22,7 +22,13 @@ export class FunctionService {
         datasetId: datasetId
       }
     })
-      .valueChanges.subscribe((value => this.allFunctionsUpdated.emit(value.data.allFunctions))
+      .valueChanges.subscribe(value => {
+        const functions = <Function[]>[];
+        for (let i = 0; i < value.data.allFunctions.length; i++) {
+          functions.push(value.data.allFunctions[i]);
+        }
+        this.allFunctionsUpdated.emit(functions);
+      }
     );
   }
 

@@ -7,6 +7,7 @@ import {Dataset, Function, FunctionInput, Requirement, SystemInterface, SystemSl
 import {SeObjectRepositoryComponent} from '../se-object-repository.component';
 import {Subscription} from 'apollo-client/util/Observable';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ColumnSortedEvent} from '../sort.service';
 
 @Component({
   selector: 'app-function-repository',
@@ -35,6 +36,7 @@ export class FunctionRepositoryComponent extends SeObjectRepositoryComponent imp
     if (this.selectedDataset) {
       this._functionService.allFunctionsUpdated.subscribe((functions) => {
         this.allFunctions = functions;
+        this.onSorted({sortDirection: 'asc', sortColumn: 'label'});
         this.route.params.subscribe(params => this.setSelectedFunction(params['id']));
       });
       this._functionService.queryAllFunctions(this.selectedDataset.datasetId);
@@ -53,6 +55,10 @@ export class FunctionRepositoryComponent extends SeObjectRepositoryComponent imp
 
   setSelectedFunction(functionUri: string) {
     if (functionUri) {
+      const element = document.getElementById(functionUri);
+      if (element && !this.isInViewport(element)) {
+        element.scrollIntoView();
+      }
       for (let index = 0; index < this.allFunctions.length; index++) {
         if (this.allFunctions[index].uri === functionUri) {
           this.selectedFunction = this.allFunctions[index];
@@ -81,5 +87,29 @@ export class FunctionRepositoryComponent extends SeObjectRepositoryComponent imp
       subscription.unsubscribe();
     });
     this._functionService.deleteFunction(this.allFunctions[index].datasetId, this.allFunctions[index].uri);
+  }
+
+  onSorted(criteria: ColumnSortedEvent): void {
+    this.allFunctions = this.allFunctions.sort((a, b) => {
+      if (criteria.sortDirection === 'desc') {
+        switch (criteria.sortColumn) {
+          case 'label':
+            return (a.label < b.label) ? 1 : -1;
+          case 'localName':
+            return (this.localName(a) < this.localName(b)) ? 1 : -1;
+          case 'assembly':
+            return (this.show(a.assembly) < this.show(b.assembly)) ? 1 : -1;
+        }
+      } else {
+        switch (criteria.sortColumn) {
+          case 'label':
+            return (a.label > b.label) ? 1 : -1;
+          case 'localName':
+            return (this.localName(a) > this.localName(b)) ? 1 : -1;
+          case 'assembly':
+            return (this.show(a.assembly) > this.show(b.assembly)) ? 1 : -1;
+        }
+      }
+    });
   }
 }

@@ -28,13 +28,13 @@ export class RequirementService {
         datasetId: datasetId
       }
     })
-      .valueChanges.subscribe((value => {
+      .valueChanges.subscribe(value => {
         const requirements = <Requirement[]>[];
         for (let i = 0; i < value.data.allRequirements.length; i++) {
           requirements.push(value.data.allRequirements[i]);
         }
         this.allRequirementsUpdated.emit(requirements);
-      })
+      }
     );
   }
 

@@ -1,6 +1,16 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
-import {Mutation, Query, Hamburger, HamburgerInput, PortRealisation, PortRealisationInput} from './types';
+import {
+  Mutation,
+  Query,
+  Hamburger,
+  HamburgerInput,
+  PortRealisation,
+  PortRealisationInput,
+  Function,
+  FunctionInput,
+  CoinsObjectInput
+} from './types';
 import {
   ALL_HAMBURGERS, ALL_REALISATION_MODULES, ALL_SYSTEM_SLOTS,
   CREATE_HAMBURGER, CREATE_PORT_REALISATION,
@@ -34,7 +44,14 @@ export class HamburgerService {
         datasetId: datasetId
       }
     })
-      .valueChanges.subscribe((value) => this.allHamburgersUpdated.emit(value.data.allHamburgers));
+      .valueChanges.subscribe(value => {
+        const hamburgers = <Hamburger[]>[];
+        for (let i = 0; i < value.data.allHamburgers.length; i++) {
+          hamburgers.push(value.data.allHamburgers[i]);
+        }
+        this.allHamburgersUpdated.emit(hamburgers);
+      }
+    );
   }
 
   public queryOneHamburger(datasetId: number, uri: string) {
@@ -67,7 +84,7 @@ export class HamburgerService {
     }).subscribe((value) => this.hamburgerCreated.emit(value.data.createHamburger));
   }
 
-  public mutateHamburger(hamburgerInput: HamburgerInput) {
+  public mutateHamburger(hamburgerInput: HamburgerInput, coinsObject: CoinsObjectInput) {
     console.log('mutateHamburger: ' + 'label=' + hamburgerInput.label);
     this.apollo.mutate<Mutation>({
       mutation: UPDATE_HAMBURGER,
@@ -81,6 +98,12 @@ export class HamburgerService {
           functionalUnit: hamburgerInput.functionalUnit,
           technicalSolution: hamburgerInput.technicalSolution,
           portRealisations: hamburgerInput.portRealisations
+        },
+        coinsObjectInput: {
+          name: coinsObject.name,
+          userID: coinsObject.userID,
+          description: coinsObject.description,
+          creationDate: coinsObject.creationDate
         }
       },
       refetchQueries: [{

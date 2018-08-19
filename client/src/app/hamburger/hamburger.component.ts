@@ -1,5 +1,6 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {
+  CoinsObject, CoinsObjectInput,
   Hamburger,
   HamburgerInput,
   PortRealisation,
@@ -25,6 +26,7 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
   allHamburgers: Hamburger[];
   allSystemSlots: SystemSlot[];
   allRealisationModules: RealisationModule[];
+  selectedCoinsObject: CoinsObject;
   selectedPortRealisation: PortRealisation;
   portRealisationAssemblyOptions: PortRealisation[];
   portRealisationPartOptions: PortRealisation[];
@@ -50,6 +52,9 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
   ngOnChanges(simpleChanges: SimpleChanges) {
     if (simpleChanges['selectedHamburger']) {
       this.selectedPortRealisation = null;
+      if (this.selectedCoinsObject) {
+        this.selectedCoinsObject = this.selectedHamburger.coins;
+      }
     }
   }
 
@@ -58,7 +63,7 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
     this.selectedPortRealisation = null;
   }
 
-  onSessionEnded(propertyValue: string, propertyLabel: string) {
+  onSessionEnded(propertyValue: any, propertyLabel: string) {
     console.log('onSessionEnded value: ' + (propertyValue ? propertyValue : '<null>') + ' propertyLabel: ' + propertyLabel);
     switch (propertyLabel) {
       case 'label':
@@ -83,48 +88,64 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
         break;
     }
     const hamburgerInput = this._hamburgerService.cloneHamburgerInput(this.selectedHamburger);
+    const coinsObjectInput = propertyLabel === 'coins' ? propertyValue
+      : new CoinsObjectInput(this.selectedHamburger.coins.name,
+        this.selectedHamburger.coins.userID, this.selectedHamburger.coins.description, this.selectedHamburger.coins.creationDate);
     console.log('propertyLabel=' + propertyLabel + ' ' + (hamburgerInput[propertyLabel] ? hamburgerInput[propertyLabel] : '<null>'));
     hamburgerInput[propertyLabel] = (propertyValue ? propertyValue : null);
     console.log('propertyLabel=' + propertyLabel + ' ' + (hamburgerInput[propertyLabel] ? hamburgerInput[propertyLabel] : '<null>'));
-    this._hamburgerService.mutateHamburger(hamburgerInput);
+    this._hamburgerService.mutateHamburger(hamburgerInput, coinsObjectInput);
     this.propertyEdited = null;
   }
 
-  onSelectedObject(seObject: SeObject): void {
-    console.log('HamburgerComponent:onSelectedObject');
-    if (this.selectedPortRealisation && this.selectedPortRealisation.uri === seObject.uri) {
-      this.selectedPortRealisation = null;
-    } else {
-      this.selectedPortRealisation = <PortRealisation>seObject;
-      this.portRealisationAssemblyOptions = null;
-      this.portRealisationPartOptions = [];
-      this.realisationPortPortOptions = [];
-
-      // query the selected Port Realisation
-      const subscription = <Subscription>this._hamburgerService.oneHamburgerUpdated.subscribe(oneHamburger => {
-        console.log('oneHamburgerUpdated');
-        if (oneHamburger.assembly) {
-          this.portRealisationAssemblyOptions = oneHamburger.assembly.portRealisations;
+  onSelectedObject(object: any, label: string): void {
+    console.log('HamburgerComponent:onSelectedObject ' + label);
+    switch (label) {
+      case 'coins':
+        if (this.selectedCoinsObject) {
+          this.selectedCoinsObject = null;
+        } else {
+          this.selectedCoinsObject = <CoinsObject>object;
         }
-        if (oneHamburger.parts && oneHamburger.parts.length > 0) {
+        console.log('HamburgerComponent:onSelectedObject this.selectedCoinsObject ' + this.selectedCoinsObject);
+        break;
+
+      case 'portRealisations':
+        if (this.selectedPortRealisation && this.selectedPortRealisation.uri === object.uri) {
+          this.selectedPortRealisation = null;
+        } else {
+          this.selectedPortRealisation = <PortRealisation>object;
+          this.portRealisationAssemblyOptions = null;
           this.portRealisationPartOptions = [];
-          for (let index = 0; index < oneHamburger.parts.length; index++) {
-            if (oneHamburger.parts[index].portRealisations && oneHamburger.parts[index].portRealisations.length > 0) {
-              for (let portIndex = 0; portIndex < oneHamburger.parts[index].portRealisations.length; portIndex++) {
-                this.portRealisationPartOptions.push(oneHamburger.parts[index].portRealisations[portIndex]);
+          this.realisationPortPortOptions = [];
+
+          // query the selected Port Realisation
+          const subscription = <Subscription>this._hamburgerService.oneHamburgerUpdated.subscribe(oneHamburger => {
+            console.log('oneHamburgerUpdated');
+            if (oneHamburger.assembly) {
+              this.portRealisationAssemblyOptions = oneHamburger.assembly.portRealisations;
+            }
+            if (oneHamburger.parts && oneHamburger.parts.length > 0) {
+              this.portRealisationPartOptions = [];
+              for (let index = 0; index < oneHamburger.parts.length; index++) {
+                if (oneHamburger.parts[index].portRealisations && oneHamburger.parts[index].portRealisations.length > 0) {
+                  for (let portIndex = 0; portIndex < oneHamburger.parts[index].portRealisations.length; portIndex++) {
+                    this.portRealisationPartOptions.push(oneHamburger.parts[index].portRealisations[portIndex]);
+                  }
+                }
               }
             }
-          }
+            if (oneHamburger.functionalUnit) {
+              this.systemInterfaceInterfaceOptions = oneHamburger.functionalUnit.interfaces;
+            }
+            if (oneHamburger.technicalSolution) {
+              this.realisationPortPortOptions = oneHamburger.technicalSolution.ports;
+            }
+            subscription.unsubscribe();
+          });
+          this._hamburgerService.queryOneHamburger(this.selectedHamburger.datasetId, this.selectedHamburger.uri);
         }
-        if (oneHamburger.functionalUnit) {
-          this.systemInterfaceInterfaceOptions = oneHamburger.functionalUnit.interfaces;
-        }
-        if (oneHamburger.technicalSolution) {
-          this.realisationPortPortOptions = oneHamburger.technicalSolution.ports;
-        }
-        subscription.unsubscribe();
-      });
-      this._hamburgerService.queryOneHamburger(this.selectedHamburger.datasetId, this.selectedHamburger.uri);
+        break;
     }
   }
 
@@ -136,7 +157,8 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
         hamburgerInput.portRealisations = [];
       }
       hamburgerInput.portRealisations.push(portRealisation.uri);
-      this._hamburgerService.mutateHamburger(hamburgerInput);
+      this._hamburgerService.mutateHamburger(hamburgerInput, new CoinsObjectInput(this.selectedHamburger.coins.name,
+        this.selectedHamburger.coins.userID, this.selectedHamburger.coins.description, this.selectedHamburger.coins.creationDate));
       subscription.unsubscribe();
     });
     console.log('onCreateObjectRequested datasetId=' + this.selectedHamburger.datasetId);
@@ -153,7 +175,8 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
           break;
         }
       }
-      this._hamburgerService.mutateHamburger(hamburgerInput);
+      this._hamburgerService.mutateHamburger(hamburgerInput, new CoinsObjectInput(this.selectedHamburger.coins.name,
+        this.selectedHamburger.coins.userID, this.selectedHamburger.coins.description, this.selectedHamburger.coins.creationDate));
       subscription.unsubscribe();
     });
     console.log('onDeleteObjectRequested label=' + object.label);

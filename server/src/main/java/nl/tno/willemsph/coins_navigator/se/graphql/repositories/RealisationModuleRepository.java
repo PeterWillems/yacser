@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationModule;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationModuleInput;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsObject;
 import nl.tno.willemsph.coins_navigator.se.model.GetRealisationModule;
 import nl.tno.willemsph.coins_navigator.se.model.PutRealisationModule;
 
@@ -49,7 +51,7 @@ public class RealisationModuleRepository {
 		return new RealisationModule(datasetId, realisationModule.getUri().toString(), realisationModule.getLabel());
 	}
 
-	public RealisationModule updateOne(RealisationModuleInput realisationModuleInput)
+	public RealisationModule updateOne(RealisationModuleInput realisationModuleInput, CoinsObjectInput coinsObjectInput)
 			throws URISyntaxException, IOException {
 		URI uri = new URI(realisationModuleInput.getUri());
 		GetRealisationModule getRealisationModule = seService
@@ -80,6 +82,11 @@ public class RealisationModuleRepository {
 				ports.add(new URI(port));
 			}
 			putRealisationModule.setPorts(ports);
+		}
+		if (coinsObjectInput != null) {
+			putRealisationModule
+					.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
+							coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
 		}
 
 		GetRealisationModule updatedRealisationModule = seService.updateRealisationModule(

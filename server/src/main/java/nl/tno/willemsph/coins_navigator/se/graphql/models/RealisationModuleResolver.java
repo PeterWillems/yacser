@@ -97,4 +97,16 @@ public class RealisationModuleResolver implements GraphQLResolver<RealisationMod
 		}
 		return hamburgers;
 	}
+	
+	public CoinsObject getCoins(RealisationModule realisationModule) throws URISyntaxException, IOException {
+		GetRealisationModule getRealisationModule = seService.getRealisationModule(realisationModule.getDatasetId(),
+				realisationModule.getUri().getFragment());
+		nl.tno.willemsph.coins_navigator.se.model.CoinsObject getCoinsObject = getRealisationModule.getCoinsObject();
+		CoinsObject coinsObject = new CoinsObject();
+		coinsObject.setName(getCoinsObject.getName());
+		coinsObject.setUserID(getCoinsObject.getUserID());
+		coinsObject.setDescription(getCoinsObject.getDescription());
+		coinsObject.setCreationDate(getCoinsObject.getCreationDate());
+		return coinsObject;
+	}
 }

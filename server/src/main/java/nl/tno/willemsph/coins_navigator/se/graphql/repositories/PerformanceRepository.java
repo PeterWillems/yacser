@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Performance;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.PerformanceInput;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsObject;
 import nl.tno.willemsph.coins_navigator.se.model.GetPerformance;
 import nl.tno.willemsph.coins_navigator.se.model.PutPerformance;
 
@@ -48,7 +50,7 @@ public class PerformanceRepository {
 		return new Performance(datasetId, performance.getUri().toString(), performance.getLabel());
 	}
 
-	public Performance updateOne(PerformanceInput performanceInput) throws URISyntaxException, IOException {
+	public Performance updateOne(PerformanceInput performanceInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
 		URI uri = new URI(performanceInput.getUri());
 		GetPerformance getPerformance = seService.getPerformance(performanceInput.getDatasetId(), uri.getFragment());
 		PutPerformance putPerformance = new PutPerformance();
@@ -66,6 +68,10 @@ public class PerformanceRepository {
 		}
 		if (performanceInput.getValue() != null) {
 			putPerformance.setValue(new URI(performanceInput.getValue()));
+		}
+		if (coinsObjectInput != null) {
+			putPerformance.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
 		}
 
 		GetPerformance updatedPerformance = seService.updatePerformance(performanceInput.getDatasetId(),

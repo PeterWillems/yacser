@@ -23,6 +23,7 @@ type Function {
 }
 
 type Hamburger {
+	coins: CoinsObject
 	datasetId: Int!
 	uri: String!
 	label: String!
@@ -43,6 +44,7 @@ type NumericProperty {
 }
 
 type Performance {
+	coins: CoinsObject
 	datasetId: Int!
 	uri: String!
 	label: String!
@@ -62,6 +64,7 @@ type PortRealisation {
 }
 
 type RealisationModule {
+	coins: CoinsObject
 	datasetId: Int!
 	uri: String!
 	label: String!
@@ -252,11 +255,11 @@ type Mutation {
   createSystemInterface(datasetId: Int!, uri: String!, label: String!): SystemInterface
   createSystemSlot(datasetId: Int!, uri: String!, label: String!): SystemSlot
   updateFunction(functionInput: FunctionInput!, coinsObjectInput: CoinsObjectInput): Function
-  updateHamburger(hamburgerInput: HamburgerInput!): Hamburger
+  updateHamburger(hamburgerInput: HamburgerInput!, coinsObjectInput: CoinsObjectInput): Hamburger
   updateNumericProperty(numericPropertyInput: NumericPropertyInput!): NumericProperty
-  updatePerformance(performanceInput: PerformanceInput!): Performance
+  updatePerformance(performanceInput: PerformanceInput!, coinsObjectInput: CoinsObjectInput): Performance
   updatePortRealisation(portRealisationInput: PortRealisationInput!): PortRealisation
-  updateRealisationModule(realisationModuleInput: RealisationModuleInput!): RealisationModule
+  updateRealisationModule(realisationModuleInput: RealisationModuleInput!, coinsObjectInput: CoinsObjectInput): RealisationModule
   updateRealisationPort(realisationPortInput: RealisationPortInput!): RealisationPort
   updateRequirement(requirementInput: RequirementInput, coinsObjectInput: CoinsObjectInput): Requirement
   updateSystemInterface(systemInterfaceInput: SystemInterfaceInput!, coinsObjectInput: CoinsObjectInput): SystemInterface

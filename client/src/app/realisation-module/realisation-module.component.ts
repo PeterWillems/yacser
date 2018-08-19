@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {RealisationModule, RealisationPort, RealisationPortInput, SeObject} from '../types';
+import {CoinsObject, CoinsObjectInput, RealisationModule, RealisationPort, RealisationPortInput, SeObject} from '../types';
 import {RealisationModuleService} from '../realisation-module.service';
 import {SeObjectComponent} from '../se-object-component';
 import {PerformanceService} from '../performance.service';
@@ -14,6 +14,7 @@ export class RealisationModuleComponent extends SeObjectComponent implements OnI
   @Input() selectedRealisationModule: RealisationModule;
   allRealisationModules: RealisationModule[];
   allPerformances: Performance[];
+  selectedCoinsObject: CoinsObject;
   selectedPort: RealisationPort;
   portAssemblyOptions: RealisationPort[];
   portPartOptions: RealisationPort[];
@@ -34,6 +35,9 @@ export class RealisationModuleComponent extends SeObjectComponent implements OnI
   ngOnChanges(simpleChanges: SimpleChanges) {
     if (simpleChanges['selectedRealisationModule']) {
       this.selectedPort = null;
+      if (this.selectedCoinsObject) {
+        this.selectedCoinsObject = this.selectedRealisationModule.coins;
+      }
     }
   }
 
@@ -42,7 +46,7 @@ export class RealisationModuleComponent extends SeObjectComponent implements OnI
     this.selectedPort = null;
   }
 
-  onSessionEnded(propertyValue: string, propertyLabel: string) {
+  onSessionEnded(propertyValue: any, propertyLabel: string) {
     console.log('onSessionEnded value: ' + (propertyValue ? propertyValue : '<null>') + ' propertyLabel: ' + propertyLabel);
     switch (propertyLabel) {
       case 'label':
@@ -57,42 +61,58 @@ export class RealisationModuleComponent extends SeObjectComponent implements OnI
         break;
     }
     const hamburgerInput = this._realisationModuleService.cloneRealisationModuleInput(this.selectedRealisationModule);
+    const coinsObjectInput = propertyLabel === 'coins' ? propertyValue
+      : new CoinsObjectInput(this.selectedRealisationModule.coins.name,
+        this.selectedRealisationModule.coins.userID, this.selectedRealisationModule.coins.description,
+        this.selectedRealisationModule.coins.creationDate);
     console.log('propertyLabel=' + propertyLabel + ' ' + (hamburgerInput[propertyLabel] ? hamburgerInput[propertyLabel] : '<null>'));
     hamburgerInput[propertyLabel] = (propertyValue ? propertyValue : null);
     console.log('propertyLabel=' + propertyLabel + ' ' + (hamburgerInput[propertyLabel] ? hamburgerInput[propertyLabel] : '<null>'));
-    this._realisationModuleService.mutateRealisationModule(hamburgerInput);
+    this._realisationModuleService.mutateRealisationModule(hamburgerInput, coinsObjectInput);
     this.propertyEdited = null;
   }
 
-  onSelectedObject(seObject: SeObject): void {
-    console.log('RealisationModuleComponent:onSelectedObject');
-    if (this.selectedPort && this.selectedPort.uri === seObject.uri) {
-      this.selectedPort = null;
-    } else {
-      this.selectedPort = <RealisationPort>seObject;
-      this.portAssemblyOptions = null;
-      this.portPartOptions = [];
-
-      // query the selected port
-      const subscription = <Subscription>this._realisationModuleService.oneRealisationModuleUpdated.subscribe(oneRealisationModule => {
-        console.log('oneRealisationModuleUpdated');
-        if (oneRealisationModule.assembly) {
-          this.portAssemblyOptions = oneRealisationModule.assembly.ports;
+  onSelectedObject(object: any, label: string): void {
+    console.log('RealisationModuleComponent:onSelectedObject ' + label);
+    switch (label) {
+      case 'coins':
+        if (this.selectedCoinsObject) {
+          this.selectedCoinsObject = null;
+        } else {
+          this.selectedCoinsObject = <CoinsObject>object;
         }
-        if (oneRealisationModule.parts && oneRealisationModule.parts.length > 0) {
+        console.log('RequirementComponent:onSelectedObject this.selectedCoinsObject ' + this.selectedCoinsObject);
+        break;
+      case 'ports':
+        if (this.selectedPort && this.selectedPort.uri === object.uri) {
+          this.selectedPort = null;
+        } else {
+          this.selectedPort = <RealisationPort>object;
+          this.portAssemblyOptions = null;
           this.portPartOptions = [];
-          for (let index = 0; index < oneRealisationModule.parts.length; index++) {
-            if (oneRealisationModule.parts[index].ports && oneRealisationModule.parts[index].ports.length > 0) {
-              for (let portIndex = 0; portIndex < oneRealisationModule.parts[index].ports.length; portIndex++) {
-                this.portPartOptions.push(oneRealisationModule.parts[index].ports[portIndex]);
+
+          // query the selected port
+          const subscription = <Subscription>this._realisationModuleService.oneRealisationModuleUpdated.subscribe(oneRealisationModule => {
+            console.log('oneRealisationModuleUpdated');
+            if (oneRealisationModule.assembly) {
+              this.portAssemblyOptions = oneRealisationModule.assembly.ports;
+            }
+            if (oneRealisationModule.parts && oneRealisationModule.parts.length > 0) {
+              this.portPartOptions = [];
+              for (let index = 0; index < oneRealisationModule.parts.length; index++) {
+                if (oneRealisationModule.parts[index].ports && oneRealisationModule.parts[index].ports.length > 0) {
+                  for (let portIndex = 0; portIndex < oneRealisationModule.parts[index].ports.length; portIndex++) {
+                    this.portPartOptions.push(oneRealisationModule.parts[index].ports[portIndex]);
+                  }
+                }
               }
             }
-          }
+            subscription.unsubscribe();
+          });
+          this._realisationModuleService
+            .queryOneRealisationModule(this.selectedRealisationModule.datasetId, this.selectedRealisationModule.uri);
         }
-        subscription.unsubscribe();
-      });
-      this._realisationModuleService
-        .queryOneRealisationModule(this.selectedRealisationModule.datasetId, this.selectedRealisationModule.uri);
+        break;
     }
   }
 
@@ -104,7 +124,9 @@ export class RealisationModuleComponent extends SeObjectComponent implements OnI
         realisationModuleInput.ports = [];
       }
       realisationModuleInput.ports.push(realisationPort.uri);
-      this._realisationModuleService.mutateRealisationModule(realisationModuleInput);
+      this._realisationModuleService.mutateRealisationModule(realisationModuleInput,
+        new CoinsObjectInput(this.selectedRealisationModule.coins.name, this.selectedRealisationModule.coins.userID,
+          this.selectedRealisationModule.coins.description, this.selectedRealisationModule.coins.creationDate));
       subscription.unsubscribe();
     });
     console.log('onCreateObjectRequested datasetId=' + this.selectedRealisationModule.datasetId);
@@ -122,7 +144,9 @@ export class RealisationModuleComponent extends SeObjectComponent implements OnI
           break;
         }
       }
-      this._realisationModuleService.mutateRealisationModule(realisationModuleInput);
+      this._realisationModuleService.mutateRealisationModule(realisationModuleInput,
+        new CoinsObjectInput(this.selectedRealisationModule.coins.name, this.selectedRealisationModule.coins.userID,
+          this.selectedRealisationModule.coins.description, this.selectedRealisationModule.coins.creationDate));
       subscription.unsubscribe();
     });
     console.log('onDeleteObjectRequested label=' + object.label);
