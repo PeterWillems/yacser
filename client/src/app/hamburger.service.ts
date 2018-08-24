@@ -85,7 +85,7 @@ export class HamburgerService {
   }
 
   public mutateHamburger(hamburgerInput: HamburgerInput, coinsObject: CoinsObjectInput) {
-    console.log('mutateHamburger: ' + 'label=' + hamburgerInput.label);
+    console.log('mutateHamburger: ' + 'label=' + hamburgerInput.label + ' startDate=' + hamburgerInput.startDate);
     this.apollo.mutate<Mutation>({
       mutation: UPDATE_HAMBURGER,
       variables: {
@@ -97,7 +97,9 @@ export class HamburgerService {
           parts: hamburgerInput.parts,
           functionalUnit: hamburgerInput.functionalUnit,
           technicalSolution: hamburgerInput.technicalSolution,
-          portRealisations: hamburgerInput.portRealisations
+          portRealisations: hamburgerInput.portRealisations,
+          startDate: hamburgerInput.startDate,
+          endDate: hamburgerInput.endDate
         },
         coinsObjectInput: {
           name: coinsObject.name,
@@ -160,6 +162,12 @@ export class HamburgerService {
       for (let index = 0; index < selectedHamburger.portRealisations.length; index++) {
         hamburgerInput.portRealisations.push(selectedHamburger.portRealisations[index].uri);
       }
+    }
+    if (selectedHamburger.startDate) {
+      hamburgerInput.startDate = selectedHamburger.startDate;
+    }
+    if (selectedHamburger.endDate) {
+      hamburgerInput.endDate = selectedHamburger.endDate;
     }
 
     return hamburgerInput;

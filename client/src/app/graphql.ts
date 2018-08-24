@@ -152,6 +152,8 @@ export const ALL_HAMBURGERS = gql`
                 label
               }
             }
+            startDate
+            endDate
           }
         }
 `;
@@ -214,6 +216,8 @@ export const ONE_HAMBURGER = gql`
                 label
               }
             }
+            startDate
+            endDate
           }
         }
 `;
@@ -254,6 +258,8 @@ export const UPDATE_HAMBURGER = gql`
             uri
             label
           }
+          startDate
+          endDate
         }
       }
 `;

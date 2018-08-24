@@ -86,6 +86,17 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
           return;
         }
         break;
+      case 'startDate':
+        if (this.selectedHamburger['startDate'] === propertyValue) {
+          return;
+        }
+        break;
+      case 'endDate':
+        if (this.selectedHamburger['endDate'] === propertyValue) {
+          return;
+        }
+        break;
+
     }
     const hamburgerInput = this._hamburgerService.cloneHamburgerInput(this.selectedHamburger);
     const coinsObjectInput = propertyLabel === 'coins' ? propertyValue
@@ -181,5 +192,17 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
     });
     console.log('onDeleteObjectRequested label=' + object.label);
     this._hamburgerService.deletePortRealisation(this.selectedHamburger.datasetId, object.uri);
+  }
+
+  format(dateTimeStr: string) {
+    if (dateTimeStr) {
+      const date = new Date(dateTimeStr);
+      return date.toLocaleString('nl', {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: 'numeric', minute: 'numeric', second: 'numeric',
+        hour12: false
+      });
+    }
+    return null;
   }
 }

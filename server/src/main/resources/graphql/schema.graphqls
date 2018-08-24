@@ -32,6 +32,8 @@ type Hamburger {
 	functionalUnit: SystemSlot
 	technicalSolution: RealisationModule
 	portRealisations: [PortRealisation]
+	startDate: String
+	endDate: String
 }
 
 type NumericProperty {
@@ -164,6 +166,8 @@ input HamburgerInput {
 	functionalUnit: String
 	technicalSolution: String
 	portRealisations: [String]
+	startDate: String
+	endDate: String
 }
 
 input NumericPropertyInput {

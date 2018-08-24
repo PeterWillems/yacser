@@ -46,6 +46,8 @@ export interface Hamburger extends SeObject {
   functionalUnit: SystemSlot;
   technicalSolution: RealisationModule;
   portRealisations: PortRealisation[];
+  startDate: string;
+  endDate: string;
 }
 
 export class HamburgerInput {
@@ -53,6 +55,8 @@ export class HamburgerInput {
   functionalUnit: string;
   technicalSolution: string;
   portRealisations: string[];
+  startDate: string;
+  endDate: string;
 
   constructor(public datasetId: number, public uri: string, public label: string, public assembly: string) {
   }

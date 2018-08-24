@@ -1,0 +1,17 @@
+<div id="myDropdown" class="dropdown-content">
+  <a href="#assembly">assembly</a>
+  <a href="#parts">parts</a>
+</div>
+<canvas id="cnvs" width="1600" height="800"></canvas>
+<div>
+  <button type="button" (click)="createSample()" class="btn btn-sm cnvs-button">sample</button>
+  <button type="button" (click)="clear()" class="btn btn-sm cnvs-button">clear</button>
+  <select id="objectTypeSelector" class="canvas-button" [(ngModel)]="selectedObjectType" (change)="setOptions()">
+    <option [class]="objectType" *ngFor="let objectType of objectTypes" [ngValue]="objectType">{{objectType}}</option>
+  </select>
+  <select class="canvas-button" [(ngModel)]="selectedOption">
+    <option *ngFor="let option of options" [ngValue]="option">{{option.label}}</option>
+  </select>
+  <button type="button" (click)="add()" class="btn btn-sm cnvs-button">add</button>
+</div>
+

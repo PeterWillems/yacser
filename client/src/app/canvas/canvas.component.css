@@ -1,0 +1,65 @@
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  font: 12px Verdana;
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  cursor: default;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 4px 4px 4px 4px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+  display: block;
+}
+
+.cnvs-button {
+  margin: 4px;
+}
+
+.Function {
+  background-color: plum;
+}
+
+.Hamburger {
+  background-color: lightsalmon;
+}
+
+.Performance {
+  background-color: yellowgreen;
+}
+
+.RealisationModule {
+  background-color: lightgreen;
+}
+
+.RealisationPort {
+  background-color: lightgreen;
+}
+
+.Requirement {
+  background-color: gold;
+}
+
+.SystemInterface {
+  background-color: darkgray;
+}
+
+.SystemSlot {
+  background-color: lightblue;
+}

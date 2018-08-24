@@ -158,6 +158,34 @@
         </td>
         <td></td>
       </tr>
+      <tr>
+        <td>start date</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='startDate'" [value]="format(selectedHamburger.startDate)"
+                        (sessionStarted)="onSessionStarted('startDate')"
+                        (sessionEnded)="onSessionEnded($event, 'startDate')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('startDate')"
+                  [class]="propertyEdited=='startDate'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>end date</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='endDate'" [value]="format(selectedHamburger.endDate)"
+                        (sessionStarted)="onSessionStarted('endDate')"
+                        (sessionEnded)="onSessionEnded($event, 'endDate')"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('endDate')"
+                  [class]="propertyEdited=='endDate'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

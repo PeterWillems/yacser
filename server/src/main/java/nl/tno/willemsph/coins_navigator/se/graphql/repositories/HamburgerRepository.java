@@ -49,7 +49,8 @@ public class HamburgerRepository {
 		return new Hamburger(datasetId, hamburger.getUri().toString(), hamburger.getLabel());
 	}
 
-	public Hamburger updateOne(HamburgerInput hamburgerInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
+	public Hamburger updateOne(HamburgerInput hamburgerInput, CoinsObjectInput coinsObjectInput)
+			throws URISyntaxException, IOException {
 		URI uri = new URI(hamburgerInput.getUri());
 		GetHamburger getHamburger = seService.getHamburger(hamburgerInput.getDatasetId(), uri.getFragment());
 		PutHamburger putHamburger = new PutHamburger();
@@ -77,6 +78,12 @@ public class HamburgerRepository {
 				parts.add(new URI(part));
 			}
 			putHamburger.setPortRealisations(parts);
+		}
+		if (hamburgerInput.getStartDate() != null) {
+			putHamburger.setStartDate(hamburgerInput.getStartDate());
+		}
+		if (hamburgerInput.getEndDate() != null) {
+			putHamburger.setEndDate(hamburgerInput.getEndDate());
 		}
 		if (coinsObjectInput != null) {
 			putHamburger.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),

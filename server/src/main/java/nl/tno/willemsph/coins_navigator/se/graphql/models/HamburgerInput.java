@@ -12,6 +12,8 @@ public class HamburgerInput {
 	private String functionalUnit;
 	private String technicalSolution;
 	private List<String> portRealisations;
+	private String startDate;
+	private String endDate;
 
 	public HamburgerInput() {
 	}
@@ -83,6 +85,22 @@ public class HamburgerInput {
 
 	public void setPortRealisations(List<String> portRealisations) {
 		this.portRealisations = portRealisations;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 
