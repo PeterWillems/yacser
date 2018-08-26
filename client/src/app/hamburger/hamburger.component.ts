@@ -132,7 +132,7 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
 
           // query the selected Port Realisation
           const subscription = <Subscription>this._hamburgerService.oneHamburgerUpdated.subscribe(oneHamburger => {
-            console.log('oneHamburgerUpdated');
+            console.log('oneHamburgerUpdated technical solution: ' + oneHamburger.technicalSolution);
             if (oneHamburger.assembly) {
               this.portRealisationAssemblyOptions = oneHamburger.assembly.portRealisations;
             }
@@ -150,6 +150,7 @@ export class HamburgerComponent extends SeObjectComponent implements OnInit, OnC
               this.systemInterfaceInterfaceOptions = oneHamburger.functionalUnit.interfaces;
             }
             if (oneHamburger.technicalSolution) {
+              console.log('oneHamburgerUpdated technical solution: ' + oneHamburger.technicalSolution.ports);
               this.realisationPortPortOptions = oneHamburger.technicalSolution.ports;
             }
             subscription.unsubscribe();

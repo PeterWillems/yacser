@@ -111,6 +111,10 @@ export class RealisationModuleService {
         query: ALL_REALISATION_MODULES, variables: {
           datasetId: realisationModuleInput.datasetId
         }
+      }, {
+        query: ALL_HAMBURGERS, variables: {
+          datasetId: realisationModuleInput.datasetId
+        }
       }]
     }).subscribe((value) => this.realisationModuleMutated.emit(value.data.mutateRealisationModule));
   }

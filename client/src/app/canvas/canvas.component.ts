@@ -3,7 +3,7 @@ import {SystemSlotService} from '../system-slot.service';
 import {DatasetService} from '../dataset.service';
 import {
   Function,
-  Hamburger,
+  Hamburger, NumericProperty,
   Performance, PortRealisation,
   RealisationModule,
   RealisationPort,
@@ -19,6 +19,7 @@ import {FunctionService} from '../function.service';
 import {RequirementService} from '../requirement.service';
 import {PerformanceService} from '../performance.service';
 import {Router} from '@angular/router';
+import {NumericPropertyService} from '../numeric-property.service';
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
@@ -43,6 +44,7 @@ export class CanvasComponent implements OnInit {
   selectedObjectType = 'SystemSlot';
   allFunctions: Function[];
   allHamburgers: Hamburger[];
+  allNumericProperties: NumericProperty[];
   allPerformances: Performance[];
   allRealisationModules: RealisationModule[];
   allRequirements: Requirement[];
@@ -54,6 +56,7 @@ export class CanvasComponent implements OnInit {
   constructor(private _datasetService: DatasetService,
               private _functionService: FunctionService,
               private _hamburgerService: HamburgerService,
+              private _numericPropertyService: NumericPropertyService,
               private _performanceService: PerformanceService,
               private _realisationModuleService: RealisationModuleService,
               private _requirementService: RequirementService,
@@ -78,14 +81,32 @@ export class CanvasComponent implements OnInit {
         this.allHamburgers = allHamburgers;
         for (let i = 0; i < allHamburgers.length; i++) {
           seObjects.set(allHamburgers[i].uri, allHamburgers[i]);
+          if (allHamburgers[i].portRealisations) {
+            for (let j = 0; j < allHamburgers[i].portRealisations.length; j++) {
+              seObjects.set(allHamburgers[i].portRealisations[j].uri, allHamburgers[i].portRealisations[j]);
+            }
+          }
         }
       });
     this._hamburgerService.queryAllHamburgers(dataset ? this._datasetService.getSelectedDataset().datasetId : 0);
+    this._numericPropertyService.allNumericPropertiesUpdated
+      .subscribe(allNumericProperties => {
+        this.allNumericProperties = allNumericProperties;
+        for (let i = 0; i < allNumericProperties.length; i++) {
+          seObjects.set(allNumericProperties[i].uri, allNumericProperties[i]);
+        }
+      });
+    this._numericPropertyService.queryAllNumericProperties(dataset ? this._datasetService.getSelectedDataset().datasetId : 0);
     this._realisationModuleService.allRealisationModulesUpdated
       .subscribe(allRealisationModules => {
         this.allRealisationModules = allRealisationModules;
         for (let i = 0; i < allRealisationModules.length; i++) {
           seObjects.set(allRealisationModules[i].uri, allRealisationModules[i]);
+          if (allRealisationModules[i].ports) {
+            for (let j = 0; j < allRealisationModules[i].ports.length; j++) {
+              seObjects.set(allRealisationModules[i].ports[j].uri, allRealisationModules[i].ports[j]);
+            }
+          }
         }
       });
     this._realisationModuleService.queryAllRealisationModules(dataset ? this._datasetService.getSelectedDataset().datasetId : 0);
@@ -124,6 +145,7 @@ export class CanvasComponent implements OnInit {
     this._systemSlotService.queryAllSystemSlots(dataset ? this._datasetService.getSelectedDataset().datasetId : 0);
 
     canvas = <HTMLCanvasElement>document.getElementById('cnvs');
+    console.log('widgets: ' + widgets.size);
     widgets.forEach((widget) => {
       canvas.addEventListener('mousedown', (e) => {
         widget.mouseDown(e);
@@ -229,30 +251,31 @@ export class CanvasComponent implements OnInit {
     let widget: Node;
     switch (this.selectedObjectType) {
       case 'Function':
-        widget = new FunctionWidget(400, 200, this.selectedOption.label, this.router);
+        widget = new FunctionWidget(400, 200, this.selectedOption.label, this.selectedOption.uri, this.router);
         break;
       case 'Hamburger':
-        widget = new HamburgerWidget(400, 200, this.selectedOption.label, this.router);
+        widget = new HamburgerWidget(400, 200, this.selectedOption.label, this.selectedOption.uri, this.router);
         break;
       case 'Performance':
-        widget = new PerformanceWidget(400, 200, this.selectedOption.label, this.router);
+        widget = new PerformanceWidget(400, 200, this.selectedOption.label, this.selectedOption.uri, this.router);
         break;
       case 'RealisationModule':
-        widget = new RealisationModuleWidget(400, 200, this.selectedOption.label, this.router);
+        widget = new RealisationModuleWidget(400, 200, this.selectedOption.label, this.selectedOption.uri, this.router);
         break;
       case 'Requirement':
-        widget = new RequirementWidget(400, 200, this.selectedOption.label, this.router);
+        widget = new RequirementWidget(400, 200, this.selectedOption.label, this.selectedOption.uri, this.router);
         break;
       case 'SystemInterface':
-        widget = new SystemInterfaceWidget(400, 200, this.selectedOption.label, this.router);
+        widget = new SystemInterfaceWidget(400, 200, this.selectedOption.label, this.selectedOption.uri, this.router);
         break;
       case 'SystemSlot':
-        widget = new SystemSlotWidget(400, 200, this.selectedOption.label, this.router);
+        widget = new SystemSlotWidget(400, 200, this.selectedOption.label, this.selectedOption.uri, this.router);
         break;
     }
-    widget.seObject = this.selectedOption;
+    //   widget.seObject = this.selectedOption;
+    //   widget.uri = this.selectedOption.uri;
     drawList.push(widget);
-    widgets.set(this.selectedOption.uri, widget);
+//    widgets.set(widget.uri, widget);
   }
 }
 
@@ -310,22 +333,28 @@ export class Circle extends Shape {
 export abstract class Node extends Shape {
   static selectedNode: Node;
   public typename: string;
-  public seObject: SeObject;
+//  public seObject: SeObject;
   public down = false;
   protected _halfWidth: number;
   protected _halfHeight: number;
   protected _anchorX = 0;
   protected _anchorY = 0;
+  protected font_size: number;
 
   constructor(public  x: number,
               public  y: number,
               protected width: number,
               protected height: number,
               protected text: string,
-              protected font_size: number = 12) {
+              public uri?: string
+  ) {
     super();
+    if (this.uri) {
+      widgets.set(this.uri, this);
+    }
     this._halfWidth = width / 2;
     this._halfHeight = height / 2;
+    this.font_size = 12;
 
     canvas.addEventListener('mousedown', (e) => {
       this.mouseDown(e);
@@ -344,6 +373,9 @@ export abstract class Node extends Shape {
       this.y = cursorY - this._anchorY;
     }
 
+    if (this.uri) {
+      this.text = this.getSeObject().label;
+    }
     ctx.save();
     ctx.lineWidth = 4;
     ctx.strokeStyle = 'black';
@@ -366,11 +398,29 @@ export abstract class Node extends Shape {
     ctx.font = this.font_size + 'px Verdana';
     if (this.down === true && this === Node.selectedNode) {
       ctx.globalAlpha = 0.5;
-      ctx.fillText(this.text, this.x + 2, this.y + 2);
+      if (ctx.measureText(this.text).width < this.width) {
+        ctx.fillText(this.text, this.x + 2, this.y + 2);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x + 2, this.y - this.height / 4 + 2);
+        ctx.fillText(secondPart, this.x + 2, this.y + this.height / 4 + 2);
+      }
     } else {
-      ctx.fillText(this.text, this.x, this.y);
+      if (ctx.measureText(this.text).width < this.width) {
+        ctx.fillText(this.text, this.x, this.y);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x, this.y - this.height / 4);
+        ctx.fillText(secondPart, this.x, this.y + this.height / 4);
+      }
     }
     ctx.restore();
+  }
+
+  public getSeObject(): SeObject {
+    return this.uri ? seObjects.get(this.uri) : null;
   }
 
   public isHit(x: number, y: number): boolean {
@@ -381,24 +431,25 @@ export abstract class Node extends Shape {
   }
 
   public mouseDown(event: MouseEvent): void {
-    console.log('mouseDown');
+    if (event.button === 2) {
+      return;
+    }
+
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
 
     if (this.isHit(x, y)) {
-      this.down = true;
+      this._anchorX = x - this.x;
+      this._anchorY = y - this.y;
       this.zIndex = zIndex++;
       if (Node.selectedNode) {
-        if (this.zIndex > Node.selectedNode.zIndex) {
+        if (Node.selectedNode !== this && this.zIndex > Node.selectedNode.zIndex) {
           Node.selectedNode = this;
-          this._anchorX = x - this.x;
-          this._anchorY = y - this.y;
         }
       } else {
         Node.selectedNode = this;
-        this._anchorX = x - this.x;
-        this._anchorY = y - this.y;
       }
+      this.down = true;
     }
   }
 
@@ -476,8 +527,8 @@ export class Edge extends Shape {
 }
 
 export class SystemSlotWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 160, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 160, 50, label, uri);
     this.typename = 'SystemSlot';
     this.color = 'LightBlue';
   }
@@ -537,7 +588,6 @@ export class SystemSlotWidget extends Node {
     event.preventDefault();
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
-    console.log('contextmenu: ' + x + ' ' + y);
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
@@ -545,27 +595,26 @@ export class SystemSlotWidget extends Node {
       myDropDown.style.top = this.y + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
-      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<SystemSlot>this.seObject).assembly != null);
-      addMenuItem(myDropDown, 'parts', this.getParts, (<SystemSlot>this.seObject).parts != null);
-      addMenuItem(myDropDown, 'functions', this.getFunctions, (<SystemSlot>this.seObject).functions != null);
-      addMenuItem(myDropDown, 'requirements', this.getRequirements, (<SystemSlot>this.seObject).requirements != null);
-      addMenuItem(myDropDown, 'interfaces', this.getInterfaces, (<SystemSlot>this.seObject).interfaces != null);
-      addMenuItem(myDropDown, 'hamburgers', this.getHamburgers, (<SystemSlot>this.seObject).hamburgers != null);
+      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<SystemSlot>this.getSeObject()).assembly != null);
+      addMenuItem(myDropDown, 'parts', this.getParts, (<SystemSlot>this.getSeObject()).parts != null);
+      addMenuItem(myDropDown, 'functions', this.getFunctions, (<SystemSlot>this.getSeObject()).functions != null);
+      addMenuItem(myDropDown, 'requirements', this.getRequirements, (<SystemSlot>this.getSeObject()).requirements != null);
+      addMenuItem(myDropDown, 'interfaces', this.getInterfaces, (<SystemSlot>this.getSeObject()).interfaces != null);
+      addMenuItem(myDropDown, 'hamburgers', this.getHamburgers, (<SystemSlot>this.getSeObject()).hamburgers != null);
       addMenuItem(myDropDown, '', null, false);
-      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/systemslots', {id: this.seObject.uri}]), true);
+      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/systemslots', {id: this.getSeObject().uri}]), true);
       myDropDown.classList.toggle('show');
     }
   }
 
   getAssembly = () => {
-    const assembly = (<SystemSlot>this.seObject).assembly;
+    const assembly = (<SystemSlot>this.getSeObject()).assembly;
     if (assembly) {
       if (widgets.get(assembly.uri)) {
         drawList.push(new Edge('assembly', this, widgets.get(assembly.uri)));
       } else {
-        const systemSlotWidget = new SystemSlotWidget(this.x + 100, this.y + 100, assembly.label, this.router);
-        systemSlotWidget.seObject = seObjects.get(assembly.uri);
-        widgets.set(assembly.uri, systemSlotWidget);
+        const systemSlotWidget =
+          new SystemSlotWidget(this.x + 100, this.y + 100, assembly.label, assembly.uri, this.router);
         drawList.push(new Edge('assembly', this, systemSlotWidget));
         drawList.push(systemSlotWidget);
       }
@@ -575,15 +624,14 @@ export class SystemSlotWidget extends Node {
   };
 
   getParts = () => {
-    const parts = (<SystemSlot>this.seObject).parts;
+    const parts = (<SystemSlot>this.getSeObject()).parts;
     if (parts && parts.length > 0) {
       for (let i = 0; i < parts.length; i++) {
         if (widgets.has(parts[i].uri)) {
           drawList.push(new Edge('part', this, widgets.get(parts[i].uri)));
         } else {
-          const systemSlotWidget = new SystemSlotWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, this.router);
-          systemSlotWidget.seObject = seObjects.get(parts[i].uri);
-          widgets.set(parts[i].uri, systemSlotWidget);
+          const systemSlotWidget =
+            new SystemSlotWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, parts[i].uri, this.router);
           drawList.push(new Edge('part', this, systemSlotWidget));
           drawList.push(systemSlotWidget);
         }
@@ -594,15 +642,14 @@ export class SystemSlotWidget extends Node {
   };
 
   getFunctions = () => {
-    const functions = (<SystemSlot>this.seObject).functions;
+    const functions = (<SystemSlot>this.getSeObject()).functions;
     if (functions && functions.length > 0) {
       for (let i = 0; i < functions.length; i++) {
         if (widgets.has(functions[i].uri)) {
           drawList.push(new Edge('function', this, widgets.get(functions[i].uri)));
         } else {
-          const functionWidget = new FunctionWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, functions[i].label, this.router);
-          functionWidget.seObject = seObjects.get(functions[i].uri);
-          widgets.set(functions[i].uri, functionWidget);
+          const functionWidget =
+            new FunctionWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, functions[i].label, functions[i].uri, this.router);
           drawList.push(new Edge('function', this, functionWidget));
           drawList.push(functionWidget);
         }
@@ -613,15 +660,14 @@ export class SystemSlotWidget extends Node {
   };
 
   getRequirements = () => {
-    const requirements = (<SystemSlot>this.seObject).requirements;
+    const requirements = (<SystemSlot>this.getSeObject()).requirements;
     if (requirements && requirements.length > 0) {
       for (let i = 0; i < requirements.length; i++) {
         if (widgets.has(requirements[i].uri)) {
           drawList.push(new Edge('requirement', this, widgets.get(requirements[i].uri)));
         } else {
-          const requirementWidget = new RequirementWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, requirements[i].label, this.router);
-          requirementWidget.seObject = seObjects.get(requirements[i].uri);
-          widgets.set(requirements[i].uri, requirementWidget);
+          const requirementWidget =
+            new RequirementWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, requirements[i].label, requirements[i].uri, this.router);
           drawList.push(new Edge('requirement', this, requirementWidget));
           drawList.push(requirementWidget);
         }
@@ -632,16 +678,14 @@ export class SystemSlotWidget extends Node {
   };
 
   getInterfaces = () => {
-    const interfaces = (<SystemSlot>this.seObject).interfaces;
+    const interfaces = (<SystemSlot>this.getSeObject()).interfaces;
     if (interfaces && interfaces.length > 0) {
       for (let i = 0; i < interfaces.length; i++) {
         if (widgets.has(interfaces[i].uri)) {
           drawList.push(new Edge('interface', this, widgets.get(interfaces[i].uri)));
         } else {
           const systemInterfaceWidget =
-            new SystemInterfaceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, interfaces[i].label, this.router);
-          systemInterfaceWidget.seObject = seObjects.get(interfaces[i].uri);
-          widgets.set(interfaces[i].uri, systemInterfaceWidget);
+            new SystemInterfaceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, interfaces[i].label, interfaces[i].uri, this.router);
           drawList.push(new Edge('interface', this, systemInterfaceWidget));
           drawList.push(systemInterfaceWidget);
         }
@@ -652,15 +696,14 @@ export class SystemSlotWidget extends Node {
   };
 
   getHamburgers = () => {
-    const hamburgers = (<SystemSlot>this.seObject).hamburgers;
+    const hamburgers = (<SystemSlot>this.getSeObject()).hamburgers;
     if (hamburgers && hamburgers.length > 0) {
       for (let i = 0; i < hamburgers.length; i++) {
         if (widgets.has(hamburgers[i].uri)) {
           drawList.push(new Edge('hamburger', this, widgets.get(hamburgers[i].uri)));
         } else {
-          const hamburgerWidget = new HamburgerWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, hamburgers[i].label, this.router);
-          hamburgerWidget.seObject = seObjects.get(hamburgers[i].uri);
-          widgets.set(hamburgers[i].uri, hamburgerWidget);
+          const hamburgerWidget =
+            new HamburgerWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, hamburgers[i].label, hamburgers[i].uri, this.router);
           drawList.push(new Edge('hamburger', this, hamburgerWidget));
           drawList.push(hamburgerWidget);
         }
@@ -672,8 +715,8 @@ export class SystemSlotWidget extends Node {
 }
 
 export class SystemInterfaceWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 160, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 160, 50, label, uri);
     this.typename = 'SystemInterface';
     this.color = 'DarkGrey';
   }
@@ -682,7 +725,6 @@ export class SystemInterfaceWidget extends Node {
     event.preventDefault();
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
-    console.log('contextmenu: ' + x + ' ' + y);
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
@@ -690,26 +732,24 @@ export class SystemInterfaceWidget extends Node {
       myDropDown.style.top = this.y + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
-      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<SystemInterface>this.seObject).assembly != null);
-      addMenuItem(myDropDown, 'parts', this.getParts, (<SystemInterface>this.seObject).parts != null);
+      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<SystemInterface>this.getSeObject()).assembly != null);
+      addMenuItem(myDropDown, 'parts', this.getParts, (<SystemInterface>this.getSeObject()).parts != null);
       addMenuItem(myDropDown, 'systemslots', this.getSystemSlots,
-        (<SystemInterface>this.seObject).systemSlot0 != null || (<SystemInterface>this.seObject).systemSlot1 != null);
-      addMenuItem(myDropDown, 'requirements', this.getRequirements, (<SystemInterface>this.seObject).requirements != null);
+        (<SystemInterface>this.getSeObject()).systemSlot0 != null || (<SystemInterface>this.getSeObject()).systemSlot1 != null);
+      addMenuItem(myDropDown, 'requirements', this.getRequirements, (<SystemInterface>this.getSeObject()).requirements != null);
       addMenuItem(myDropDown, '', null, false);
-      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/systeminterfaces', {id: this.seObject.uri}]), true);
+      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/systeminterfaces', {id: this.getSeObject().uri}]), true);
       myDropDown.classList.toggle('show');
     }
   }
 
   getAssembly = () => {
-    const assembly = (<SystemInterface>this.seObject).assembly;
+    const assembly = (<SystemInterface>this.getSeObject()).assembly;
     if (assembly) {
       if (widgets.get(assembly.uri)) {
         drawList.push(new Edge('assembly', this, widgets.get(assembly.uri)));
       } else {
-        const systemInterfaceWidget = new SystemInterfaceWidget(this.x + 100, this.y + 100, assembly.label, this.router);
-        systemInterfaceWidget.seObject = seObjects.get(assembly.uri);
-        widgets.set(assembly.uri, systemInterfaceWidget);
+        const systemInterfaceWidget = new SystemInterfaceWidget(this.x + 100, this.y + 100, assembly.label, assembly.uri, this.router);
         drawList.push(new Edge('assembly', this, systemInterfaceWidget));
         drawList.push(systemInterfaceWidget);
       }
@@ -719,15 +759,14 @@ export class SystemInterfaceWidget extends Node {
   };
 
   getParts = () => {
-    const parts = (<SystemInterface>this.seObject).parts;
+    const parts = (<SystemInterface>this.getSeObject()).parts;
     if (parts && parts.length > 0) {
       for (let i = 0; i < parts.length; i++) {
         if (widgets.has(parts[i].uri)) {
           drawList.push(new Edge('part', this, widgets.get(parts[i].uri)));
         } else {
-          const systemInterfaceWidget = new SystemInterfaceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, this.router);
-          systemInterfaceWidget.seObject = seObjects.get(parts[i].uri);
-          widgets.set(parts[i].uri, systemInterfaceWidget);
+          const systemInterfaceWidget =
+            new SystemInterfaceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, parts[i].uri, this.router);
           drawList.push(new Edge('part', this, systemInterfaceWidget));
           drawList.push(systemInterfaceWidget);
         }
@@ -738,15 +777,14 @@ export class SystemInterfaceWidget extends Node {
   };
 
   getSystemSlots = () => {
-    const systemSlot0 = (<SystemInterface>this.seObject).systemSlot0;
-    const systemSlot1 = (<SystemInterface>this.seObject).systemSlot1;
+    const systemSlot0 = (<SystemInterface>this.getSeObject()).systemSlot0;
+    const systemSlot1 = (<SystemInterface>this.getSeObject()).systemSlot1;
     if (systemSlot0) {
       if (widgets.get(systemSlot0.uri)) {
         drawList.push(new Edge('systemslot', this, widgets.get(systemSlot0.uri)));
       } else {
-        const systemSlot0Widget = new SystemSlotWidget(this.x + 100, this.y + 100, systemSlot0.label, this.router);
-        systemSlot0Widget.seObject = seObjects.get(systemSlot0.uri);
-        widgets.set(systemSlot0.uri, systemSlot0Widget);
+        const systemSlot0Widget =
+          new SystemSlotWidget(this.x + 100, this.y + 100, systemSlot0.label, systemSlot0.uri, this.router);
         drawList.push(new Edge('systemslot', this, systemSlot0Widget));
         drawList.push(systemSlot0Widget);
       }
@@ -755,9 +793,7 @@ export class SystemInterfaceWidget extends Node {
       if (widgets.get(systemSlot1.uri)) {
         drawList.push(new Edge('systemslot', this, widgets.get(systemSlot1.uri)));
       } else {
-        const systemSlot0Widget = new SystemSlotWidget(this.x + 100, this.y + 100, systemSlot1.label, this.router);
-        systemSlot0Widget.seObject = seObjects.get(systemSlot1.uri);
-        widgets.set(systemSlot1.uri, systemSlot0Widget);
+        const systemSlot0Widget = new SystemSlotWidget(this.x + 100, this.y + 100, systemSlot1.label, systemSlot1.uri, this.router);
         drawList.push(new Edge('systemslot', this, systemSlot0Widget));
         drawList.push(systemSlot0Widget);
       }
@@ -767,15 +803,14 @@ export class SystemInterfaceWidget extends Node {
   };
 
   getRequirements = () => {
-    const requirements = (<SystemInterface>this.seObject).requirements;
+    const requirements = (<SystemInterface>this.getSeObject()).requirements;
     if (requirements && requirements.length > 0) {
       for (let i = 0; i < requirements.length; i++) {
         if (widgets.has(requirements[i].uri)) {
           drawList.push(new Edge('requirement', this, widgets.get(requirements[i].uri)));
         } else {
-          const requirementWidget = new RequirementWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, requirements[i].label, this.router);
-          requirementWidget.seObject = seObjects.get(requirements[i].uri);
-          widgets.set(requirements[i].uri, requirementWidget);
+          const requirementWidget =
+            new RequirementWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, requirements[i].label, requirements[i].uri, this.router);
           drawList.push(new Edge('requirement', this, requirementWidget));
           drawList.push(requirementWidget);
         }
@@ -787,8 +822,8 @@ export class SystemInterfaceWidget extends Node {
 }
 
 export class FunctionWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 160, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 160, 50, label, uri);
     this.typename = 'Function';
     this.color = 'Plum';
   }
@@ -797,7 +832,6 @@ export class FunctionWidget extends Node {
     event.preventDefault();
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
-    console.log('contextmenu: ' + x + ' ' + y);
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
@@ -805,26 +839,24 @@ export class FunctionWidget extends Node {
       myDropDown.style.top = this.y + 'px';
 
       clearMenu(myDropDown);
-      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Function>this.seObject).assembly != null);
-      addMenuItem(myDropDown, 'parts', this.getParts, (<Function>this.seObject).parts != null);
-      addMenuItem(myDropDown, 'input', this.getInput, (<Function>this.seObject).input != null);
-      addMenuItem(myDropDown, 'output', this.getOutput, (<Function>this.seObject).output != null);
-      addMenuItem(myDropDown, 'requirements', this.getRequirements, (<Function>this.seObject).requirements != null);
+      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Function>this.getSeObject()).assembly != null);
+      addMenuItem(myDropDown, 'parts', this.getParts, (<Function>this.getSeObject()).parts != null);
+      addMenuItem(myDropDown, 'input', this.getInput, (<Function>this.getSeObject()).input != null);
+      addMenuItem(myDropDown, 'output', this.getOutput, (<Function>this.getSeObject()).output != null);
+      addMenuItem(myDropDown, 'requirements', this.getRequirements, (<Function>this.getSeObject()).requirements != null);
       addMenuItem(myDropDown, '', null, false);
-      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/functions', {id: this.seObject.uri}]), true);
+      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/functions', {id: this.getSeObject().uri}]), true);
       myDropDown.classList.toggle('show');
     }
   }
 
   getAssembly = () => {
-    const assembly = (<Function>this.seObject).assembly;
+    const assembly = (<Function>this.getSeObject()).assembly;
     if (assembly) {
       if (widgets.get(assembly.uri)) {
         drawList.push(new Edge('assembly', this, widgets.get(assembly.uri)));
       } else {
-        const functionWidget = new FunctionWidget(this.x + 100, this.y + 100, assembly.label, this.router);
-        functionWidget.seObject = seObjects.get(assembly.uri);
-        widgets.set(assembly.uri, functionWidget);
+        const functionWidget = new FunctionWidget(this.x + 100, this.y + 100, assembly.label, assembly.uri, this.router);
         drawList.push(new Edge('assembly', this, functionWidget));
         drawList.push(functionWidget);
       }
@@ -834,15 +866,13 @@ export class FunctionWidget extends Node {
   };
 
   getParts = () => {
-    const parts = (<Function>this.seObject).parts;
+    const parts = (<Function>this.getSeObject()).parts;
     if (parts && parts.length > 0) {
       for (let i = 0; i < parts.length; i++) {
         if (widgets.has(parts[i].uri)) {
           drawList.push(new Edge('part', this, widgets.get(parts[i].uri)));
         } else {
-          const functionWidget = new FunctionWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, this.router);
-          functionWidget.seObject = seObjects.get(parts[i].uri);
-          widgets.set(parts[i].uri, functionWidget);
+          const functionWidget = new FunctionWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, parts[i].uri, this.router);
           drawList.push(new Edge('part', this, functionWidget));
           drawList.push(functionWidget);
         }
@@ -853,14 +883,12 @@ export class FunctionWidget extends Node {
   };
 
   getInput = () => {
-    const input = (<Function>this.seObject).input;
+    const input = (<Function>this.getSeObject()).input;
     if (input) {
       if (widgets.get(input.uri)) {
         drawList.push(new Edge('input', this, widgets.get(input.uri)));
       } else {
-        const inputWidget = new SystemInterfaceWidget(this.x + 100, this.y + 100, input.label, this.router);
-        inputWidget.seObject = seObjects.get(input.uri);
-        widgets.set(input.uri, inputWidget);
+        const inputWidget = new SystemInterfaceWidget(this.x + 100, this.y + 100, input.label, input.uri, this.router);
         drawList.push(new Edge('input', this, inputWidget));
         drawList.push(inputWidget);
       }
@@ -870,14 +898,12 @@ export class FunctionWidget extends Node {
   };
 
   getOutput = () => {
-    const output = (<Function>this.seObject).output;
+    const output = (<Function>this.getSeObject()).output;
     if (output) {
       if (widgets.get(output.uri)) {
         drawList.push(new Edge('output', this, widgets.get(output.uri)));
       } else {
-        const outputWidget = new SystemInterfaceWidget(this.x + 100, this.y + 100, output.label, this.router);
-        outputWidget.seObject = seObjects.get(output.uri);
-        widgets.set(output.uri, outputWidget);
+        const outputWidget = new SystemInterfaceWidget(this.x + 100, this.y + 100, output.label, output.uri, this.router);
         drawList.push(new Edge('output', this, outputWidget));
         drawList.push(outputWidget);
       }
@@ -887,15 +913,14 @@ export class FunctionWidget extends Node {
   };
 
   getRequirements = () => {
-    const requirements = (<Function>this.seObject).requirements;
+    const requirements = (<Function>this.getSeObject()).requirements;
     if (requirements && requirements.length > 0) {
       for (let i = 0; i < requirements.length; i++) {
         if (widgets.has(requirements[i].uri)) {
           drawList.push(new Edge('requirement', this, widgets.get(requirements[i].uri)));
         } else {
-          const requirementWidget = new RequirementWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, requirements[i].label, this.router);
-          requirementWidget.seObject = seObjects.get(requirements[i].uri);
-          widgets.set(requirements[i].uri, requirementWidget);
+          const requirementWidget =
+            new RequirementWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, requirements[i].label, requirements[i].uri, this.router);
           drawList.push(new Edge('requirement', this, requirementWidget));
           drawList.push(requirementWidget);
         }
@@ -907,8 +932,8 @@ export class FunctionWidget extends Node {
 }
 
 export class RequirementWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 160, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 160, 50, label, uri);
     this.typename = 'Requirment';
     this.color = 'Gold';
   }
@@ -917,7 +942,6 @@ export class RequirementWidget extends Node {
     event.preventDefault();
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
-    console.log('contextmenu: ' + x + ' ' + y);
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
@@ -925,25 +949,23 @@ export class RequirementWidget extends Node {
       myDropDown.style.top = this.y + 'px';
 
       clearMenu(myDropDown);
-      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Requirement>this.seObject).assembly != null);
-      addMenuItem(myDropDown, 'parts', this.getParts, (<Requirement>this.seObject).parts != null);
-      addMenuItem(myDropDown, 'min value', this.getMinValue, (<Requirement>this.seObject).minValue != null);
-      addMenuItem(myDropDown, 'max value', this.getMaxValue, (<Requirement>this.seObject).maxValue != null);
+      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Requirement>this.getSeObject()).assembly != null);
+      addMenuItem(myDropDown, 'parts', this.getParts, (<Requirement>this.getSeObject()).parts != null);
+      addMenuItem(myDropDown, 'min value', this.getMinValue, (<Requirement>this.getSeObject()).minValue != null);
+      addMenuItem(myDropDown, 'max value', this.getMaxValue, (<Requirement>this.getSeObject()).maxValue != null);
       addMenuItem(myDropDown, '', null, false);
-      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/requirements', {id: this.seObject.uri}]), true);
+      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/requirements', {id: this.getSeObject().uri}]), true);
       myDropDown.classList.toggle('show');
     }
   }
 
   getAssembly = () => {
-    const assembly = (<Requirement>this.seObject).assembly;
+    const assembly = (<Requirement>this.getSeObject()).assembly;
     if (assembly) {
       if (widgets.get(assembly.uri)) {
         drawList.push(new Edge('assembly', this, widgets.get(assembly.uri)));
       } else {
-        const requirementWidget = new RequirementWidget(this.x + 100, this.y + 100, assembly.label, this.router);
-        requirementWidget.seObject = seObjects.get(assembly.uri);
-        widgets.set(assembly.uri, requirementWidget);
+        const requirementWidget = new RequirementWidget(this.x + 100, this.y + 100, assembly.label, assembly.uri, this.router);
         drawList.push(new Edge('assembly', this, requirementWidget));
         drawList.push(requirementWidget);
       }
@@ -953,15 +975,14 @@ export class RequirementWidget extends Node {
   };
 
   getParts = () => {
-    const parts = (<Requirement>this.seObject).parts;
+    const parts = (<Requirement>this.getSeObject()).parts;
     if (parts && parts.length > 0) {
       for (let i = 0; i < parts.length; i++) {
         if (widgets.has(parts[i].uri)) {
           drawList.push(new Edge('part', this, widgets.get(parts[i].uri)));
         } else {
-          const requirementWidget = new RequirementWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, this.router);
-          requirementWidget.seObject = seObjects.get(parts[i].uri);
-          widgets.set(parts[i].uri, requirementWidget);
+          const requirementWidget =
+            new RequirementWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, parts[i].uri, this.router);
           drawList.push(new Edge('part', this, requirementWidget));
           drawList.push(requirementWidget);
         }
@@ -972,14 +993,12 @@ export class RequirementWidget extends Node {
   };
 
   getMinValue = () => {
-    const minValue = (<Requirement>this.seObject).minValue;
+    const minValue = (<Requirement>this.getSeObject()).minValue;
     if (minValue) {
       if (widgets.get(minValue.uri)) {
         drawList.push(new Edge('min value', this, widgets.get(minValue.uri)));
       } else {
-        const numericValueWidget = new NumericValueWidget(this.x + 100, this.y + 100, minValue.label, this.router);
-        numericValueWidget.seObject = seObjects.get(minValue.uri);
-        widgets.set(minValue.uri, numericValueWidget);
+        const numericValueWidget = new NumericValueWidget(this.x + 100, this.y + 100, minValue.label, minValue.uri, this.router);
         drawList.push(new Edge('min value', this, numericValueWidget));
         drawList.push(numericValueWidget);
       }
@@ -989,14 +1008,12 @@ export class RequirementWidget extends Node {
   };
 
   getMaxValue = () => {
-    const maxValue = (<Requirement>this.seObject).maxValue;
+    const maxValue = (<Requirement>this.getSeObject()).maxValue;
     if (maxValue) {
       if (widgets.get(maxValue.uri)) {
         drawList.push(new Edge('max value', this, widgets.get(maxValue.uri)));
       } else {
-        const numericValueWidget = new NumericValueWidget(this.x + 100, this.y + 100, maxValue.label, this.router);
-        numericValueWidget.seObject = seObjects.get(maxValue.uri);
-        widgets.set(maxValue.uri, numericValueWidget);
+        const numericValueWidget = new NumericValueWidget(this.x + 100, this.y + 100, maxValue.label, maxValue.uri, this.router);
         drawList.push(new Edge('max value', this, numericValueWidget));
         drawList.push(numericValueWidget);
       }
@@ -1007,8 +1024,8 @@ export class RequirementWidget extends Node {
 }
 
 export class RealisationModuleWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 160, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 160, 50, label, uri);
     this.typename = 'RealisationModule';
     this.color = 'LightGreen';
   }
@@ -1017,7 +1034,6 @@ export class RealisationModuleWidget extends Node {
     event.preventDefault();
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
-    console.log('contextmenu: ' + x + ' ' + y);
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
@@ -1025,25 +1041,23 @@ export class RealisationModuleWidget extends Node {
       myDropDown.style.top = this.y + 'px';
 
       clearMenu(myDropDown);
-      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<RealisationModule>this.seObject).assembly != null);
-      addMenuItem(myDropDown, 'parts', this.getParts, (<RealisationModule>this.seObject).parts != null);
-      addMenuItem(myDropDown, 'ports', this.getPorts, (<RealisationModule>this.seObject).ports != null);
-      addMenuItem(myDropDown, 'performances', this.getPerformances, (<RealisationModule>this.seObject).performances != null);
+      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<RealisationModule>this.getSeObject()).assembly != null);
+      addMenuItem(myDropDown, 'parts', this.getParts, (<RealisationModule>this.getSeObject()).parts != null);
+      addMenuItem(myDropDown, 'ports', this.getPorts, (<RealisationModule>this.getSeObject()).ports != null);
+      addMenuItem(myDropDown, 'performances', this.getPerformances, (<RealisationModule>this.getSeObject()).performances != null);
       addMenuItem(myDropDown, '', null, false);
-      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/realisationmodules', {id: this.seObject.uri}]), true);
+      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/realisationmodules', {id: this.getSeObject().uri}]), true);
       myDropDown.classList.toggle('show');
     }
   }
 
   getAssembly = () => {
-    const assembly = (<RealisationModule>this.seObject).assembly;
+    const assembly = (<RealisationModule>this.getSeObject()).assembly;
     if (assembly) {
       if (widgets.get(assembly.uri)) {
         drawList.push(new Edge('assembly', this, widgets.get(assembly.uri)));
       } else {
-        const realisationModuleWidget = new RealisationModuleWidget(this.x + 100, this.y + 100, assembly.label, this.router);
-        realisationModuleWidget.seObject = seObjects.get(assembly.uri);
-        widgets.set(assembly.uri, realisationModuleWidget);
+        const realisationModuleWidget = new RealisationModuleWidget(this.x + 100, this.y + 100, assembly.label, assembly.uri, this.router);
         drawList.push(new Edge('assembly', this, realisationModuleWidget));
         drawList.push(realisationModuleWidget);
       }
@@ -1053,16 +1067,14 @@ export class RealisationModuleWidget extends Node {
   };
 
   getParts = () => {
-    const parts = (<RealisationModule>this.seObject).parts;
+    const parts = (<RealisationModule>this.getSeObject()).parts;
     if (parts && parts.length > 0) {
       for (let i = 0; i < parts.length; i++) {
         if (widgets.has(parts[i].uri)) {
           drawList.push(new Edge('part', this, widgets.get(parts[i].uri)));
         } else {
           const realisationModuleWidget =
-            new RealisationModuleWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, this.router);
-          realisationModuleWidget.seObject = seObjects.get(parts[i].uri);
-          widgets.set(parts[i].uri, realisationModuleWidget);
+            new RealisationModuleWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, parts[i].uri, this.router);
           drawList.push(new Edge('part', this, realisationModuleWidget));
           drawList.push(realisationModuleWidget);
         }
@@ -1073,15 +1085,14 @@ export class RealisationModuleWidget extends Node {
   };
 
   getPorts = () => {
-    const ports = (<RealisationModule>this.seObject).ports;
+    const ports = (<RealisationModule>this.getSeObject()).ports;
     if (ports && ports.length > 0) {
       for (let i = 0; i < ports.length; i++) {
         if (widgets.has(ports[i].uri)) {
           drawList.push(new Edge('port', this, widgets.get(ports[i].uri)));
         } else {
-          const realisationPortWidget = new RealisationPortWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, ports[i].label, this.router);
-          realisationPortWidget.seObject = <RealisationPort>ports[i];
-          widgets.set(ports[i].uri, realisationPortWidget);
+          const realisationPortWidget =
+            new RealisationPortWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, ports[i].label, ports[i].uri, this.router);
           drawList.push(new Edge('port', this, realisationPortWidget));
           drawList.push(realisationPortWidget);
         }
@@ -1092,15 +1103,14 @@ export class RealisationModuleWidget extends Node {
   };
 
   getPerformances = () => {
-    const performances = (<RealisationModule>this.seObject).performances;
+    const performances = (<RealisationModule>this.getSeObject()).performances;
     if (performances && performances.length > 0) {
       for (let i = 0; i < performances.length; i++) {
         if (widgets.has(performances[i].uri)) {
           drawList.push(new Edge('performance', this, widgets.get(performances[i].uri)));
         } else {
-          const performanceWidget = new PerformanceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, performances[i].label, this.router);
-          performanceWidget.seObject = seObjects.get(performances[i].uri);
-          widgets.set(performances[i].uri, performanceWidget);
+          const performanceWidget =
+            new PerformanceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, performances[i].label, performances[i].uri, this.router);
           drawList.push(new Edge('performance', this, performanceWidget));
           drawList.push(performanceWidget);
         }
@@ -1112,8 +1122,8 @@ export class RealisationModuleWidget extends Node {
 }
 
 export class RealisationPortWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 100, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 100, 50, label, uri);
     this.typename = 'RealisationPort';
     this.color = 'LightGreen';
   }
@@ -1122,7 +1132,6 @@ export class RealisationPortWidget extends Node {
     event.preventDefault();
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
-    console.log('contextmenu: ' + x + ' ' + y);
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
@@ -1130,22 +1139,20 @@ export class RealisationPortWidget extends Node {
       myDropDown.style.top = this.y + 'px';
 
       clearMenu(myDropDown);
-      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<RealisationPort>this.seObject).assembly != null);
-      addMenuItem(myDropDown, 'parts', this.getParts, (<RealisationPort>this.seObject).parts != null);
-      addMenuItem(myDropDown, 'performances', null, (<RealisationModule>this.seObject).performances != null);
+      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<RealisationPort>this.getSeObject()).assembly != null);
+      addMenuItem(myDropDown, 'parts', this.getParts, (<RealisationPort>this.getSeObject()).parts != null);
+      addMenuItem(myDropDown, 'performances', null, (<RealisationModule>this.getSeObject()).performances != null);
       myDropDown.classList.toggle('show');
     }
   }
 
   getAssembly = () => {
-    const assembly = (<RealisationPort>this.seObject).assembly;
+    const assembly = (<RealisationPort>this.getSeObject()).assembly;
     if (assembly) {
       if (widgets.get(assembly.uri)) {
         drawList.push(new Edge('assembly', this, widgets.get(assembly.uri)));
       } else {
-        const realisationPortWidget = new RealisationPortWidget(this.x + 100, this.y + 100, assembly.label, this.router);
-        realisationPortWidget.seObject = assembly;
-        widgets.set(assembly.uri, realisationPortWidget);
+        const realisationPortWidget = new RealisationPortWidget(this.x + 100, this.y + 100, assembly.label, assembly.uri, this.router);
         drawList.push(new Edge('assembly', this, realisationPortWidget));
         drawList.push(realisationPortWidget);
       }
@@ -1155,15 +1162,14 @@ export class RealisationPortWidget extends Node {
   };
 
   getParts = () => {
-    const parts = (<RealisationPort>this.seObject).parts;
+    const parts = (<RealisationPort>this.getSeObject()).parts;
     if (parts && parts.length > 0) {
       for (let i = 0; i < parts.length; i++) {
         if (widgets.has(parts[i].uri)) {
           drawList.push(new Edge('part', this, widgets.get(parts[i].uri)));
         } else {
-          const realisationPortWidget = new RealisationPortWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, this.router);
-          realisationPortWidget.seObject = parts[i];
-          widgets.set(parts[i].uri, realisationPortWidget);
+          const realisationPortWidget =
+            new RealisationPortWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, parts[i].uri, this.router);
           drawList.push(new Edge('part', this, realisationPortWidget));
           drawList.push(realisationPortWidget);
         }
@@ -1174,15 +1180,14 @@ export class RealisationPortWidget extends Node {
   };
 
   getPerformances = () => {
-    const performances = (<RealisationPort>this.seObject).performances;
+    const performances = (<RealisationPort>this.getSeObject()).performances;
     if (performances && performances.length > 0) {
       for (let i = 0; i < performances.length; i++) {
         if (widgets.has(performances[i].uri)) {
           drawList.push(new Edge('performance', this, widgets.get(performances[i].uri)));
         } else {
-          const performanceWidget = new PerformanceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, performances[i].label, this.router);
-          performanceWidget.seObject = seObjects.get(performances[i].uri);
-          widgets.set(performances[i].uri, performanceWidget);
+          const performanceWidget =
+            new PerformanceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, performances[i].label, performances[i].uri, this.router);
           drawList.push(new Edge('performance', this, performanceWidget));
           drawList.push(performanceWidget);
         }
@@ -1194,8 +1199,8 @@ export class RealisationPortWidget extends Node {
 }
 
 export class HamburgerWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 160, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 160, 50, label, uri);
     this.typename = 'Hamburger';
     this.color = 'LightSalmon';
   }
@@ -1204,7 +1209,6 @@ export class HamburgerWidget extends Node {
     event.preventDefault();
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
-    console.log('contextmenu: ' + x + ' ' + y);
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
@@ -1212,26 +1216,24 @@ export class HamburgerWidget extends Node {
       myDropDown.style.top = this.y + 'px';
 
       clearMenu(myDropDown);
-      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Hamburger>this.seObject).assembly != null);
-      addMenuItem(myDropDown, 'parts', this.getParts, (<Hamburger>this.seObject).parts != null);
-      addMenuItem(myDropDown, 'functional unit', this.getFunctionalUnit, (<Hamburger>this.seObject).functionalUnit != null);
-      addMenuItem(myDropDown, 'technical solution', this.getTechnicalSolution);
-      addMenuItem(myDropDown, 'port realisations', this.getPortRealisations, (<Hamburger>this.seObject).portRealisations != null);
+      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Hamburger>this.getSeObject()).assembly != null);
+      addMenuItem(myDropDown, 'parts', this.getParts, (<Hamburger>this.getSeObject()).parts != null);
+      addMenuItem(myDropDown, 'functional unit', this.getFunctionalUnit, (<Hamburger>this.getSeObject()).functionalUnit != null);
+      addMenuItem(myDropDown, 'technical solution', this.getTechnicalSolution, (<Hamburger>this.getSeObject()).technicalSolution != null);
+      addMenuItem(myDropDown, 'port realisations', this.getPortRealisations, (<Hamburger>this.getSeObject()).portRealisations != null);
       addMenuItem(myDropDown, '', null, false);
-      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/hamburgers', {id: this.seObject.uri}]), true);
+      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/hamburgers', {id: this.getSeObject().uri}]), true);
       myDropDown.classList.toggle('show');
     }
   }
 
   getAssembly = () => {
-    const assembly = (<Hamburger>this.seObject).assembly;
+    const assembly = (<Hamburger>this.getSeObject()).assembly;
     if (assembly) {
       if (widgets.get(assembly.uri)) {
         drawList.push(new Edge('assembly', this, widgets.get(assembly.uri)));
       } else {
-        const hamburgerWidget = new HamburgerWidget(this.x + 100, this.y + 100, assembly.label, this.router);
-        hamburgerWidget.seObject = seObjects.get(assembly.uri);
-        widgets.set(assembly.uri, hamburgerWidget);
+        const hamburgerWidget = new HamburgerWidget(this.x + 100, this.y + 100, assembly.label, assembly.uri, this.router);
         drawList.push(new Edge('assembly', this, hamburgerWidget));
         drawList.push(hamburgerWidget);
       }
@@ -1241,15 +1243,14 @@ export class HamburgerWidget extends Node {
   };
 
   getParts = () => {
-    const parts = (<Hamburger>this.seObject).parts;
+    const parts = (<Hamburger>this.getSeObject()).parts;
     if (parts && parts.length > 0) {
       for (let i = 0; i < parts.length; i++) {
         if (widgets.has(parts[i].uri)) {
           drawList.push(new Edge('part', this, widgets.get(parts[i].uri)));
         } else {
-          const hamburgerWidget = new HamburgerWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, this.router);
-          hamburgerWidget.seObject = seObjects.get(parts[i].uri);
-          widgets.set(parts[i].uri, hamburgerWidget);
+          const hamburgerWidget =
+            new HamburgerWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, parts[i].uri, this.router);
           drawList.push(new Edge('part', this, hamburgerWidget));
           drawList.push(hamburgerWidget);
         }
@@ -1260,14 +1261,12 @@ export class HamburgerWidget extends Node {
   };
 
   getFunctionalUnit = () => {
-    const functionalUnit = (<Hamburger>this.seObject).functionalUnit;
+    const functionalUnit = (<Hamburger>this.getSeObject()).functionalUnit;
     if (functionalUnit) {
       if (widgets.get(functionalUnit.uri)) {
         drawList.push(new Edge('functional unit', this, widgets.get(functionalUnit.uri)));
       } else {
-        const systemSlotWidget = new SystemSlotWidget(this.x + 100, this.y + 100, functionalUnit.label, this.router);
-        systemSlotWidget.seObject = seObjects.get(functionalUnit.uri);
-        widgets.set(functionalUnit.uri, systemSlotWidget);
+        const systemSlotWidget = new SystemSlotWidget(this.x + 100, this.y + 100, functionalUnit.label, functionalUnit.uri, this.router);
         drawList.push(new Edge('functional unit', this, systemSlotWidget));
         drawList.push(systemSlotWidget);
       }
@@ -1277,14 +1276,13 @@ export class HamburgerWidget extends Node {
   };
 
   getTechnicalSolution = () => {
-    const technicalSolution = (<Hamburger>this.seObject).technicalSolution;
+    const technicalSolution = (<Hamburger>this.getSeObject()).technicalSolution;
     if (technicalSolution) {
       if (widgets.get(technicalSolution.uri)) {
         drawList.push(new Edge('technical solution', this, widgets.get(technicalSolution.uri)));
       } else {
-        const realisationModuleWidget = new RealisationModuleWidget(this.x + 100, this.y + 100, technicalSolution.label, this.router);
-        realisationModuleWidget.seObject = seObjects.get(technicalSolution.uri);
-        widgets.set(technicalSolution.uri, realisationModuleWidget);
+        const realisationModuleWidget =
+          new RealisationModuleWidget(this.x + 100, this.y + 100, technicalSolution.label, technicalSolution.uri, this.router);
         drawList.push(new Edge('technical solution', this, realisationModuleWidget));
         drawList.push(realisationModuleWidget);
       }
@@ -1294,16 +1292,15 @@ export class HamburgerWidget extends Node {
   };
 
   getPortRealisations = () => {
-    const portRealisations = (<Hamburger>this.seObject).portRealisations;
+    const portRealisations = (<Hamburger>this.getSeObject()).portRealisations;
     if (portRealisations && portRealisations.length > 0) {
       for (let i = 0; i < portRealisations.length; i++) {
         if (widgets.has(portRealisations[i].uri)) {
           drawList.push(new Edge('port realisation', this, widgets.get(portRealisations[i].uri)));
         } else {
           const portRealisationWidget =
-            new PortRealisationWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, portRealisations[i].label, this.router);
-          portRealisationWidget.seObject = portRealisations[i];
-          widgets.set(portRealisations[i].uri, portRealisationWidget);
+            new PortRealisationWidget(this.x + 100 + i * 8, this.y + 100 + i * 8,
+              portRealisations[i].label, portRealisations[i].uri, this.router);
           drawList.push(new Edge('port realisation', this, portRealisationWidget));
           drawList.push(portRealisationWidget);
         }
@@ -1315,8 +1312,8 @@ export class HamburgerWidget extends Node {
 }
 
 export class PortRealisationWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 100, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 100, 50, label, uri);
     this.typename = 'PortRealisation';
     this.color = 'LightSalmon';
   }
@@ -1325,7 +1322,6 @@ export class PortRealisationWidget extends Node {
     event.preventDefault();
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
-    console.log('contextmenu: ' + x + ' ' + y);
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
@@ -1333,23 +1329,22 @@ export class PortRealisationWidget extends Node {
       myDropDown.style.top = this.y + 'px';
 
       clearMenu(myDropDown);
-      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<PortRealisation>this.seObject).assembly != null);
-      addMenuItem(myDropDown, 'parts', this.getParts, (<PortRealisation>this.seObject).parts != null);
-      addMenuItem(myDropDown, 'interface', this.getInterface, (<PortRealisation>this.seObject).interface != null);
-      addMenuItem(myDropDown, 'port', this.getPort, (<PortRealisation>this.seObject).port != null);
+      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<PortRealisation>this.getSeObject()).assembly != null);
+      addMenuItem(myDropDown, 'parts', this.getParts, (<PortRealisation>this.getSeObject()).parts != null);
+      addMenuItem(myDropDown, 'interface', this.getInterface, (<PortRealisation>this.getSeObject()).interface != null);
+      addMenuItem(myDropDown, 'port', this.getPort, (<PortRealisation>this.getSeObject()).port != null);
       myDropDown.classList.toggle('show');
     }
   }
 
   getAssembly = () => {
-    const assembly = (<PortRealisation>this.seObject).assembly;
+    const assembly = (<PortRealisation>this.getSeObject()).assembly;
     if (assembly) {
       if (widgets.get(assembly.uri)) {
         drawList.push(new Edge('assembly', this, widgets.get(assembly.uri)));
       } else {
-        const portRealisationWidget = new PortRealisationWidget(this.x + 100, this.y + 100, assembly.label, this.router);
-        portRealisationWidget.seObject = seObjects.get(assembly.uri);
-        widgets.set(assembly.uri, portRealisationWidget);
+        const portRealisationWidget =
+          new PortRealisationWidget(this.x + 100, this.y + 100, assembly.label, assembly.uri, this.router);
         drawList.push(new Edge('assembly', this, portRealisationWidget));
         drawList.push(portRealisationWidget);
       }
@@ -1359,15 +1354,14 @@ export class PortRealisationWidget extends Node {
   };
 
   getParts = () => {
-    const parts = (<PortRealisation>this.seObject).parts;
+    const parts = (<PortRealisation>this.getSeObject()).parts;
     if (parts && parts.length > 0) {
       for (let i = 0; i < parts.length; i++) {
         if (widgets.has(parts[i].uri)) {
           drawList.push(new Edge('part', this, widgets.get(parts[i].uri)));
         } else {
-          const portRealisationWidget = new PortRealisationWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, this.router);
-          portRealisationWidget.seObject = seObjects.get(parts[i].uri);
-          widgets.set(parts[i].uri, portRealisationWidget);
+          const portRealisationWidget =
+            new PortRealisationWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, parts[i].uri, this.router);
           drawList.push(new Edge('part', this, portRealisationWidget));
           drawList.push(portRealisationWidget);
         }
@@ -1378,14 +1372,13 @@ export class PortRealisationWidget extends Node {
   };
 
   getInterface = () => {
-    const systemInterface = (<PortRealisation>this.seObject).interface;
+    const systemInterface = (<PortRealisation>this.getSeObject()).interface;
     if (systemInterface) {
       if (widgets.get(systemInterface.uri)) {
         drawList.push(new Edge('interface', this, widgets.get(systemInterface.uri)));
       } else {
-        const systemInterfaceWidget = new SystemInterfaceWidget(this.x + 100, this.y + 100, systemInterface.label, this.router);
-        systemInterfaceWidget.seObject = seObjects.get(systemInterface.uri);
-        widgets.set(systemInterface.uri, systemInterfaceWidget);
+        const systemInterfaceWidget =
+          new SystemInterfaceWidget(this.x + 100, this.y + 100, systemInterface.label, systemInterface.uri, this.router);
         drawList.push(new Edge('interface', this, systemInterfaceWidget));
         drawList.push(systemInterfaceWidget);
       }
@@ -1395,14 +1388,12 @@ export class PortRealisationWidget extends Node {
   };
 
   getPort = () => {
-    const port = (<PortRealisation>this.seObject).port;
+    const port = (<PortRealisation>this.getSeObject()).port;
     if (port) {
       if (widgets.get(port.uri)) {
         drawList.push(new Edge('port', this, widgets.get(port.uri)));
       } else {
-        const realisationPortWidget = new RealisationPortWidget(this.x + 100, this.y + 100, port.label, this.router);
-        realisationPortWidget.seObject = seObjects.get(port.uri);
-        widgets.set(port.uri, realisationPortWidget);
+        const realisationPortWidget = new RealisationPortWidget(this.x + 100, this.y + 100, port.label, port.uri, this.router);
         drawList.push(new Edge('port', this, realisationPortWidget));
         drawList.push(realisationPortWidget);
       }
@@ -1413,8 +1404,8 @@ export class PortRealisationWidget extends Node {
 }
 
 export class PerformanceWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 160, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 160, 50, label, uri);
     this.typename = 'Performance';
     this.color = 'YellowGreen';
   }
@@ -1423,7 +1414,7 @@ export class PerformanceWidget extends Node {
     event.preventDefault();
     const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
     const y: number = event.y - canvas.offsetTop + window.pageYOffset;
-    console.log('contextmenu: ' + x + ' ' + y);
+
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
@@ -1431,24 +1422,22 @@ export class PerformanceWidget extends Node {
       myDropDown.style.top = this.y + 'px';
 
       clearMenu(myDropDown);
-      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Performance>this.seObject).assembly != null);
-      addMenuItem(myDropDown, 'parts', this.getParts, (<Performance>this.seObject).parts != null);
-      addMenuItem(myDropDown, 'value', this.getValue, (<Performance>this.seObject).value != null);
+      addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Performance>this.getSeObject()).assembly != null);
+      addMenuItem(myDropDown, 'parts', this.getParts, (<Performance>this.getSeObject()).parts != null);
+      addMenuItem(myDropDown, 'value', this.getValue, (<Performance>this.getSeObject()).value != null);
       addMenuItem(myDropDown, '', null, false);
-      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/performances', {id: this.seObject.uri}]), true);
+      addMenuItem(myDropDown, '=>', () => this.router.navigate(['/performances', {id: this.getSeObject().uri}]), true);
       myDropDown.classList.toggle('show');
     }
   }
 
   getAssembly = () => {
-    const assembly = (<Performance>this.seObject).assembly;
+    const assembly = (<Performance>this.getSeObject()).assembly;
     if (assembly) {
       if (widgets.get(assembly.uri)) {
         drawList.push(new Edge('assembly', this, widgets.get(assembly.uri)));
       } else {
-        const performanceWidget = new PerformanceWidget(this.x + 100, this.y + 100, assembly.label, this.router);
-        performanceWidget.seObject = seObjects.get(assembly.uri);
-        widgets.set(assembly.uri, performanceWidget);
+        const performanceWidget = new PerformanceWidget(this.x + 100, this.y + 100, assembly.label, assembly.uri, this.router);
         drawList.push(new Edge('assembly', this, performanceWidget));
         drawList.push(performanceWidget);
       }
@@ -1458,15 +1447,14 @@ export class PerformanceWidget extends Node {
   };
 
   getParts = () => {
-    const parts = (<Performance>this.seObject).parts;
+    const parts = (<Performance>this.getSeObject()).parts;
     if (parts && parts.length > 0) {
       for (let i = 0; i < parts.length; i++) {
         if (widgets.has(parts[i].uri)) {
           drawList.push(new Edge('part', this, widgets.get(parts[i].uri)));
         } else {
-          const performanceWidget = new PerformanceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, this.router);
-          performanceWidget.seObject = seObjects.get(parts[i].uri);
-          widgets.set(parts[i].uri, performanceWidget);
+          const performanceWidget =
+            new PerformanceWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, parts[i].label, parts[i].uri, this.router);
           drawList.push(new Edge('part', this, performanceWidget));
           drawList.push(performanceWidget);
         }
@@ -1477,14 +1465,12 @@ export class PerformanceWidget extends Node {
   };
 
   getValue = () => {
-    const value = (<Performance>this.seObject).value;
+    const value = (<Performance>this.getSeObject()).value;
     if (value) {
       if (widgets.get(value.uri)) {
         drawList.push(new Edge('value', this, widgets.get(value.uri)));
       } else {
-        const numericValueWidget = new NumericValueWidget(this.x + 100, this.y + 100, value.label, this.router);
-        numericValueWidget.seObject = seObjects.get(value.uri);
-        widgets.set(value.uri, numericValueWidget);
+        const numericValueWidget = new NumericValueWidget(this.x + 100, this.y + 100, value.label, value.uri, this.router);
         drawList.push(new Edge('value', this, numericValueWidget));
         drawList.push(numericValueWidget);
       }
@@ -1495,8 +1481,8 @@ export class PerformanceWidget extends Node {
 }
 
 export class NumericValueWidget extends Node {
-  constructor(public x: number, public y: number, public label: string, public router?: Router) {
-    super(x, y, 160, 50, label);
+  constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
+    super(x, y, 160, 50, label, uri);
     this.typename = 'NumericValue';
     this.color = 'white';
   }

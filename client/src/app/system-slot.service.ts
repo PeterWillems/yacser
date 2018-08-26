@@ -2,6 +2,7 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {CoinsObjectInput, Mutation, Query, SeObject, SystemInterface, SystemSlot, SystemSlotInput} from './types';
 import {
+  ALL_HAMBURGERS,
   ALL_SYSTEM_INTERFACES,
   ALL_SYSTEM_SLOTS,
   CREATE_SYSTEM_SLOT,
@@ -119,6 +120,10 @@ export class SystemSlotService {
         }
       }, {
         query: ALL_SYSTEM_INTERFACES, variables: {
+          datasetId: systemSlot.datasetId
+        }
+      }, {
+        query: ALL_HAMBURGERS, variables: {
           datasetId: systemSlot.datasetId
         }
       }]

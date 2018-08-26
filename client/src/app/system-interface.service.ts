@@ -2,7 +2,7 @@ import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {CoinsObjectInput, Mutation, Query, Requirement, RequirementInput, SystemInterface, SystemInterfaceInput} from './types';
 import {
-  ALL_FUNCTIONS,
+  ALL_FUNCTIONS, ALL_HAMBURGERS,
   ALL_SYSTEM_INTERFACES, ALL_SYSTEM_SLOTS,
   CREATE_SYSTEM_INTERFACE, DELETE_SYSTEM_INTERFACE, UPDATE_SYSTEM_INTERFACE,
 } from './graphql';
@@ -87,6 +87,10 @@ export class SystemInterfaceService {
         }
       }, {
         query: ALL_FUNCTIONS, variables: {
+          datasetId: systemInterfaceInput.datasetId
+        }
+      }, {
+        query: ALL_HAMBURGERS, variables: {
           datasetId: systemInterfaceInput.datasetId
         }
       }]
