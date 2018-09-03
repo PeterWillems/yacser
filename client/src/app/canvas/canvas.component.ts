@@ -23,6 +23,15 @@ import {NumericPropertyService} from '../numeric-property.service';
 
 let canvas: HTMLCanvasElement;
 let ctx: CanvasRenderingContext2D;
+
+let windowX = 0;
+let windowY = 0;
+
+let currentScale = 1;
+const minScale = .2;
+const maxScale = 3;
+const scaleIncrement = .1;
+
 let widgets = new Map<string, Node>();
 const seObjects = new Map<string, SeObject>();
 
@@ -159,10 +168,13 @@ export class CanvasComponent implements OnInit {
 
     });
     ctx = canvas.getContext('2d');
+    windowX = 0;
+    windowY = 0;
     document.onmousemove = (event: MouseEvent) => {
-      cursorX = event.x - canvas.offsetLeft + window.pageXOffset;
-      cursorY = event.y - canvas.offsetTop + window.pageYOffset;
+      cursorX = (event.x - canvas.offsetLeft + window.pageXOffset) / currentScale;
+      cursorY = (event.y - canvas.offsetTop + window.pageYOffset) / currentScale;
     };
+    ctx.save();
     gameloop();
   }
 
@@ -282,9 +294,12 @@ export class CanvasComponent implements OnInit {
 function gameloop(): void {
   requestAnimationFrame(gameloop);
   ctx.fillStyle = 'lightgrey';
-  ctx.fillRect(0, 0, 1600, 800);
-
+  ctx.fillRect(-windowX, -windowY, 1600, 800);
+  ctx.save();
+  ctx.scale(currentScale, currentScale);
   draw();
+  ctx.restore();
+
 }
 
 function draw(): void {
@@ -295,6 +310,52 @@ function draw(): void {
     drawList[shapeIndex].draw();
   }
 }
+
+document.onkeydown = (e) => {
+
+  // e = e ? e : window.event;
+  console.log(e.keyCode + 'down');
+
+  switch (e.keyCode) {
+    case 38:
+      // up
+      windowY -= 10;
+      ctx.translate(0, -10);
+      break;
+    case 40:
+      // down
+      windowY += 10;
+      ctx.translate(0, 10);
+      break;
+    case 37:
+      // left
+      windowX -= 10;
+      ctx.translate(-10, 0);
+      break;
+    case 39:
+      // right
+      windowX += 10;
+      ctx.translate(10, 0);
+      break;
+    case 109:
+      // -
+      currentScale -= scaleIncrement;
+      if (currentScale < minScale) {
+        currentScale = minScale;
+      }
+      console.log('zoom out: currentScale=' + currentScale);
+      break;
+    case 107:
+      // +
+      currentScale += scaleIncrement;
+      if (currentScale > maxScale) {
+        currentScale = maxScale;
+      }
+      console.log('zoom in: currentScale=' + currentScale);
+      break;
+  }
+
+};
 
 export abstract class Shape {
   public x: number;
@@ -383,7 +444,7 @@ export abstract class Node extends Shape {
     if (this.down === true && this === Node.selectedNode) {
       ctx.globalAlpha = 0.5;
       ctx.strokeRect(this.x - this._halfWidth + 2, this.y - this._halfHeight + 2, this.width, this.height);
-      ctx.rect(this.x - this._halfWidth + 2, this.y - this._halfHeight + 2, this.width, this.height);
+      ctx.fillRect(this.x - this._halfWidth + 2, this.y - this._halfHeight + 2, this.width, this.height);
     } else {
       ctx.strokeRect(this.x - this._halfWidth, this.y - this._halfHeight, this.width, this.height);
       ctx.fillRect(this.x - this._halfWidth, this.y - this._halfHeight, this.width, this.height);
@@ -424,6 +485,7 @@ export abstract class Node extends Shape {
   }
 
   public isHit(x: number, y: number): boolean {
+    console.log('x=' + x + ' this.x=' + this.x + ' this._halfWidth=' + this._halfWidth + ' windowX=' + windowX);
     return x > this.x - this._halfWidth
       && y > this.y - this._halfHeight
       && x < this.x + this._halfWidth
@@ -431,16 +493,18 @@ export abstract class Node extends Shape {
   }
 
   public mouseDown(event: MouseEvent): void {
+    console.log('event.x=' + event.x + ' event.y=' + event.y);
     if (event.button === 2) {
       return;
     }
 
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
+    console.log('x=' + x + ' y=' + y + ' windowX=' + windowX + ' windowY=' + windowY);
 
     if (this.isHit(x, y)) {
-      this._anchorX = x - this.x;
-      this._anchorY = y - this.y;
+      this._anchorX = x - this.x + windowX / currentScale;
+      this._anchorY = y - this.y + windowY / currentScale;
       this.zIndex = zIndex++;
       if (Node.selectedNode) {
         if (Node.selectedNode !== this && this.zIndex > Node.selectedNode.zIndex) {
@@ -499,8 +563,8 @@ export class Edge extends Shape {
   draw(): void {
     // this.x = this.startNode.x + ((this.endNode.x - this.startNode.x) / 2) + canvas.offsetLeft + window.pageXOffset;
     // this.y = this.startNode.y + ((this.endNode.y - this.startNode.y) / 2) + canvas.offsetTop + window.pageYOffset;
-    this.x = this.startNode.x + ((this.endNode.x - this.startNode.x) / 3);
-    this.y = this.startNode.y + ((this.endNode.y - this.startNode.y) / 3);
+    this.x = this.startNode.x + ((this.endNode.x - this.startNode.x) * 4 / 9);
+    this.y = this.startNode.y + ((this.endNode.y - this.startNode.y) * 4 / 9);
 
     ctx.save();
     ctx.beginPath();
@@ -528,71 +592,87 @@ export class Edge extends Shape {
 
 export class SystemSlotWidget extends Node {
   constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
-    super(x, y, 160, 50, label, uri);
+    super(x, y, 120, 120, label, uri);
     this.typename = 'SystemSlot';
     this.color = 'LightBlue';
   }
 
-  // public draw() {
-  //   if (this.down === true) {
-  //     this.x = cursorX - this._anchorX;
-  //     this.y = cursorY - this._anchorY;
-  //   }
-  //
-  //   ctx.save();
-  //   ctx.lineWidth = 4;
-  //   ctx.strokeStyle = 'black';
-  //   ctx.fillStyle = this.color;
-  //   const numberOfSides = 8,
-  //     size = 75,
-  //     Xcenter = this.x,
-  //     Ycenter = this.y;
-  //   ctx.beginPath();
-  //   ctx.moveTo(Xcenter + size * Math.cos(0), Ycenter + size * Math.sin(0));
-  //   if (this.down === true) {
-  //     ctx.globalAlpha = 0.5;
-  //     for (let i = 1; i <= numberOfSides; i += 1) {
-  //       ctx.lineTo(Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides) + 2,
-  //         Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides) + 2);
-  //     }
-  //     ctx.stroke();
-  //     ctx.closePath(); // automatically moves back to bottom left corner
-  //     ctx.fill();
-  //   } else {
-  //     for (let i = 1; i <= numberOfSides; i += 1) {
-  //       ctx.lineTo(Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides),
-  //         Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides));
-  //     }
-  //     ctx.stroke();
-  //     ctx.closePath(); // automatically moves back to bottom left corner
-  //     ctx.fill();
-  //   }
-  //   ctx.restore();
-  //
-  //   ctx.save();
-  //   ctx.beginPath();
-  //   ctx.textAlign = 'center';
-  //   ctx.textBaseline = 'middle';
-  //   ctx.fillStyle = 'black';
-  //   ctx.font = this.font_size + 'px Verdana';
-  //   if (this.down === true) {
-  //     ctx.globalAlpha = 0.5;
-  //     ctx.fillText(this.text, this.x + 2, this.y + 2);
-  //   } else {
-  //     ctx.fillText(this.text, this.x, this.y);
-  //   }
-  //   ctx.restore();
-  // }
+  public draw() {
+    if (this.down === true) {
+      this.x = cursorX - this._anchorX;
+      this.y = cursorY - this._anchorY;
+    }
+
+    ctx.save();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = this.color;
+    const numberOfSides = 8,
+      size = 60,
+      Xcenter = this.x,
+      Ycenter = this.y;
+    ctx.translate(Xcenter, Ycenter);
+    ctx.rotate(Math.PI / numberOfSides);
+    ctx.beginPath();
+    ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
+    if (this.down === true) {
+      ctx.globalAlpha = 0.5;
+      for (let i = 1; i <= numberOfSides; i += 1) {
+        ctx.lineTo(size * Math.cos(i * 2 * Math.PI / numberOfSides) + 2,
+          size * Math.sin(i * 2 * Math.PI / numberOfSides) + 2);
+      }
+      ctx.stroke();
+      ctx.closePath(); // automatically moves back to bottom left corner
+      ctx.fill();
+    } else {
+      for (let i = 1; i <= numberOfSides; i += 1) {
+        ctx.lineTo(size * Math.cos(i * 2 * Math.PI / numberOfSides),
+          size * Math.sin(i * 2 * Math.PI / numberOfSides));
+      }
+      ctx.stroke();
+      ctx.closePath(); // automatically moves back to bottom left corner
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'black';
+    ctx.font = this.font_size + 'px Verdana';
+    if (this.down === true && this === Node.selectedNode) {
+      ctx.globalAlpha = 0.5;
+      if (ctx.measureText(this.text).width < this.width) {
+        ctx.fillText(this.text, this.x + 2, this.y + 2);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x + 2, this.y - this.height / 8 + 2);
+        ctx.fillText(secondPart, this.x + 2, this.y + this.height / 8 + 2);
+      }
+    } else {
+      if (ctx.measureText(this.text).width < this.width) {
+        ctx.fillText(this.text, this.x, this.y);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x, this.y - this.height / 8);
+        ctx.fillText(secondPart, this.x, this.y + this.height / 8);
+      }
+    }
+    ctx.restore();
+  }
 
   public contextmenu(event: MouseEvent): void {
     event.preventDefault();
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
-      myDropDown.style.left = this.x + canvas.offsetLeft + 'px';
-      myDropDown.style.top = this.y + canvas.offsetTop + 'px';
+      myDropDown.style.left = this.x * currentScale + windowX + canvas.offsetLeft + 'px';
+      myDropDown.style.top = this.y * currentScale + windowY + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
       addMenuItem(myDropDown, 'assembly', this.getAssembly, (<SystemSlot>this.getSeObject()).assembly != null);
@@ -723,13 +803,13 @@ export class SystemInterfaceWidget extends Node {
 
   contextmenu(event: MouseEvent): void {
     event.preventDefault();
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
-      myDropDown.style.left = this.x + canvas.offsetLeft + 'px';
-      myDropDown.style.top = this.y + canvas.offsetTop + 'px';
+      myDropDown.style.left = this.x * currentScale + windowX + canvas.offsetLeft + 'px';
+      myDropDown.style.top = this.y * currentScale + windowY + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
       addMenuItem(myDropDown, 'assembly', this.getAssembly, (<SystemInterface>this.getSeObject()).assembly != null);
@@ -830,13 +910,13 @@ export class FunctionWidget extends Node {
 
   public contextmenu(event: MouseEvent): void {
     event.preventDefault();
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
-      myDropDown.style.left = this.x + 'px';
-      myDropDown.style.top = this.y + 'px';
+      myDropDown.style.left = this.x * currentScale + windowX + canvas.offsetLeft + 'px';
+      myDropDown.style.top = this.y * currentScale + windowY + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
       addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Function>this.getSeObject()).assembly != null);
@@ -940,13 +1020,13 @@ export class RequirementWidget extends Node {
 
   public contextmenu(event: MouseEvent): void {
     event.preventDefault();
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
-      myDropDown.style.left = this.x + 'px';
-      myDropDown.style.top = this.y + 'px';
+      myDropDown.style.left = this.x * currentScale + windowX + canvas.offsetLeft + 'px';
+      myDropDown.style.top = this.y * currentScale + windowY + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
       addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Requirement>this.getSeObject()).assembly != null);
@@ -1025,20 +1105,78 @@ export class RequirementWidget extends Node {
 
 export class RealisationModuleWidget extends Node {
   constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
-    super(x, y, 160, 50, label, uri);
+    super(x, y, 110, 110, label, uri);
     this.typename = 'RealisationModule';
     this.color = 'LightGreen';
   }
 
+  public draw(): void {
+    if (this.down === true && this === Node.selectedNode) {
+      this.x = cursorX - this._anchorX;
+      this.y = cursorY - this._anchorY;
+    }
+
+    if (this.uri) {
+      this.text = this.getSeObject().label;
+    }
+    ctx.save();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = this.color;
+    if (this.down === true && this === Node.selectedNode) {
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.arc(this.x + 2, this.y + 2, this.width / 2, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = 'LightGreen';
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.width / 2, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = 'LightGreen';
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'black';
+    ctx.font = this.font_size + 'px Verdana';
+    if (this.down === true && this === Node.selectedNode) {
+      ctx.globalAlpha = 0.5;
+      if (ctx.measureText(this.text).width < this.width - 4) {
+        ctx.fillText(this.text, this.x + 2, this.y + 2);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x + 2, this.y - this.height / 6 + 2);
+        ctx.fillText(secondPart, this.x + 2, this.y + this.height / 6 + 2);
+      }
+    } else {
+      if (ctx.measureText(this.text).width < this.width - 4) {
+        ctx.fillText(this.text, this.x, this.y);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x, this.y - this.height / 6);
+        ctx.fillText(secondPart, this.x, this.y + this.height / 6);
+      }
+    }
+    ctx.restore();
+  }
+
   public contextmenu(event: MouseEvent): void {
     event.preventDefault();
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
-      myDropDown.style.left = this.x + 'px';
-      myDropDown.style.top = this.y + 'px';
+      myDropDown.style.left = this.x * currentScale + windowX + canvas.offsetLeft + 'px';
+      myDropDown.style.top = this.y * currentScale + windowY + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
       addMenuItem(myDropDown, 'assembly', this.getAssembly, (<RealisationModule>this.getSeObject()).assembly != null);
@@ -1122,29 +1260,142 @@ export class RealisationModuleWidget extends Node {
 }
 
 export class RealisationPortWidget extends Node {
+  public rotateState = 0;
+
   constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
-    super(x, y, 100, 50, label, uri);
+    super(x, y, 90, 90, label, uri);
     this.typename = 'RealisationPort';
     this.color = 'LightGreen';
   }
 
+  public draw(): void {
+    if (this.down === true && this === Node.selectedNode) {
+      this.x = cursorX - this._anchorX;
+      this.y = cursorY - this._anchorY;
+    }
+
+    if (this.uri) {
+      this.text = this.getSeObject().label;
+    }
+    ctx.save();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = this.color;
+    const rotation = this.rotateState * Math.PI / 2;
+    if (this.down === true && this === Node.selectedNode) {
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.arc(this.x + 2, this.y + 2, this.width / 2, Math.PI + rotation, Math.PI * 2 + rotation);
+      switch (this.rotateState) {
+        case 0:
+          ctx.moveTo(this.x - this._halfWidth + 2, this.y + 2);
+          ctx.lineTo(this.x + this._halfWidth + 2, this.y + 2);
+          break;
+        case 1:
+          ctx.moveTo(this.x + 2, this.y - this._halfHeight + 2);
+          ctx.lineTo(this.x + 2, this.y + this._halfHeight + 2);
+          break;
+        case 2:
+          ctx.moveTo(this.x - this._halfWidth + 2, this.y + 2);
+          ctx.lineTo(this.x + this._halfWidth + 2, this.y + 2);
+          break;
+        case 3:
+          ctx.moveTo(this.x + 2, this.y - this._halfHeight + 2);
+          ctx.lineTo(this.x + 2, this.y + this._halfHeight + 2);
+          break;
+      }
+      ctx.stroke();
+      ctx.fillStyle = 'LightGreen';
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.width / 2, Math.PI + rotation, Math.PI * 2 + rotation);
+      switch (this.rotateState) {
+        case 0:
+          ctx.moveTo(this.x - this._halfWidth, this.y);
+          ctx.lineTo(this.x + this._halfWidth, this.y);
+          break;
+        case 1:
+          ctx.moveTo(this.x, this.y - this._halfHeight);
+          ctx.lineTo(this.x, this.y + this._halfHeight);
+          break;
+        case 2:
+          ctx.moveTo(this.x - this._halfWidth, this.y);
+          ctx.lineTo(this.x + this._halfWidth, this.y);
+          break;
+        case 3:
+          ctx.moveTo(this.x, this.y - this._halfHeight);
+          ctx.lineTo(this.x, this.y + this._halfHeight);
+          break;
+      }
+      ctx.stroke();
+      ctx.fillStyle = 'LightGreen';
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'black';
+    ctx.font = (this.font_size - 2) + 'px Verdana';
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotateState !== 2 ? this.rotateState * Math.PI / 2 : 0);
+    if (this.down === true && this === Node.selectedNode) {
+      ctx.globalAlpha = 0.5;
+      if (ctx.measureText(this.text).width < this.width - 4) {
+        ctx.fillText(this.text, 2, (this.rotateState !== 2 ? this.height / -6 : this.height / 6) + 2);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        // ctx.fillText(firstPart, this.x + 2, this.y - this.height / 3 + 2);
+        // ctx.fillText(secondPart, this.x + 2, this.y - this.height / 6 + 2);
+        ctx.fillText(firstPart, 2, (this.rotateState !== 2 ? this.height / -3 : this.height / 6) + 2);
+        ctx.fillText(secondPart, 2, (this.rotateState !== 2 ? this.height / -6 : this.height / 3) + 2);
+      }
+    } else {
+      if (ctx.measureText(this.text).width < this.width - 4) {
+        // ctx.fillText(this.text, this.x, this.y);
+        ctx.fillText(this.text, 0, this.rotateState !== 2 ? this.height / -6 : this.height / 6);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        // ctx.fillText(firstPart, this.x, this.y - this.height / 3);
+        // ctx.fillText(secondPart, this.x, this.y - this.height / 6);
+        ctx.fillText(firstPart, 0, this.rotateState !== 2 ? this.height / -3 : this.height / 6);
+        ctx.fillText(secondPart, 0, this.rotateState !== 2 ? this.height / -6 : this.height / 3);
+      }
+    }
+    ctx.restore();
+  }
+
   contextmenu(event: MouseEvent): void {
     event.preventDefault();
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
-      myDropDown.style.left = this.x + 'px';
-      myDropDown.style.top = this.y + 'px';
+      myDropDown.style.left = this.x * currentScale + windowX + canvas.offsetLeft + 'px';
+      myDropDown.style.top = this.y * currentScale + windowY + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
       addMenuItem(myDropDown, 'assembly', this.getAssembly, (<RealisationPort>this.getSeObject()).assembly != null);
       addMenuItem(myDropDown, 'parts', this.getParts, (<RealisationPort>this.getSeObject()).parts != null);
       addMenuItem(myDropDown, 'performances', null, (<RealisationModule>this.getSeObject()).performances != null);
+      addMenuItem(myDropDown, '', null, false);
+      addMenuItem(myDropDown, 'rotate', this.rotate, true);
       myDropDown.classList.toggle('show');
     }
   }
+
+  rotate = () => {
+    this.rotateState++;
+    if (this.rotateState > 3) {
+      this.rotateState = 0;
+    }
+  };
 
   getAssembly = () => {
     const assembly = (<RealisationPort>this.getSeObject()).assembly;
@@ -1200,20 +1451,88 @@ export class RealisationPortWidget extends Node {
 
 export class HamburgerWidget extends Node {
   constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
-    super(x, y, 160, 50, label, uri);
+    super(x, y, 110, 110, label, uri);
     this.typename = 'Hamburger';
     this.color = 'LightSalmon';
   }
 
+  public draw(): void {
+    if (this.down === true && this === Node.selectedNode) {
+      this.x = cursorX - this._anchorX;
+      this.y = cursorY - this._anchorY;
+    }
+
+    if (this.uri) {
+      this.text = this.getSeObject().label;
+    }
+    ctx.save();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = this.color;
+    if (this.down === true && this === Node.selectedNode) {
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.arc(this.x + 2, this.y + 2, this.width / 2, 0, Math.PI);
+      ctx.stroke();
+      ctx.fillStyle = 'LightGreen';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(this.x + 2, this.y + 2, this.width / 2, Math.PI, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = 'LightBlue';
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.width / 2, 0, Math.PI);
+      ctx.stroke();
+      ctx.fillStyle = 'LightGreen';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.width / 2, Math.PI, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = 'LightBlue';
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'black';
+    ctx.font = this.font_size + 'px Verdana';
+    if (this.down === true && this === Node.selectedNode) {
+      ctx.globalAlpha = 0.5;
+      if (ctx.measureText(this.text).width < this.width - 4) {
+        ctx.fillText(this.text, this.x + 2, this.y + 2);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x + 2, this.y - this.height / 6 + 2);
+        ctx.fillText(secondPart, this.x + 2, this.y + this.height / 6 + 2);
+      }
+    } else {
+      if (ctx.measureText(this.text).width < this.width - 4) {
+        ctx.fillText(this.text, this.x, this.y);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x, this.y - this.height / 6);
+        ctx.fillText(secondPart, this.x, this.y + this.height / 6);
+      }
+    }
+    ctx.restore();
+  }
+
   public contextmenu(event: MouseEvent): void {
     event.preventDefault();
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
-      myDropDown.style.left = this.x + 'px';
-      myDropDown.style.top = this.y + 'px';
+      myDropDown.style.left = this.x * currentScale + windowX + canvas.offsetLeft + 'px';
+      myDropDown.style.top = this.y * currentScale + windowY + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
       addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Hamburger>this.getSeObject()).assembly != null);
@@ -1312,21 +1631,90 @@ export class HamburgerWidget extends Node {
 }
 
 export class PortRealisationWidget extends Node {
+
   constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
-    super(x, y, 100, 50, label, uri);
+    super(x, y, 90, 90, label, uri);
     this.typename = 'PortRealisation';
     this.color = 'LightSalmon';
   }
 
+  public draw(): void {
+    if (this.down === true && this === Node.selectedNode) {
+      this.x = cursorX - this._anchorX;
+      this.y = cursorY - this._anchorY;
+    }
+
+    if (this.uri) {
+      this.text = this.getSeObject().label;
+    }
+    ctx.save();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'black';
+    ctx.fillStyle = this.color;
+    if (this.down === true && this === Node.selectedNode) {
+      ctx.globalAlpha = 0.5;
+      ctx.beginPath();
+      ctx.arc(this.x + 2, this.y + 2, this.width / 2, 0, Math.PI);
+      ctx.stroke();
+      ctx.fillStyle = 'LightGreen';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(this.x + 2, this.y + 2, this.width / 2, Math.PI, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = 'DarkGrey';
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.width / 2, 0, Math.PI);
+      ctx.stroke();
+      ctx.fillStyle = 'LightGreen';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.width / 2, Math.PI, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = 'DarkGrey';
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'black';
+    ctx.font = (this.font_size - 2) + 'px Verdana';
+    if (this.down === true && this === Node.selectedNode) {
+      ctx.globalAlpha = 0.5;
+      if (ctx.measureText(this.text).width < this.width - 4) {
+        ctx.fillText(this.text, this.x + 2, this.y + 2);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x + 2, this.y - this.height / 6 + 2);
+        ctx.fillText(secondPart, this.x + 2, this.y + this.height / 6 + 2);
+      }
+    } else {
+      if (ctx.measureText(this.text).width < this.width - 4) {
+        ctx.fillText(this.text, this.x, this.y);
+      } else {
+        const firstPart = this.text.substring(0, this.text.length / 2);
+        const secondPart = this.text.substring(this.text.length / 2);
+        ctx.fillText(firstPart, this.x, this.y - this.height / 6);
+        ctx.fillText(secondPart, this.x, this.y + this.height / 6);
+      }
+    }
+    ctx.restore();
+  }
+
   contextmenu(event: MouseEvent): void {
     event.preventDefault();
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
-      myDropDown.style.left = this.x + 'px';
-      myDropDown.style.top = this.y + 'px';
+      myDropDown.style.left = this.x * currentScale + windowX + canvas.offsetLeft + 'px';
+      myDropDown.style.top = this.y * currentScale + windowY + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
       addMenuItem(myDropDown, 'assembly', this.getAssembly, (<PortRealisation>this.getSeObject()).assembly != null);
@@ -1412,14 +1800,14 @@ export class PerformanceWidget extends Node {
 
   public contextmenu(event: MouseEvent): void {
     event.preventDefault();
-    const x: number = event.x - canvas.offsetLeft + window.pageXOffset;
-    const y: number = event.y - canvas.offsetTop + window.pageYOffset;
+    const x: number = (event.x - windowX - canvas.offsetLeft + window.pageXOffset) / currentScale;
+    const y: number = (event.y - windowY - canvas.offsetTop + window.pageYOffset) / currentScale;
 
 
     if (this.isHit(x, y)) {
       const myDropDown = document.getElementById('myDropdown');
-      myDropDown.style.left = this.x + 'px';
-      myDropDown.style.top = this.y + 'px';
+      myDropDown.style.left = this.x * currentScale + windowX + canvas.offsetLeft + 'px';
+      myDropDown.style.top = this.y * currentScale + windowY + canvas.offsetTop + 'px';
 
       clearMenu(myDropDown);
       addMenuItem(myDropDown, 'assembly', this.getAssembly, (<Performance>this.getSeObject()).assembly != null);
