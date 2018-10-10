@@ -42,7 +42,7 @@ import nl.tno.willemsph.sparql.EmbeddedServer;
 @Service
 public class SeService {
 	public enum SeObjectType {
-		SystemSlot, RealisationModule, Function, Performance, Requirement, SystemInterface, Hamburger, PortRealisation, RealisationPort, NumericProperty;
+		SystemSlot, RealisationModule, Function, Performance, Requirement, SystemInterface, Hamburger, PortRealisation, RealisationPort, NumericProperty, LifecyclePhase;
 
 		GetSeObject create(SeService seService, int datasetId, String uri) throws URISyntaxException {
 			switch (this) {
@@ -123,7 +123,8 @@ public class SeService {
 	}
 
 	public Dataset getDataset(int datasetId) throws URISyntaxException, IOException {
-		return getEmbeddedServer().getDatasets().get(datasetId);
+		// return getEmbeddedServer().getDatasets().get(datasetId);
+		return getEmbeddedServer().getDataset(datasetId);
 	}
 
 	public File getDatasetFile(int datasetId, String filePath)
@@ -678,6 +679,10 @@ public class SeService {
 			portRealisations.add(portRealisation);
 		}
 		return portRealisations;
+	}
+
+	public void updateDataset(int datasetId, URI uri, String versionInfo) throws IOException, URISyntaxException {
+		getEmbeddedServer().updateDataset(datasetId, uri, versionInfo);
 	}
 
 }

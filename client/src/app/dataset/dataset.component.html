@@ -1,15 +1,68 @@
-<table class="table">
-  <thead>
-  <tr>
-    <th>dataset ID</th>
-    <th>file path</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let dataset of datasets" (click)="selectDataset(dataset)"
-      [class]="isSelected(dataset)">
-    <td>{{dataset.datasetId}}</td>
-    <td>{{dataset.filepath}}</td>
-  </tr>
-  </tbody>
-</table>
+<div class="card border-primary">
+  <div class="card-header">
+    <h5 class="card-title">Dataset: "{{selectedDataset.filepath}}"</h5></div>
+  <div class="card-body">
+    <table class="table table-hover table-bordered table-sm">
+      <thead class="thead-light">
+      <tr class="table-record">
+        <th>property</th>
+        <th>value</th>
+        <th><span class="fa fa-edit fa-lg"></span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>uri</td>
+        <td class="disabled-property">{{selectedDataset.uri}}</td>
+        <td>
+          <button type="button" [disabled]="true"
+                  class="btn  btn-sm"><span class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>file path</td>
+        <td class="disabled-property">
+          <app-property [editMode]="propertyEdited=='filepath'" [value]="selectedDataset.filepath"
+                        (sessionStarted)="onSessionStarted('filepath')"
+                        (sessionEnded)="onSessionEnded($event, 'filepath')"></app-property>
+        </td>
+        <td>
+          <button type="button" [disabled]="true" (click)="onSessionStarted('filepath')"
+                  [class]="propertyEdited=='filepath'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>imports</td>
+        <td class="disabled-property">
+          <app-property [editMode]="propertyEdited=='imports'" [value]="selectedDataset.imports" [list]="true"
+                        (sessionStarted)="onSessionStarted('imports')"
+                        (sessionEnded)="onSessionEnded($event, 'imports')"></app-property>
+        </td>
+        <td>
+          <button type="button" [disabled]="true" (click)="onSessionStarted('imports')"
+                  [class]="propertyEdited=='imports'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>version info</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='versionInfo'" [value]="selectedDataset.versionInfo"
+                        (sessionStarted)="onSessionStarted('versionInfo')"
+                        (sessionEnded)="onSessionEnded($event, 'versionInfo')"></app-property>
+        </td>
+        <td>
+          <button type="button" [disabled]="false" (click)="onSessionStarted('versionInfo')"
+                  [class]="propertyEdited=='versionInfo'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,9 +1,13 @@
 <div *ngIf="editMode && !iri">
   <input class="form-control" type="text" [(ngModel)]="value" (keyup)="onKey($event)">
 </div>
-<div *ngIf="!editMode && !iri"
+<div *ngIf="!editMode && !iri && !list"
      (dblclick)="onEditModeChanged()">
   {{value}}
+</div>
+<div *ngIf="!editMode && !iri && list"
+     (dblclick)="onEditModeChanged()">
+  [ {{value}} ]
 </div>
 <div *ngIf="editMode && iri && !list">
   <select class="form-control" [(ngModel)]="value" (change)="onSelectionChange($event)">

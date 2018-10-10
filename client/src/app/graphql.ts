@@ -5,10 +5,29 @@ export const ALL_DATASETS = gql`
     allDatasets {
       datasetId
       filepath
+      uri
+      ontologyUri
+      imports
+      versionInfo
     }
   }
 `;
 
+export const UPDATE_DATASET = gql`
+      mutation updateDataset($datasetInput: DatasetInput!) {
+        updateDataset (datasetInput: $datasetInput) {
+          datasetId
+          uri
+          versionInfo
+        }
+      }
+`;
+
+export const SAVE_DATASET = gql`
+      mutation saveDataset($datasetId: Int!) {
+        saveDataset (datasetId: $datasetId)
+      }
+`;
 
 export const ALL_FUNCTIONS = gql`
        query allFunctions($datasetId: Int!) {

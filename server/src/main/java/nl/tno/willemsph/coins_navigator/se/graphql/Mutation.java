@@ -1,5 +1,6 @@
 package nl.tno.willemsph.coins_navigator.se.graphql;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Component;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 
 import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.Dataset;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.DatasetInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Function;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.FunctionInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.Hamburger;
@@ -28,6 +31,7 @@ import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemInterface;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemInterfaceInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlot;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlotInput;
+import nl.tno.willemsph.coins_navigator.se.graphql.repositories.DatasetRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.FunctionRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.HamburgerRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.NumericPropertyRepository;
@@ -42,6 +46,7 @@ import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemSlotReposi
 @Component
 public class Mutation implements GraphQLMutationResolver {
 
+	private final DatasetRepository datasetRepository;
 	private final FunctionRepository functionRepository;
 	private final HamburgerRepository hamburgerRepository;
 	private final NumericPropertyRepository numericPropertyRepository;
@@ -53,12 +58,13 @@ public class Mutation implements GraphQLMutationResolver {
 	private final SystemInterfaceRepository systemInterfaceRepository;
 	private final SystemSlotRepository systemSlotRepository;
 
-	public Mutation(FunctionRepository functionRepository, HamburgerRepository hamburgerRepository,
-			NumericPropertyRepository numericPropertyRepository, PerformanceRepository performanceRepository,
-			PortRealisationRepository portRealisationRepository,
+	public Mutation(DatasetRepository datasetRepository, FunctionRepository functionRepository,
+			HamburgerRepository hamburgerRepository, NumericPropertyRepository numericPropertyRepository,
+			PerformanceRepository performanceRepository, PortRealisationRepository portRealisationRepository,
 			RealisationModuleRepository realisationModuleRepository,
 			RealisationPortRepository realisationPortRepository, RequirementRepository requirementRepository,
 			SystemInterfaceRepository systemInterfaceRepository, SystemSlotRepository systemSlotRepository) {
+		this.datasetRepository = datasetRepository;
 		this.functionRepository = functionRepository;
 		this.hamburgerRepository = hamburgerRepository;
 		this.numericPropertyRepository = numericPropertyRepository;
@@ -72,6 +78,17 @@ public class Mutation implements GraphQLMutationResolver {
 	}
 
 	/*
+	 * DATASETS
+	 */
+	public Dataset updateDataset(DatasetInput datasetInput) throws URISyntaxException, IOException {
+		return datasetRepository.updateOne(datasetInput);
+	}
+
+	public Integer saveDataset(int datasetId) throws FileNotFoundException, URISyntaxException, IOException {
+		return datasetRepository.save(datasetId);
+	}
+
+	/*
 	 * FUNCTIONS
 	 */
 	public Function createFunction(int datasetId, String uri, String label) throws URISyntaxException, IOException {
@@ -80,7 +97,8 @@ public class Mutation implements GraphQLMutationResolver {
 		return newFunction;
 	}
 
-	public Function updateFunction(FunctionInput functionInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
+	public Function updateFunction(FunctionInput functionInput, CoinsObjectInput coinsObjectInput)
+			throws URISyntaxException, IOException {
 		return functionRepository.updateOne(functionInput, coinsObjectInput);
 	}
 
@@ -97,7 +115,8 @@ public class Mutation implements GraphQLMutationResolver {
 		return newHamburger;
 	}
 
-	public Hamburger updateHamburger(HamburgerInput hamburgerInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
+	public Hamburger updateHamburger(HamburgerInput hamburgerInput, CoinsObjectInput coinsObjectInput)
+			throws URISyntaxException, IOException {
 		return hamburgerRepository.updateOne(hamburgerInput, coinsObjectInput);
 	}
 
@@ -153,7 +172,8 @@ public class Mutation implements GraphQLMutationResolver {
 		return newPerformance;
 	}
 
-	public Performance updatePerformance(PerformanceInput performanceInput, CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
+	public Performance updatePerformance(PerformanceInput performanceInput, CoinsObjectInput coinsObjectInput)
+			throws URISyntaxException, IOException {
 		return performanceRepository.updateOne(performanceInput, coinsObjectInput);
 	}
 
@@ -171,8 +191,8 @@ public class Mutation implements GraphQLMutationResolver {
 		return newRealisationModule;
 	}
 
-	public RealisationModule updateRealisationModule(RealisationModuleInput realisationModuleInput, CoinsObjectInput coinsObjectInput)
-			throws URISyntaxException, IOException {
+	public RealisationModule updateRealisationModule(RealisationModuleInput realisationModuleInput,
+			CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
 		return realisationModuleRepository.updateOne(realisationModuleInput, coinsObjectInput);
 	}
 
@@ -246,8 +266,8 @@ public class Mutation implements GraphQLMutationResolver {
 		return newSystemInterface;
 	}
 
-	public SystemInterface updateSystemInterface(SystemInterfaceInput systemInterfaceInput, CoinsObjectInput coinsObjectInput)
-			throws URISyntaxException, IOException {
+	public SystemInterface updateSystemInterface(SystemInterfaceInput systemInterfaceInput,
+			CoinsObjectInput coinsObjectInput) throws URISyntaxException, IOException {
 		return systemInterfaceRepository.updateOne(systemInterfaceInput, coinsObjectInput);
 	}
 

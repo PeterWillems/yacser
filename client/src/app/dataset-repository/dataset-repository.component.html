@@ -1,0 +1,32 @@
+<div class="row ">
+  <div class="col-md-5 column-content left-column">
+    <div class="card border-primary">
+      <div class="card-header">
+        <h5 class="card-title">Datasets</h5></div>
+      <div class="card-body repository-body">
+        <table class="table table-hover table-bordered table-sm">
+          <thead>
+          <tr>
+            <th>dataset ID</th>
+            <th>file path</th>
+            <th>save</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let dataset of datasets" (click)="selectDataset(dataset)"
+              [class]="isSelected(dataset)">
+            <td>{{dataset.datasetId}}</td>
+            <td>{{dataset.filepath}}</td>
+            <td><button type="button" (click)="saveDataset(dataset)" class="btn btn-sm">
+              <span class="fa fa-save fa-lg"></span>
+            </button></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-7 column-content">
+    <app-dataset *ngIf="selectedDataset" [selectedDataset]="selectedDataset"></app-dataset>
+  </div>
+</div>

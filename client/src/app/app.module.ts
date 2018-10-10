@@ -9,7 +9,7 @@ import {AppComponent} from './app.component';
 import {SystemslotRepositoryComponent} from './systemslot-repository/systemslot-repository.component';
 import {SystemslotComponent} from './systemslot/systemslot.component';
 import {PropertyComponent} from './property/property.component';
-import {DatasetComponent} from './dataset/dataset.component';
+import {DatasetRepositoryComponent} from './dataset-repository/dataset-repository.component';
 import {FunctionRepositoryComponent} from './function-repository/function-repository.component';
 import {RequirementRepositoryComponent} from './requirement-repository/requirement-repository.component';
 import {FunctionComponent} from './function/function.component';
@@ -30,10 +30,11 @@ import {CoinsobjectComponent} from './coinsobject/coinsobject.component';
 import {SortableColumnComponent} from './sortable-column/sortable-column.component';
 import {SortableTableDirective} from './sortable-table.directive';
 import {CanvasComponent} from './canvas/canvas.component';
+import { DatasetComponent } from './dataset/dataset.component';
 
 const appRoutes: Routes = [
     {path: '', redirectTo: '/datasets', pathMatch: 'full'},
-    {path: 'datasets', component: DatasetComponent},
+    {path: 'datasets', component: DatasetRepositoryComponent},
     {path: 'systemslots', component: SystemslotRepositoryComponent},
     {path: 'systeminterfaces', component: SysteminterfaceRepositoryComponent},
     {path: 'functions', component: FunctionRepositoryComponent},
@@ -54,7 +55,7 @@ const appRoutes: Routes = [
     SystemslotRepositoryComponent,
     SystemslotComponent,
     PropertyComponent,
-    DatasetComponent,
+    DatasetRepositoryComponent,
     FunctionRepositoryComponent,
     RequirementRepositoryComponent,
     FunctionComponent,
@@ -74,6 +75,7 @@ const appRoutes: Routes = [
     SortableColumnComponent,
     SortableTableDirective,
     CanvasComponent,
+    DatasetComponent,
   ],
   imports: [
     BrowserModule,

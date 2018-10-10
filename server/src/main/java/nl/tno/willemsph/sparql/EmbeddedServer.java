@@ -19,6 +19,7 @@ import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.RDFWriter;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
@@ -40,7 +41,8 @@ public class EmbeddedServer {
 	public static final String SE_EXAMPLE_URI = "http://www.coinsweb.nl/coins2/reffrm/se/";
 	public static final String COINS2 = "http://www.coinsweb.nl/cbim-2.0.rdf#";
 	private static final String CBIM2_RESOURCE = "cbim-2.0.rdf";
-	public static final String SE = "http://www.coinsweb.nl/coins2/reffrm/se#";
+	// public static final String SE = "http://www.coinsweb.nl/coins2/reffrm/se#";
+	public static final String SE = "http://www.infrabim.nl/coins/se/yacser#";
 	private static final String SE_RESOURCE = "se.ttl";
 	private static final String[] EXAMPLES = { "new", "parkbank3", "wegjunctie", "wissel", "verbinding" };
 	public static Dataset ds;
@@ -48,6 +50,7 @@ public class EmbeddedServer {
 	private PrefixMapping prefixMapping;
 
 	public EmbeddedServer() throws IOException, URISyntaxException {
+		exampleDatasets = new ArrayList<>();
 		startServer();
 	}
 
@@ -60,7 +63,13 @@ public class EmbeddedServer {
 		defaultModel.read(se.getInputStream(), null, "TURTLE");
 		ds = DatasetFactory.create(defaultModel);
 
-		for (nl.tno.willemsph.coins_navigator.se.Dataset dataset : getDatasets()) {
+		int id = 0;
+		for (String example : EXAMPLES) {
+			exampleDatasets.add(new nl.tno.willemsph.coins_navigator.se.Dataset(id++, "examples/" + example + ".ttl",
+					SE_EXAMPLE_URI + example));
+		}
+		
+		for (nl.tno.willemsph.coins_navigator.se.Dataset dataset : exampleDatasets) {
 			Model namedModel = ModelFactory.createDefaultModel();
 			Resource model = new ClassPathResource(dataset.getFilepath());
 			namedModel.read(model.getInputStream(), null, "TURTLE");
@@ -68,6 +77,20 @@ public class EmbeddedServer {
 			if (ontologyIterator.hasNext()) {
 				Statement nextOntology = ontologyIterator.next();
 				dataset.setOntologyUri(new URI(nextOntology.getSubject().getURI()));
+				StmtIterator versionInfoIterator = namedModel.listStatements(nextOntology.getSubject(), OWL.versionInfo,
+						(RDFNode) null);
+				if (versionInfoIterator.hasNext()) {
+					dataset.setVersionInfo(versionInfoIterator.next().getObject().asLiteral().getString());
+				}
+				List<URI> imports = new ArrayList<>();
+				StmtIterator importsIterator = namedModel.listStatements(nextOntology.getSubject(), OWL.imports,
+						(RDFNode) null);
+				while (importsIterator.hasNext()) {
+					imports.add(new URI(importsIterator.next().getObject().asResource().getURI()));
+				}
+				if (imports.size() > 0) {
+					dataset.setImports(imports);
+				}
 			}
 			ds.addNamedModel(dataset.getUri().toString(), namedModel);
 		}
@@ -151,26 +174,74 @@ public class EmbeddedServer {
 		System.out.println("Response Code : " + responseCode);
 	}
 
-	private List<nl.tno.willemsph.coins_navigator.se.Dataset> datasets;
+	private List<nl.tno.willemsph.coins_navigator.se.Dataset> exampleDatasets;
 
-	public List<nl.tno.willemsph.coins_navigator.se.Dataset> getDatasets() throws URISyntaxException {
-		if (datasets == null) {
-			datasets = new ArrayList<>();
-			int id = 0;
-			for (String example : EXAMPLES) {
-				datasets.add(new nl.tno.willemsph.coins_navigator.se.Dataset(id++, "examples/" + example + ".ttl",
-						SE_EXAMPLE_URI + example));
-			}
+	public List<nl.tno.willemsph.coins_navigator.se.Dataset> getDatasets() throws URISyntaxException, IOException {
+//		if (datasets == null) {
+//			datasets = new ArrayList<>();
+//			int id = 0;
+//			for (String example : EXAMPLES) {
+//				datasets.add(new nl.tno.willemsph.coins_navigator.se.Dataset(id++, "examples/" + example + ".ttl",
+//						SE_EXAMPLE_URI + example));
+//			}
+//		}
+		List<nl.tno.willemsph.coins_navigator.se.Dataset> datasets = new ArrayList<>();
+		int id = 0;
+		for (String example : EXAMPLES) {
+			datasets.add(getDataset(id++));
 		}
 		return datasets;
 	}
 
-	public void saveDataset(int datasetId) throws URISyntaxException {
+	public void saveDataset(int datasetId) throws URISyntaxException, IOException {
 		DatasetAccessor datasetAccessor = DatasetAccessorFactory.create(ds);
 		String graphUri = getDatasets().get(datasetId).getUri().toString();
 		Model model = datasetAccessor.getModel(graphUri);
 		RDFWriter writer = model.getWriter("TURTLE");
 		writer.write(model, System.out, null);
+	}
+
+	public void updateDataset(int datasetId, URI uri, String versionInfo) throws IOException, URISyntaxException {
+		nl.tno.willemsph.coins_navigator.se.Dataset getDataset = getDatasets().get(datasetId);
+		ParameterizedSparqlString queryStr = new ParameterizedSparqlString(getPrefixMapping());
+		queryStr.setIri("graph", getDataset.getUri().toString());
+		queryStr.setIri("ontology", getDataset.getUri().toString());
+		queryStr.setIri("ontologyType", OWL.Ontology.getURI());
+		queryStr.setLiteral("new_versionInfo", versionInfo);
+		queryStr.append("  DELETE { GRAPH ?graph { ?ontology owl:versionInfo ?versionInfo }} ");
+		queryStr.append("  INSERT { GRAPH ?graph { ?ontology owl:versionInfo ?new_versionInfo }} ");
+		queryStr.append("WHERE { GRAPH ?graph {?ontology rdf:type ?ontologyType; owl:versionInfo ?versionInfo . } ");
+		queryStr.append("}");
+
+		update(queryStr);
+	}
+
+	public nl.tno.willemsph.coins_navigator.se.Dataset getDataset(int datasetId) throws IOException, URISyntaxException {
+		nl.tno.willemsph.coins_navigator.se.Dataset getDataset = exampleDatasets.get(datasetId);
+		ParameterizedSparqlString queryStr = new ParameterizedSparqlString(getPrefixMapping());
+		queryStr.setIri("graph", getDataset.getUri().toString());
+		queryStr.setIri("ontology", getDataset.getUri().toString());
+		queryStr.append("SELECT ?versionInfo ");
+		queryStr.append("{");
+		queryStr.append("  GRAPH ?graph { ");
+		queryStr.append("    OPTIONAL {");
+		queryStr.append("      ?ontology owl:versionInfo ?versionInfo . ");
+		queryStr.append("    }");
+		queryStr.append("  }");
+		queryStr.append("}");
+		queryStr.append("ORDER BY ?versionInfo");
+
+		nl.tno.willemsph.coins_navigator.se.Dataset dataset = null;
+		JsonNode responseNodes = query(queryStr);
+		if (responseNodes.size() > 0) {
+			JsonNode versionInfoNode = responseNodes.get(0).get("versionInfo");
+			String versionInfo = versionInfoNode != null ? versionInfoNode.get("value").asText() : null;
+			dataset = new nl.tno.willemsph.coins_navigator.se.Dataset (datasetId, getDataset.getFilepath(), getDataset.getUri().toString());
+			dataset.setVersionInfo(versionInfo);
+			dataset.setOntologyUri(getDataset.getUri());
+			dataset.setImports(getDataset.getImports());
+		}
+		return dataset;
 	}
 
 }

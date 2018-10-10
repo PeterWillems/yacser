@@ -13,6 +13,17 @@ export class CoinsObjectInput {
 export interface Dataset {
   datasetId: number;
   filepath: string;
+  uri: string;
+  ontologyUri: string;
+  imports: string[];
+  versionInfo: string;
+}
+
+export class DatasetInput {
+
+  constructor(public datasetId: number, public uri: string, public versionInfo: string) {
+  }
+
 }
 
 export interface SeObject {

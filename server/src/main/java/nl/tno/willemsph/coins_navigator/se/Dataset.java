@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.apache.jena.rdf.model.Model;
 import org.springframework.core.io.ClassPathResource;
@@ -17,6 +18,8 @@ public class Dataset {
 	private String filepath;
 	private URI uri;
 	private URI ontologyUri;
+	private List<URI> imports;
+	private String versionInfo;
 
 	public Dataset() {
 	}
@@ -57,6 +60,22 @@ public class Dataset {
 
 	public void setOntologyUri(URI ontologyUri) {
 		this.ontologyUri = ontologyUri;
+	}
+
+	public List<URI> getImports() {
+		return imports;
+	}
+
+	public void setImports(List<URI> imports) {
+		this.imports = imports;
+	}
+
+	public String getVersionInfo() {
+		return versionInfo;
+	}
+
+	public void setVersionInfo(String versionInfo) {
+		this.versionInfo = versionInfo;
 	}
 
 	public void save() throws FileNotFoundException, IOException {

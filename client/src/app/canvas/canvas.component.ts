@@ -592,7 +592,7 @@ export class Edge extends Shape {
 
 export class SystemSlotWidget extends Node {
   constructor(public x: number, public y: number, public label: string, public uri?: string, public router?: Router) {
-    super(x, y, 120, 120, label, uri);
+    super(x, y, 110, 110, label, uri);
     this.typename = 'SystemSlot';
     this.color = 'LightBlue';
   }
@@ -603,34 +603,54 @@ export class SystemSlotWidget extends Node {
       this.y = cursorY - this._anchorY;
     }
 
+    // ctx.save();
+    // ctx.lineWidth = 4;
+    // ctx.strokeStyle = 'black';
+    // ctx.fillStyle = this.color;
+    // const numberOfSides = 8,
+    //   size = 60,
+    //   Xcenter = this.x,
+    //   Ycenter = this.y;
+    // ctx.translate(Xcenter, Ycenter);
+    // ctx.rotate(Math.PI / numberOfSides);
+    // ctx.beginPath();
+    // ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
+    // if (this.down === true) {
+    //   ctx.globalAlpha = 0.5;
+    //   for (let i = 1; i <= numberOfSides; i += 1) {
+    //     ctx.lineTo(size * Math.cos(i * 2 * Math.PI / numberOfSides) + 2,
+    //       size * Math.sin(i * 2 * Math.PI / numberOfSides) + 2);
+    //   }
+    //   ctx.stroke();
+    //   ctx.closePath(); // automatically moves back to bottom left corner
+    //   ctx.fill();
+    // } else {
+    //   for (let i = 1; i <= numberOfSides; i += 1) {
+    //     ctx.lineTo(size * Math.cos(i * 2 * Math.PI / numberOfSides),
+    //       size * Math.sin(i * 2 * Math.PI / numberOfSides));
+    //   }
+    //   ctx.stroke();
+    //   ctx.closePath(); // automatically moves back to bottom left corner
+    //   ctx.fill();
+    // }
+    // ctx.restore();
+
     ctx.save();
     ctx.lineWidth = 4;
     ctx.strokeStyle = 'black';
     ctx.fillStyle = this.color;
-    const numberOfSides = 8,
-      size = 60,
-      Xcenter = this.x,
-      Ycenter = this.y;
-    ctx.translate(Xcenter, Ycenter);
-    ctx.rotate(Math.PI / numberOfSides);
-    ctx.beginPath();
-    ctx.moveTo(size * Math.cos(0), size * Math.sin(0));
-    if (this.down === true) {
+    if (this.down === true && this === Node.selectedNode) {
       ctx.globalAlpha = 0.5;
-      for (let i = 1; i <= numberOfSides; i += 1) {
-        ctx.lineTo(size * Math.cos(i * 2 * Math.PI / numberOfSides) + 2,
-          size * Math.sin(i * 2 * Math.PI / numberOfSides) + 2);
-      }
+      ctx.beginPath();
+      ctx.arc(this.x + 2, this.y + 2, this.width / 2, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.closePath(); // automatically moves back to bottom left corner
+      ctx.fillStyle = this.color;
       ctx.fill();
     } else {
-      for (let i = 1; i <= numberOfSides; i += 1) {
-        ctx.lineTo(size * Math.cos(i * 2 * Math.PI / numberOfSides),
-          size * Math.sin(i * 2 * Math.PI / numberOfSides));
-      }
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.width / 2, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.closePath(); // automatically moves back to bottom left corner
+      ctx.fillStyle = this.color;
       ctx.fill();
     }
     ctx.restore();
@@ -873,7 +893,7 @@ export class SystemInterfaceWidget extends Node {
       if (widgets.get(systemSlot1.uri)) {
         drawList.push(new Edge('systemslot', this, widgets.get(systemSlot1.uri)));
       } else {
-        const systemSlot0Widget = new SystemSlotWidget(this.x + 100, this.y + 100, systemSlot1.label, systemSlot1.uri, this.router);
+        const systemSlot0Widget = new SystemSlotWidget(this.x + 108, this.y + 108, systemSlot1.label, systemSlot1.uri, this.router);
         drawList.push(new Edge('systemslot', this, systemSlot0Widget));
         drawList.push(systemSlot0Widget);
       }
@@ -1183,6 +1203,7 @@ export class RealisationModuleWidget extends Node {
       addMenuItem(myDropDown, 'parts', this.getParts, (<RealisationModule>this.getSeObject()).parts != null);
       addMenuItem(myDropDown, 'ports', this.getPorts, (<RealisationModule>this.getSeObject()).ports != null);
       addMenuItem(myDropDown, 'performances', this.getPerformances, (<RealisationModule>this.getSeObject()).performances != null);
+      addMenuItem(myDropDown, 'hamburgers', this.getHamburgers, (<RealisationModule>this.getSeObject()).hamburgers != null);
       addMenuItem(myDropDown, '', null, false);
       addMenuItem(myDropDown, '=>', () => this.router.navigate(['/realisationmodules', {id: this.getSeObject().uri}]), true);
       myDropDown.classList.toggle('show');
@@ -1257,6 +1278,25 @@ export class RealisationModuleWidget extends Node {
     const myDropDown = document.getElementById('myDropdown');
     myDropDown.classList.toggle('show');
   };
+
+  getHamburgers = () => {
+    const hamburgers = (<RealisationModule>this.getSeObject()).hamburgers;
+    if (hamburgers && hamburgers.length > 0) {
+      for (let i = 0; i < hamburgers.length; i++) {
+        if (widgets.has(hamburgers[i].uri)) {
+          drawList.push(new Edge('hamburger', this, widgets.get(hamburgers[i].uri)));
+        } else {
+          const hamburgerWidget =
+            new HamburgerWidget(this.x + 100 + i * 8, this.y + 100 + i * 8, hamburgers[i].label, hamburgers[i].uri, this.router);
+          drawList.push(new Edge('hamburger', this, hamburgerWidget));
+          drawList.push(hamburgerWidget);
+        }
+      }
+    }
+    const myDropDown = document.getElementById('myDropdown');
+    myDropDown.classList.toggle('show');
+  };
+
 }
 
 export class RealisationPortWidget extends Node {

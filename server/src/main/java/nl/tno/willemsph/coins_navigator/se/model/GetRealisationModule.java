@@ -11,6 +11,7 @@ import org.apache.jena.query.ParameterizedSparqlString;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
+import nl.tno.willemsph.coins_navigator.se.SeService.SeObjectType;
 import nl.tno.willemsph.sparql.EmbeddedServer;
 
 public class GetRealisationModule extends GetSeObject {
@@ -164,6 +165,32 @@ public class GetRealisationModule extends GetSeObject {
 		queryStr.append("WHERE { } ");
 
 		getEmbeddedServer().update(queryStr);
+	}
+	
+	public List<URI> getLifeCyclePhases() throws IOException, URISyntaxException {
+		ParameterizedSparqlString queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
+		queryStr.setIri("graph", getDatasetUri());
+		queryStr.setIri("realisation_module", getUri().toString());
+		queryStr.setIri("lifeCyclePhase", SeObjectType.LifecyclePhase.getUri());
+		queryStr.append("SELECT ?type ?property ");
+		queryStr.append("{");
+		queryStr.append("  GRAPH ?graph { ");
+		queryStr.append("      ?realisation_module rdf:type ?type . ");
+		queryStr.append("  }");
+		queryStr.append("  ?type rdfs:subClassOf ?lifeCyclePhase . ");
+		queryStr.append("  ?property rdfs:domain ?type . ");
+		queryStr.append("}");
+
+		JsonNode responseNodes = getEmbeddedServer().query(queryStr);
+		List<URI> typeUris = new ArrayList<>();
+		for (JsonNode node : responseNodes) {
+			JsonNode typeNode = node.get("type");
+			String typeUri = typeNode != null ? typeNode.get("value").asText() : null;
+			if (typeUri != null) {
+				typeUris.add(new URI(typeUri));
+			}
+		}
+		return typeUris;
 	}
 
 	public void delete() throws IOException, URISyntaxException {

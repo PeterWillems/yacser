@@ -8,6 +8,10 @@ type CoinsObject {
 type Dataset {
   datasetId: Int!
   filepath: String!
+  uri: String
+  ontologyUri: String
+  imports: [String]
+  versionInfo: String
 }
 
 type Function {
@@ -146,6 +150,12 @@ input CoinsObjectInput {
 	creationDate: String
 }
 
+input DatasetInput {
+	datasetId: Int!
+	uri: String
+	versionInfo: String
+}
+
 input FunctionInput {
 	datasetId: Int!
 	uri: String!
@@ -258,6 +268,7 @@ type Mutation {
   createRequirement(datasetId: Int!, uri: String!, label: String!): Requirement
   createSystemInterface(datasetId: Int!, uri: String!, label: String!): SystemInterface
   createSystemSlot(datasetId: Int!, uri: String!, label: String!): SystemSlot
+  updateDataset(datasetInput: DatasetInput!): Dataset
   updateFunction(functionInput: FunctionInput!, coinsObjectInput: CoinsObjectInput): Function
   updateHamburger(hamburgerInput: HamburgerInput!, coinsObjectInput: CoinsObjectInput): Hamburger
   updateNumericProperty(numericPropertyInput: NumericPropertyInput!): NumericProperty
@@ -278,6 +289,7 @@ type Mutation {
   deleteRequirement(datasetId: Int!, uri: String!): Requirement
   deleteSystemInterface(datasetId: Int!, uri: String!): SystemInterface
   deleteSystemSlot(datasetId: Int!, uri: String!): SystemSlot
+  saveDataset(datasetId: Int!): Int
 }
 
 schema {
