@@ -50,6 +50,12 @@ public class SeController {
 	public List<Dataset> getAllDatasets() throws URISyntaxException, IOException {
 		return _seService.getAllDatasets();
 	}
+	
+	@CrossOrigin
+	@RequestMapping(method = RequestMethod.POST, value = "/se/datasets")
+	public Dataset createDataset(@RequestBody Dataset dataset) throws URISyntaxException, IOException {
+		return _seService.createDataset(dataset);
+	}
 
 	@CrossOrigin
 	@RequestMapping(method = RequestMethod.GET, value = "/se/datasets/{id}")

@@ -1,7 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Apollo} from 'apollo-angular';
 import {CoinsObjectInput, Dataset, DatasetInput, Function, FunctionInput, Mutation, Query} from './types';
-import {ALL_DATASETS, ALL_FUNCTIONS, SAVE_DATASET, UPDATE_DATASET, UPDATE_FUNCTION} from './graphql';
+import {ALL_DATASETS, ALL_FUNCTIONS, CREATE_DATASET, SAVE_DATASET, UPDATE_DATASET, UPDATE_FUNCTION} from './graphql';
 
 @Injectable({
   providedIn: 'root'
@@ -30,12 +30,32 @@ export class DatasetService {
     this.datasetSelected.emit(this.selectedDataset);
   }
 
+  public createDataset(datasetInput: DatasetInput) {
+    console.log('createDataset: ' + 'label=' + datasetInput.label);
+    this._apollo.mutate<Mutation>({
+      mutation: CREATE_DATASET, variables: {
+        datasetInput: {
+          datasetId: datasetInput.datasetId,
+          label: datasetInput.label,
+          uri: datasetInput.uri,
+          versionInfo: datasetInput.versionInfo
+        }
+      },
+      refetchQueries: [{
+        query: ALL_DATASETS, variables: {
+          datasetId: datasetInput.datasetId
+        }
+      }]
+    }).subscribe();
+  }
+
   public mutateDataset(datasetInput: DatasetInput) {
     console.log('mutateDataset: ' + 'versionInfo=' + datasetInput.versionInfo);
     this._apollo.mutate<Mutation>({
       mutation: UPDATE_DATASET, variables: {
         datasetInput: {
           datasetId: datasetInput.datasetId,
+          label: datasetInput.label,
           uri: datasetInput.uri,
           versionInfo: datasetInput.versionInfo
         }
@@ -52,14 +72,15 @@ export class DatasetService {
     console.log('saveDataset: ' + 'datasetId=' + datasetId);
     this._apollo.mutate<Mutation>({
       mutation: SAVE_DATASET, variables: {
-          datasetId: datasetId
+        datasetId: datasetId
       }
     }).subscribe();
   }
 
   public cloneDatasetInput(selectedDataset: Dataset): DatasetInput {
-    const functionInput = new DatasetInput(selectedDataset.datasetId, selectedDataset.uri, selectedDataset.versionInfo);
+    const datasetInput =
+      new DatasetInput(selectedDataset.datasetId, selectedDataset.label, selectedDataset.uri, selectedDataset.versionInfo);
 
-    return functionInput;
+    return datasetInput;
   }
 }

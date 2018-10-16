@@ -1,6 +1,6 @@
 <div class="card border-primary">
   <div class="card-header">
-    <h5 class="card-title">Dataset: "{{selectedDataset.filepath}}"</h5></div>
+    <h5 class="card-title">Dataset: "{{selectedDataset.label}}"</h5></div>
   <div class="card-body">
     <table class="table table-hover table-bordered table-sm">
       <thead class="thead-light">
@@ -11,6 +11,20 @@
       </tr>
       </thead>
       <tbody>
+      <tr>
+        <td>label</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='label'" [value]="selectedDataset.label"
+                        (sessionStarted)="onSessionStarted('label')"
+                        (sessionEnded)="onSessionEnded($event, 'label')"></app-property>
+        </td>
+        <td>
+          <button type="button" [disabled]="false" (click)="onSessionStarted('label')"
+                  [class]="propertyEdited=='label'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
+        </td>
+      </tr>
       <tr>
         <td>uri</td>
         <td class="disabled-property">{{selectedDataset.uri}}</td>

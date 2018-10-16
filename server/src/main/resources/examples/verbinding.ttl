@@ -84,6 +84,7 @@
         coins2:userID        "3.2" .
 
 <>      a                owl:Ontology ;
+		rdfs:label       "verbinding" ;
         rdfs:comment     "Template model to create new SE models"@en ;
         owl:imports      <http://www.infrabim.nl/coins/se/yacser> ;
         owl:versionInfo  "Praktijk voorbeeld Systems Engineering versie 1.0" .

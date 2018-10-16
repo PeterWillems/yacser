@@ -6,8 +6,9 @@ type CoinsObject {
 }
 
 type Dataset {
-  datasetId: Int!
-  filepath: String!
+  datasetId: Int
+  label: String
+  filepath: String
   uri: String
   ontologyUri: String
   imports: [String]
@@ -151,8 +152,11 @@ input CoinsObjectInput {
 }
 
 input DatasetInput {
-	datasetId: Int!
+	datasetId: Int
+	label: String
+	filepath: String
 	uri: String
+	imports: [String]
 	versionInfo: String
 }
 
@@ -258,6 +262,7 @@ input SystemSlotInput {
 }
 
 type Mutation {
+  createDataset(datasetInput: DatasetInput!): Dataset
   createFunction(datasetId: Int!, uri: String!, label: String!): Function
   createHamburger(datasetId: Int!, uri: String!, label: String!): Hamburger
   createNumericProperty(datasetId: Int!, uri: String!, label: String!): NumericProperty

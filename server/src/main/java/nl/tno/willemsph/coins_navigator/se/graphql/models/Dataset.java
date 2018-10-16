@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Dataset {
 	private int datasetId;
+	private String label;
 	private String filepath;
 	private String uri;
 	private String ontologyUri;
@@ -15,8 +16,9 @@ public class Dataset {
 	public Dataset() {
 	}
 
-	public Dataset(int datasetId, String filepath, URI uri, URI ontologyUri, List<URI> imports, String versionInfo) {
+	public Dataset(int datasetId, String label, String filepath, URI uri, URI ontologyUri, List<URI> imports, String versionInfo) {
 		this.datasetId = datasetId;
+		this.label = label;
 		this.filepath = filepath;
 		this.uri = uri != null ? uri.toString() : null;
 		this.ontologyUri = ontologyUri != null ? ontologyUri.toString() : null;
@@ -35,6 +37,14 @@ public class Dataset {
 
 	public void setDatasetId(int datasetId) {
 		this.datasetId = datasetId;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	public String getFilepath() {

@@ -681,8 +681,12 @@ public class SeService {
 		return portRealisations;
 	}
 
-	public void updateDataset(int datasetId, URI uri, String versionInfo) throws IOException, URISyntaxException {
-		getEmbeddedServer().updateDataset(datasetId, uri, versionInfo);
+	public void updateDataset(int datasetId, String label, URI uri, String versionInfo) throws IOException, URISyntaxException {
+		getEmbeddedServer().updateDataset(datasetId, label, uri, versionInfo);
+	}
+
+	public Dataset createDataset(Dataset dataset) throws IOException, URISyntaxException {
+		return getEmbeddedServer().createDataset(dataset);
 	}
 
 }

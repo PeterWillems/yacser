@@ -11,6 +11,7 @@
 
 <http://www.coinsweb.nl/coins2/reffrm/se/wissel>
   rdf:type owl:Ontology ;
+  rdfs:label "wissel" ;
   owl:imports <http://www.infrabim.nl/coins/se/yacser> ;
   owl:versionInfo "Created with TopBraid Composer" ;
 .

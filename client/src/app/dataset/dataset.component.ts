@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {CoinsObjectInput, Dataset} from '../types';
+import {Dataset} from '../types';
 import {SeObjectComponent} from '../se-object-component';
 import {DatasetService} from '../dataset.service';
 
@@ -21,6 +21,11 @@ export class DatasetComponent extends SeObjectComponent implements OnInit {
   onSessionEnded(propertyValue: string, propertyLabel: string) {
     console.log('onSessionEnded value: ' + (propertyValue ? propertyValue : '<null>') + ' propertyLabel: ' + propertyLabel);
     switch (propertyLabel) {
+      case 'label':
+        if (this.selectedDataset['label'] === propertyValue) {
+          return;
+        }
+        break;
       case 'versionInfo':
         if (this.selectedDataset['versionInfo'] === propertyValue) {
           return;

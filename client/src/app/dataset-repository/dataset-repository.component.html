@@ -8,7 +8,7 @@
           <thead>
           <tr>
             <th>dataset ID</th>
-            <th>file path</th>
+            <th>label</th>
             <th>save</th>
           </tr>
           </thead>
@@ -16,10 +16,22 @@
           <tr *ngFor="let dataset of datasets" (click)="selectDataset(dataset)"
               [class]="isSelected(dataset)">
             <td>{{dataset.datasetId}}</td>
-            <td>{{dataset.filepath}}</td>
-            <td><button type="button" (click)="saveDataset(dataset)" class="btn btn-sm">
-              <span class="fa fa-save fa-lg"></span>
-            </button></td>
+            <td>{{dataset.label}}</td>
+            <td>
+              <button type="button" (click)="saveDataset(dataset)" class="btn btn-sm">
+                <span class="fa fa-save fa-lg"></span>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="datasets">
+            <td>{{datasets.length}}</td>
+            <td><input class="form-control" [placeholder]="'Enter dataset label'" [(ngModel)]="newDatasetLabel"></td>
+            <td>
+              <button type="button" (click)="onCreate()" class="btn btn-sm"
+                      [disabled]="newDatasetLabel?newDatasetLabel.length===0:true">
+                <span class="fa fa-asterisk fa-lg"></span>
+              </button>
+            </td>
           </tr>
           </tbody>
         </table>

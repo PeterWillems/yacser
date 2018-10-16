@@ -259,6 +259,7 @@
         se:hasPort  :RealisationPort_e285d191-11fc-4634-804b-f60f73229796 , :RealisationPort_30a415c4-fe63-4d9f-9788-abedc6ed1eef .
 
 <>      a                owl:Ontology ;
+		rdfs:label       "parkbank3" ;
         rdfs:comment     "Template model to create new SE models"@en ;
         owl:imports      <http://www.infrabim.nl/coins/se/yacser> ;
         owl:versionInfo  "Created with COINS Navigator SE" .

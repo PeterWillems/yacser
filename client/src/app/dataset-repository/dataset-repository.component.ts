@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Dataset} from '../types';
+import {Dataset, DatasetInput} from '../types';
 import {DatasetService} from '../dataset.service';
 
 @Component({
@@ -10,14 +10,18 @@ import {DatasetService} from '../dataset.service';
 export class DatasetRepositoryComponent implements OnInit {
   datasets: Dataset[];
   selectedDataset: Dataset;
+  newDatasetLabel: string;
 
   constructor(private _datasetService: DatasetService) {
   }
 
   ngOnInit() {
     this._datasetService.datasetsUpdated.subscribe((datasets) => {
+      console.log('DatasetRepositoryComponent: datasetsUpdated');
       this.datasets = datasets;
-      this.selectedDataset = this._datasetService.getSelectedDataset();
+      if (this._datasetService.getSelectedDataset()) {
+        this.selectedDataset = datasets[this._datasetService.getSelectedDataset().datasetId];
+      }
     });
     this._datasetService.queryAllDatasets();
   }
@@ -39,5 +43,11 @@ export class DatasetRepositoryComponent implements OnInit {
 
   saveDataset(dataset: Dataset): void {
     this._datasetService.saveDataset(dataset.datasetId);
+  }
+
+  onCreate(): void {
+    const datasetInput = new DatasetInput(-1, this.newDatasetLabel, '', '');
+    this.newDatasetLabel = null;
+    this._datasetService.createDataset(datasetInput);
   }
 }

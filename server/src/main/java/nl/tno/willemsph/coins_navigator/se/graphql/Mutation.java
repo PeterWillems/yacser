@@ -80,6 +80,10 @@ public class Mutation implements GraphQLMutationResolver {
 	/*
 	 * DATASETS
 	 */
+	public Dataset createDataset(DatasetInput datasetInput) throws IOException, URISyntaxException {
+		return datasetRepository.createDataset(datasetInput);
+	}
+
 	public Dataset updateDataset(DatasetInput datasetInput) throws URISyntaxException, IOException {
 		return datasetRepository.updateOne(datasetInput);
 	}

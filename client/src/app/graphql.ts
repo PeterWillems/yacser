@@ -4,6 +4,7 @@ export const ALL_DATASETS = gql`
   query allDatasets {
     allDatasets {
       datasetId
+      label
       filepath
       uri
       ontologyUri
@@ -13,11 +14,25 @@ export const ALL_DATASETS = gql`
   }
 `;
 
+export const CREATE_DATASET = gql`
+      mutation createDataset($datasetInput: DatasetInput!) {
+        createDataset (datasetInput: $datasetInput) {
+          datasetId
+          label
+          uri
+          filepath
+          versionInfo
+        }
+      }
+`;
+
 export const UPDATE_DATASET = gql`
       mutation updateDataset($datasetInput: DatasetInput!) {
         updateDataset (datasetInput: $datasetInput) {
           datasetId
+          label
           uri
+          filepath
           versionInfo
         }
       }

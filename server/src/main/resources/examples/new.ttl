@@ -1,17 +1,14 @@
-# baseURI: http://www.coinsweb.nl/coins2/reffrm/se/new
-# imports: http://www.infrabim.nl/coins/se/yacser
-
-@prefix : <http://www.coinsweb.nl/coins2/reffrm/se/new#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base          <http://www.coinsweb.nl/coins2/reffrm/se/new> .
+@prefix :      <http://www.coinsweb.nl/coins2/reffrm/se/new#> .
+@prefix se:    <http://www.infrabim.nl/coins/se/yacser#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix coins2: <http://www.coinsweb.nl/cbim-2.0.rdf#> .
-@prefix se: <http://www.infrabim.nl/coins/se/yacser#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://www.coinsweb.nl/coins2/reffrm/se/new>
-  rdf:type owl:Ontology ;
-  rdfs:comment "Template model to create new SE models"@en ;
-  owl:imports <http://www.infrabim.nl/coins/se/yacser> ;
-  owl:versionInfo "Created with COINS Navigator SE" ;
-.
+<>      a                owl:Ontology ;
+		rdfs:label       "new" ;
+        rdfs:comment     "Template model to create new SE models"@en ;
+        owl:imports      <http://www.infrabim.nl/coins/se/yacser> ;
+        owl:versionInfo  "Yet another TEST!!! Or not? Still? Well?" .

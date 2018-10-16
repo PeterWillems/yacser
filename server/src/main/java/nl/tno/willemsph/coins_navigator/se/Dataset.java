@@ -15,6 +15,7 @@ import nl.tno.willemsph.sparql.EmbeddedServer;
 
 public class Dataset {
 	private int id;
+	private String label;
 	private String filepath;
 	private URI uri;
 	private URI ontologyUri;
@@ -24,8 +25,9 @@ public class Dataset {
 	public Dataset() {
 	}
 
-	public Dataset(int id, String filePath, String uri) throws URISyntaxException {
+	public Dataset(int id, String label, String filePath, String uri) throws URISyntaxException {
 		this.id = id;
+		this.label = label;
 		this.filepath = filePath;
 		this.uri = uri != null ? new URI(uri) : null;
 	}
@@ -36,6 +38,14 @@ public class Dataset {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	public String getFilepath() {
@@ -82,13 +92,17 @@ public class Dataset {
 		ClassPathResource resource = new ClassPathResource(getFilepath());
 		FileOutputStream out = new FileOutputStream(resource.getFile());
 		Model namedModel = EmbeddedServer.ds.getNamedModel(getUri().toString());
-		namedModel.write(out, "TURTLE", getOntologyUri().toString());
+		if (getOntologyUri() != null) {
+			namedModel.write(out, "TURTLE", getOntologyUri().toString());
+		} else {
+			namedModel.write(out, "TURTLE", getUri().toString());
+		}
 		out.close();
 	}
 
 	public File getModel(String filePath) throws FileNotFoundException, IOException {
-//		ClassPathResource resource = new ClassPathResource(getFilepath());
-//		File output = File.createTempFile(resource.getFilename(),"");
+		// ClassPathResource resource = new ClassPathResource(getFilepath());
+		// File output = File.createTempFile(resource.getFilename(),"");
 		File output = new File(filePath);
 		FileOutputStream out = new FileOutputStream(output);
 		Model namedModel = EmbeddedServer.ds.getNamedModel(getUri().toString());

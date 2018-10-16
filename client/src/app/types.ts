@@ -12,6 +12,7 @@ export class CoinsObjectInput {
 
 export interface Dataset {
   datasetId: number;
+  label: string;
   filepath: string;
   uri: string;
   ontologyUri: string;
@@ -21,7 +22,7 @@ export interface Dataset {
 
 export class DatasetInput {
 
-  constructor(public datasetId: number, public uri: string, public versionInfo: string) {
+  constructor(public datasetId: number, public label: string, public uri: string, public versionInfo: string) {
   }
 
 }

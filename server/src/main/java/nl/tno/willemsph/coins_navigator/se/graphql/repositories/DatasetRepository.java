@@ -24,8 +24,9 @@ public class DatasetRepository {
 		List<Dataset> datasets = new ArrayList<>();
 		List<nl.tno.willemsph.coins_navigator.se.Dataset> getDatasets = seService.getAllDatasets();
 		for (nl.tno.willemsph.coins_navigator.se.Dataset getDataset : getDatasets) {
-			Dataset dataset = new Dataset(getDataset.getId(), getDataset.getFilepath(), getDataset.getUri(),
-					getDataset.getOntologyUri(), getDataset.getImports(), getDataset.getVersionInfo());
+			Dataset dataset = new Dataset(getDataset.getId(), getDataset.getLabel(), getDataset.getFilepath(),
+					getDataset.getUri(), getDataset.getOntologyUri(), getDataset.getImports(),
+					getDataset.getVersionInfo());
 			datasets.add(dataset);
 		}
 		return datasets;
@@ -34,14 +35,24 @@ public class DatasetRepository {
 	public Dataset updateOne(DatasetInput datasetInput) throws URISyntaxException, IOException {
 		URI uri = new URI(datasetInput.getUri());
 
-		seService.updateDataset(datasetInput.getDatasetId(), uri, datasetInput.getVersionInfo());
+		seService.updateDataset(datasetInput.getDatasetId(), datasetInput.getLabel(), uri,
+				datasetInput.getVersionInfo());
 		nl.tno.willemsph.coins_navigator.se.Dataset getDataset = seService.getDataset(datasetInput.getDatasetId());
-		return new Dataset(getDataset.getId(), getDataset.getFilepath(), getDataset.getUri(),
+		return new Dataset(getDataset.getId(), getDataset.getLabel(), getDataset.getFilepath(), getDataset.getUri(),
 				getDataset.getOntologyUri(), getDataset.getImports(), getDataset.getVersionInfo());
 	}
 
 	public Integer save(int datasetId) throws FileNotFoundException, URISyntaxException, IOException {
 		nl.tno.willemsph.coins_navigator.se.Dataset saveDataset = seService.saveDataset(datasetId);
 		return saveDataset != null ? saveDataset.getId() : null;
+	}
+
+	public Dataset createDataset(DatasetInput datasetInput) throws IOException, URISyntaxException {
+		nl.tno.willemsph.coins_navigator.se.Dataset newDataset = seService
+				.createDataset(new nl.tno.willemsph.coins_navigator.se.Dataset(-1, datasetInput.getLabel(),
+						datasetInput.getFilepath(), datasetInput.getUri()));
+		Dataset dataset = new Dataset(newDataset.getId(), newDataset.getLabel(), newDataset.getFilepath(),
+				newDataset.getUri(), null, newDataset.getImports(), newDataset.getVersionInfo());
+		return dataset;
 	}
 }
