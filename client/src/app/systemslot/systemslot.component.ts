@@ -15,7 +15,7 @@ import {Subscription} from 'apollo-client/util/Observable';
 })
 export class SystemslotComponent extends SeObjectComponent implements OnInit, OnChanges {
   @Input() selectedSystemSlot: SystemSlot;
-  @Output() selectedSystemSlotChanged = new EventEmitter<string>();
+//  @Output() selectedSystemSlotChanged = new EventEmitter<string>();
   allSystemSlots: SystemSlot[];
   allFunctions: Function[];
   allRequirements: Requirement[];

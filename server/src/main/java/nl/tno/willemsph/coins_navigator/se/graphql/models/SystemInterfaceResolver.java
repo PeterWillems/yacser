@@ -15,6 +15,7 @@ import nl.tno.willemsph.coins_navigator.se.SeService;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.RequirementRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemInterfaceRepository;
 import nl.tno.willemsph.coins_navigator.se.graphql.repositories.SystemSlotRepository;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsProperty;
 import nl.tno.willemsph.coins_navigator.se.model.GetSystemInterface;
 
 @Component

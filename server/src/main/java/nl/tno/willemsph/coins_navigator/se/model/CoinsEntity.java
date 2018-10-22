@@ -1,16 +1,13 @@
-package nl.tno.willemsph.coins_navigator.se.graphql.models;
+package nl.tno.willemsph.coins_navigator.se.model;
 
 import java.util.List;
 
-public class CoinsObject {
+abstract public class CoinsEntity {
 	private String name;
 	private String userID;
 	private String description;
 	private String creationDate;
 	private List<CoinsProperty> hasProperties;
-
-	public CoinsObject() {
-	}
 
 	public String getName() {
 		return name;
@@ -50,6 +47,17 @@ public class CoinsObject {
 
 	public void setHasProperties(List<CoinsProperty> hasProperties) {
 		this.hasProperties = hasProperties;
+	}
+
+	public CoinsEntity() {
+	}
+
+	public CoinsEntity(String name, String userID, String description, String creationDate, List<CoinsProperty> hasProperties) {
+		setName(name);
+		setUserID(userID);
+		setDescription(description);
+		setCreationDate(creationDate);
+		setHasProperties(hasProperties);
 	}
 
 }

@@ -89,7 +89,7 @@ public class SystemSlotRepository {
 		}
 		if (coinsObjectInput != null) {
 			putSystemSlot.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
-					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), null));
 		}
 
 		GetSystemSlot updatedSystemSlot = seService.updateSystemSlot(systemSlotInput.getDatasetId(),

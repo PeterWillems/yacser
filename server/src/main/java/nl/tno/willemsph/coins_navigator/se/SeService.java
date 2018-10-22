@@ -119,7 +119,8 @@ public class SeService {
 	}
 
 	public List<Dataset> getAllDatasets() throws URISyntaxException, IOException {
-		return getEmbeddedServer().getDatasets();
+//		return getEmbeddedServer().getDatasets();
+		return getEmbeddedServer().exampleDatasets;
 	}
 
 	public Dataset getDataset(int datasetId) throws URISyntaxException, IOException {
@@ -649,8 +650,8 @@ public class SeService {
 	}
 
 	private String getDatasetUri(int datasetId) throws URISyntaxException, IOException {
-		return getEmbeddedServer().getDatasets().get(datasetId).getUri().toString();
-
+		// return getEmbeddedServer().getDatasets().get(datasetId).getUri().toString();
+		return getEmbeddedServer().exampleDatasets.get(datasetId).getUri().toString();
 	}
 
 	private String generateUri(int datasetId, SeObjectType seObjectType) throws URISyntaxException, IOException {
@@ -659,7 +660,8 @@ public class SeService {
 	}
 
 	public String getOntologyUri(int datasetId) throws URISyntaxException, IOException {
-		return getEmbeddedServer().getDatasets().get(datasetId).getOntologyUri().toString();
+		// return getEmbeddedServer().getDatasets().get(datasetId).getOntologyUri().toString();
+		return getEmbeddedServer().exampleDatasets.get(datasetId).getOntologyUri().toString();
 	}
 
 	public String getLocalName(String uri) {

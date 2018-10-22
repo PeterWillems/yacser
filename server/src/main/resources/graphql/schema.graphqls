@@ -1,8 +1,15 @@
+type CoinsProperty {
+	name: String
+	type: String
+	value: String
+}
+
 type CoinsObject {
 	name: String
 	userID: String
 	description: String
 	creationDate: String
+	hasProperties: [CoinsProperty]
 }
 
 type Dataset {

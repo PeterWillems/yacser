@@ -1,8 +1,15 @@
+export class CoinsProperty {
+  name: string;
+  type: string;
+  value: string;
+}
+
 export class CoinsObject {
   name: string;
   userID: string;
   description: string;
   creationDate: string;
+  hasProperties: CoinsProperty[];
 }
 
 export class CoinsObjectInput {

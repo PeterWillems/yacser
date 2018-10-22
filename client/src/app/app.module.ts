@@ -31,6 +31,7 @@ import {SortableColumnComponent} from './sortable-column/sortable-column.compone
 import {SortableTableDirective} from './sortable-table.directive';
 import {CanvasComponent} from './canvas/canvas.component';
 import { DatasetComponent } from './dataset/dataset.component';
+import { CoinspropertyComponent } from './coinsobject/coinsproperty/coinsproperty.component';
 
 const appRoutes: Routes = [
     {path: '', redirectTo: '/datasets', pathMatch: 'full'},
@@ -76,6 +77,7 @@ const appRoutes: Routes = [
     SortableTableDirective,
     CanvasComponent,
     DatasetComponent,
+    CoinspropertyComponent,
   ],
   imports: [
     BrowserModule,

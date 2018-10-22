@@ -87,7 +87,7 @@ public class HamburgerRepository {
 		}
 		if (coinsObjectInput != null) {
 			putHamburger.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
-					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), null));
 		}
 
 		GetHamburger updatedHamburger = seService.updateHamburger(hamburgerInput.getDatasetId(),

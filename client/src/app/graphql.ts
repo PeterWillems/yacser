@@ -835,6 +835,11 @@ export const ALL_SYSTEM_SLOTS = gql`
               userID
               description
               creationDate
+              hasProperties {
+                name
+                type
+                value
+              }
             }
             assembly {
               uri

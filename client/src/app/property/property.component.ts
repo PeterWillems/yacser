@@ -12,6 +12,7 @@ export class PropertyComponent implements OnInit, OnChanges {
   @Input() iri: boolean;
   @Input() label: string;
   @Input() options: SeObject[];
+  @Input() type: string;
   selectedOption: SeObject;
   @Input() list: boolean;
   @Input() route: string;
@@ -25,6 +26,7 @@ export class PropertyComponent implements OnInit, OnChanges {
 
   constructor() {
     this.editMode = false;
+    this.type = 'text';
     this.iri = false;
     this._sessionRunning = false;
     this.list = false;
@@ -145,5 +147,17 @@ export class PropertyComponent implements OnInit, OnChanges {
 
   delete(object: SeObject): void {
     this.deleteObjectRequested.emit(object);
+  }
+
+  format(dateTimeStr: string) {
+    if (dateTimeStr) {
+      const date = new Date(dateTimeStr);
+      return date.toLocaleString('nl', {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: 'numeric', minute: 'numeric', second: 'numeric',
+        hour12: false
+      });
+    }
+    return null;
   }
 }

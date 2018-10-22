@@ -1,7 +1,7 @@
 <div class="card border-primary">
   <div class="card-header">
     <h5 class="card-title">Hamburger: "{{selectedHamburger.label}}"</h5></div>
-  <div class="card-body">
+  <div class="card-body object-body">
     <table class="table table-hover table-bordered table-sm">
       <thead class="thead-light">
       <tr class="table-record">
@@ -161,7 +161,8 @@
       <tr>
         <td>start date</td>
         <td>
-          <app-property [editMode]="propertyEdited=='startDate'" [value]="format(selectedHamburger.startDate)"
+          <app-property [editMode]="propertyEdited=='startDate'" [value]="selectedHamburger.startDate"
+                        [type]="'datetime-local'"
                         (sessionStarted)="onSessionStarted('startDate')"
                         (sessionEnded)="onSessionEnded($event, 'startDate')"></app-property>
         </td>
@@ -175,7 +176,8 @@
       <tr>
         <td>end date</td>
         <td>
-          <app-property [editMode]="propertyEdited=='endDate'" [value]="format(selectedHamburger.endDate)"
+          <app-property [editMode]="propertyEdited=='endDate'" [value]="selectedHamburger.endDate"
+                        [type]="'datetime-local'"
                         (sessionStarted)="onSessionStarted('endDate')"
                         (sessionEnded)="onSessionEnded($event, 'endDate')"></app-property>
         </td>

@@ -86,7 +86,7 @@ public class RealisationModuleRepository {
 		if (coinsObjectInput != null) {
 			putRealisationModule
 					.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
-							coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
+							coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), null));
 		}
 
 		GetRealisationModule updatedRealisationModule = seService.updateRealisationModule(

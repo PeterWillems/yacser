@@ -14,7 +14,8 @@
           </tr>
           </thead>
           <tbody>
-          <tr [id]="systemSlotItem.uri" *ngFor="let systemSlotItem of allSystemSlots; let i = index" class="table-record" (click)="onSelect(i)"
+          <tr [id]="systemSlotItem.uri" *ngFor="let systemSlotItem of allSystemSlots; let i = index"
+              class="table-record" (click)="onSelect(i)"
               [class]="systemSlotItem == selectedSystemSlot?'selected':''">
             <td>{{systemSlotItem.label}}</td>
             <td>{{localName(systemSlotItem)}}</td>
@@ -40,8 +41,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-7 column-content">
-    <app-systemslot *ngIf="selectedSystemSlot" [selectedSystemSlot]="selectedSystemSlot"
-                    (selectedSystemSlotChanged)="onSelectedSystemSlotChanged($event)"></app-systemslot>
+  <div class="col-md-7 column-content right-column">
+    <app-systemslot *ngIf="selectedSystemSlot" [selectedSystemSlot]="selectedSystemSlot"></app-systemslot>
   </div>
 </div>

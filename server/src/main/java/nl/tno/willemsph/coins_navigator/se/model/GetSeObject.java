@@ -3,11 +3,8 @@ package nl.tno.willemsph.coins_navigator.se.model;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -321,7 +318,9 @@ public class GetSeObject {
 	}
 
 	protected String getDatasetUri() throws URISyntaxException, IOException {
-		return getEmbeddedServer().getDatasets().get(this.datasetId).getUri().toString();
+		// return
+		// getEmbeddedServer().getDatasets().get(this.datasetId).getUri().toString();
+		return getEmbeddedServer().exampleDatasets.get(this.datasetId).getUri().toString();
 	}
 
 	protected String getOntologyUri() throws URISyntaxException, IOException {
@@ -405,6 +404,72 @@ public class GetSeObject {
 			// creationDateNode != null ?
 			// Date.from(Instant.parse(creationDateNode.get("value").asText())) : null);
 			coinsObject.setCreationDate(creationDateNode != null ? creationDateNode.get("value").asText() : null);
+		}
+
+		queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
+		queryStr.setIri("graph", getDatasetUri());
+		queryStr.setIri("se_object", this.uri.toString());
+		queryStr.append("SELECT ?propertyRsrc ?propertyType ?superPropertyType ?propertyValue ?name ?userID ?description ?creationDate ");
+		queryStr.append("{");
+		queryStr.append("  OPTIONAL {");
+		queryStr.append("    GRAPH ?graph { ");
+		queryStr.append("      ?se_object coins2:hasProperties ?propertyRsrc . ");
+		queryStr.append("      ?propertyRsrc rdf:type ?propertyType . ");
+		queryStr.append("    }");
+		queryStr.append("      ?propertyType rdfs:subClassOf+ ?superPropertyType . ");
+		queryStr.append(
+				"      FILTER (?superPropertyType = coins2:ComplexProperty || ?superPropertyType = coins2:SimpleProperty) ");
+		queryStr.append(
+				"      BIND (IF (?superPropertyType = coins2:ComplexProperty,coins2:objectValue,  coins2:datatypeValue) AS ?value) ");
+		queryStr.append("    GRAPH ?graph { ");
+		queryStr.append("      ?propertyRsrc ?value ?propertyValue . ");
+		queryStr.append("    }");
+		queryStr.append("  }");
+		queryStr.append("  GRAPH ?graph { ");
+		queryStr.append("    OPTIONAL {");
+		queryStr.append("      ?propertyRsrc coins2:name ?name .");
+		queryStr.append("    }");
+		queryStr.append("    OPTIONAL {");
+		queryStr.append("      ?propertyRsrc coins2:userID ?userID .");
+		queryStr.append("    }");
+		queryStr.append("    OPTIONAL {");
+		queryStr.append("      ?propertyRsrc coins2:description ?description .");
+		queryStr.append("    }");
+		queryStr.append("    OPTIONAL {");
+		queryStr.append("      ?propertyRsrc coins2:creationDate ?creationDate .");
+		queryStr.append("    }");
+		queryStr.append("  }");
+		queryStr.append("}");
+
+		responseNodes = getEmbeddedServer().query(queryStr);
+		List<CoinsProperty> coinsProperties = new ArrayList<>();
+		int index = 0;
+		for (JsonNode jsonNode : responseNodes) {
+			JsonNode propertyTypeNode = jsonNode.get("propertyType");
+			if (propertyTypeNode != null) {
+				String propertyType = propertyTypeNode.get("value").asText();
+				CoinsProperty coinsProperty = new CoinsProperty();
+				coinsProperty.setType(new URI(propertyType));
+				JsonNode propertyValueNode = jsonNode.get("propertyValue");
+				Object propertyValue = propertyValueNode != null ? propertyValueNode.get("value").asText() : null;
+				coinsProperty.setValue(propertyValue);
+				coinsProperties.add(coinsProperty);
+				JsonNode nameNode = responseNodes.get(index).get("name");
+				coinsProperty.setName(nameNode != null ? nameNode.get("value").asText() : null);
+				JsonNode userIDNode = responseNodes.get(index).get("userID");
+				coinsProperty.setUserID(userIDNode != null ? userIDNode.get("value").asText() : null);
+				JsonNode descriptionNode = responseNodes.get(index).get("description");
+				coinsProperty.setDescription(descriptionNode != null ? descriptionNode.get("value").asText() : null);
+				JsonNode creationDateNode = responseNodes.get(index).get("creationDate");
+				// coinsObject.setCreationDate(
+				// creationDateNode != null ?
+				// Date.from(Instant.parse(creationDateNode.get("value").asText())) : null);
+				coinsProperty.setCreationDate(creationDateNode != null ? creationDateNode.get("value").asText() : null);
+			}
+			index++;
+		}
+		if (!coinsProperties.isEmpty()) {
+			coinsObject.setHasProperties(coinsProperties);
 		}
 		return coinsObject;
 	}

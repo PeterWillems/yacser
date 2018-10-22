@@ -188,7 +188,7 @@ public class EmbeddedServer {
 		System.out.println("Response Code : " + responseCode);
 	}
 
-	private List<nl.tno.willemsph.coins_navigator.se.Dataset> exampleDatasets;
+	public List<nl.tno.willemsph.coins_navigator.se.Dataset> exampleDatasets;
 
 	public List<nl.tno.willemsph.coins_navigator.se.Dataset> getDatasets() throws URISyntaxException, IOException {
 		// if (datasets == null) {
@@ -223,7 +223,8 @@ public class EmbeddedServer {
 
 	public void updateDataset(int datasetId, String label, URI uri, String versionInfo)
 			throws IOException, URISyntaxException {
-		nl.tno.willemsph.coins_navigator.se.Dataset getDataset = getDatasets().get(datasetId);
+//		nl.tno.willemsph.coins_navigator.se.Dataset getDataset = getDatasets().get(datasetId);
+		nl.tno.willemsph.coins_navigator.se.Dataset getDataset = exampleDatasets.get(datasetId);
 		ParameterizedSparqlString queryStr = new ParameterizedSparqlString(getPrefixMapping());
 		queryStr.setIri("graph", getDataset.getUri().toString());
 		queryStr.setIri("ontology", getDataset.getUri().toString());

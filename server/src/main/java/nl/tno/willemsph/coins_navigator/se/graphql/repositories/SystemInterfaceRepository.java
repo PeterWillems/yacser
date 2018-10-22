@@ -84,7 +84,7 @@ public class SystemInterfaceRepository {
 		}
 		if (coinsObjectInput != null) {
 			putSystemInterface.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
-					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), null));
 		}
 		
 		GetSystemInterface updatedSystemInterface = seService.updateSystemInterface(systemInterfaceInput.getDatasetId(),

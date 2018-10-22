@@ -1,50 +1,16 @@
 package nl.tno.willemsph.coins_navigator.se.model;
 
-public class CoinsObject {
-	private String name;
-	private String userID;
-	private String description;
-	private String creationDate;
+import java.util.List;
+
+public class CoinsObject extends CoinsEntity {
 
 	public CoinsObject() {
+		super();
 	}
 
-	public CoinsObject(String name, String userID, String description, String creationDate) {
-		setName(name);
-		setUserID(userID);
-		setDescription(description);
-		setCreationDate(creationDate);
+	public CoinsObject(String name, String userID, String description, String creationDate,
+			List<CoinsProperty> hasProperties) {
+		super(name, userID, description, creationDate, hasProperties);
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUserID() {
-		return userID;
-	}
-
-	public void setUserID(String userID) {
-		this.userID = userID;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(String creationDate) {
-		this.creationDate = creationDate;
-	}
 }

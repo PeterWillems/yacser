@@ -122,6 +122,18 @@ public class SystemSlotResolver implements GraphQLResolver<SystemSlot> {
 		coinsObject.setUserID(getCoinsObject.getUserID());
 		coinsObject.setDescription(getCoinsObject.getDescription());
 		coinsObject.setCreationDate(getCoinsObject.getCreationDate());
+		List<nl.tno.willemsph.coins_navigator.se.model.CoinsProperty> hasProperties = getCoinsObject.getHasProperties();
+		if (hasProperties != null && hasProperties.size() > 0) {
+			List<CoinsProperty> coinsProperties = new ArrayList<>();
+			for (nl.tno.willemsph.coins_navigator.se.model.CoinsProperty getCoinsProperty : hasProperties) {
+				CoinsProperty coinsProperty = new CoinsProperty();
+				coinsProperty.setName(getCoinsProperty.getName());
+				coinsProperty.setType(getCoinsProperty.getType());
+				coinsProperty.setValue(getCoinsProperty.getValue());
+				coinsProperties.add(coinsProperty);
+			}
+			coinsObject.setHasProperties(coinsProperties);
+		}
 		return coinsObject;
 	}
 }

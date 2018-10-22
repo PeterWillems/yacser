@@ -74,7 +74,7 @@ public class RequirementRepository {
 		}
 		if (coinsObjectInput != null) {
 			putRequirement.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
-					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), null));
 		}
 
 

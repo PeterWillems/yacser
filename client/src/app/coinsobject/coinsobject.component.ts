@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CoinsObject, CoinsObjectInput, SeObject, SystemInterface, SystemInterfaceInput} from '../types';
+import {CoinsObject, CoinsObjectInput, CoinsProperty, SeObject, SystemInterface, SystemInterfaceInput} from '../types';
 import {SeObjectComponent} from '../se-object-component';
 
 @Component({
@@ -10,6 +10,7 @@ import {SeObjectComponent} from '../se-object-component';
 export class CoinsobjectComponent extends SeObjectComponent implements OnInit {
   @Input() selectedCoinsObject: CoinsObject;
   @Output() updatedCoinsObject = new EventEmitter<CoinsObjectInput>();
+  selectedProperty: CoinsProperty;
 
   constructor() {
     super();
@@ -33,17 +34,24 @@ export class CoinsobjectComponent extends SeObjectComponent implements OnInit {
   }
 
   format(dateTimeStr: string) {
-    const date = new Date(dateTimeStr);
-    return date.toLocaleString('nl', {
-      year: 'numeric', month: 'numeric', day: 'numeric',
-      hour: 'numeric', minute: 'numeric', second: 'numeric',
-      hour12: false
-    });
+    if (!dateTimeStr) {
+      const date = new Date(dateTimeStr);
+      return date.toLocaleString('nl', {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: 'numeric', minute: 'numeric', second: 'numeric',
+        hour12: false
+      });
+    }
+    return null;
   }
 
   private _cloneCoinsObjectInput(coinsObject: CoinsObject): CoinsObjectInput {
     const coinsObjectInput = new CoinsObjectInput(coinsObject.name, coinsObject.userID, coinsObject.description, coinsObject.creationDate);
     return coinsObjectInput;
+  }
+
+  public onSelectedProperty(selectedProperty: CoinsProperty): void {
+    this.selectedProperty = selectedProperty;
   }
 
 }

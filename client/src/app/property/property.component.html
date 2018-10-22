@@ -1,9 +1,9 @@
 <div *ngIf="editMode && !iri">
-  <input class="form-control" type="text" [(ngModel)]="value" (keyup)="onKey($event)">
+  <input class="form-control" [type]="type" [(ngModel)]="value" (keyup)="onKey($event)">
 </div>
 <div *ngIf="!editMode && !iri && !list"
      (dblclick)="onEditModeChanged()">
-  {{value}}
+  {{type === 'datetime-local' ? format(value) : value}}
 </div>
 <div *ngIf="!editMode && !iri && list"
      (dblclick)="onEditModeChanged()">
@@ -59,7 +59,7 @@
   <ng-container *ngIf="!route">
     <a *ngFor="let object of value; let last = last; let first = first"
        href="#" (click)="!!onLocalLink(object)">
-      {{first?'[ ':''}}{{object.label}}{{!last?', ':''}}{{last?' ]':''}}
+      {{first?'[ ':''}}{{object.label?object.label:object.name}}{{!last?', ':''}}{{last?' ]':''}}
     </a>&nbsp;
   </ng-container>
   <ng-container *ngIf="route && route!=='#'">

@@ -80,7 +80,7 @@ public class FunctionRepository {
 		}
 		if (coinsObjectInput != null) {
 			putFunction.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
-					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate()));
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), null));
 		}
 
 		GetFunction updatedFunction = seService.updateFunction(functionInput.getDatasetId(), getFunction.getLocalName(),

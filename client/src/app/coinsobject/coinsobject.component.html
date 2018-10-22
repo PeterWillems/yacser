@@ -56,7 +56,8 @@
       <tr>
         <td>creation date</td>
         <td>
-          <app-property [editMode]="propertyEdited=='creationDate'" [value]="format(selectedCoinsObject.creationDate)"
+          <app-property [editMode]="propertyEdited=='creationDate'" [type]="'datetime-local'"
+                        [value]="selectedCoinsObject.creationDate"
                         (sessionStarted)="onSessionStarted('creationDate')"
                         (sessionEnded)="onSessionEnded($event, 'creationDate')"></app-property>
         </td>
@@ -65,6 +66,20 @@
                   [class]="propertyEdited=='creationDate'?'btn btn-primary btn-sm':'btn btn-sm'"><span
             class="fa fa-edit fa-lg"></span>
           </button>
+        </td>
+      </tr>
+      <tr>
+        <td>properties</td>
+        <td>
+          <app-property [editMode]="propertyEdited=='properties'" [list]="true" [iri]="true"
+                        [value]="selectedCoinsObject.hasProperties" (selectedObject)="onSelectedProperty($event)"
+                        (sessionStarted)="onSessionStarted('properties')"
+                        (sessionEnded)="onSessionEnded($event, 'properties')"></app-property>
+        </td>
+      </tr>
+      <tr>
+        <td *ngIf="selectedProperty" colspan="2">
+          <app-coinsproperty [selectedProperty]="selectedProperty"></app-coinsproperty>
         </td>
       </tr>
       </tbody>
