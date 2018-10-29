@@ -1,5 +1,10 @@
 <div *ngIf="editMode && !iri">
-  <input class="form-control" [type]="type" [(ngModel)]="value" (keyup)="onKey($event)">
+  <input *ngIf="!options" class="form-control" [type]="type" [(ngModel)]="value" (keyup)="onKey($event)">
+  <select *ngIf="options" class="form-control" [(ngModel)]="value">
+    <option *ngFor="let option of options" [ngValue]="option" [selected]="option===selectedOption">
+      {{option}}
+    </option>
+  </select>
 </div>
 <div *ngIf="!editMode && !iri && !list"
      (dblclick)="onEditModeChanged()">
@@ -19,8 +24,11 @@
 <div *ngIf="editMode && iri && list">
   <table class="table">
     <tr *ngFor="let item of value; ">
-      <td>{{item.uri.substring(item.uri.indexOf('#'))}}</td>
-      <td>{{item.label}}</td>
+      <td *ngIf="item.uri">{{item.uri.substring(item.uri.indexOf('#'))}}</td>
+      <td *ngIf="!item.uri">{{item.type.substring(item.type.indexOf('#')+1)}}</td>
+      <td *ngIf="item.label">{{item.label}}</td>
+      <td *ngIf="!item.label">{{item.name}}</td>
+      <td *ngIf="item.value">{{item.value}}</td>
       <td *ngIf="options">
         <button type="button" (click)="remove(item)"
                 class="btn btn-sm"><span class="fa fa-remove fa-lg"></span>

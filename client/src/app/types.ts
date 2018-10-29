@@ -1,7 +1,7 @@
 export class CoinsProperty {
-  name: string;
-  type: string;
-  value: string;
+
+  constructor(public name: string, public type: string, public value: string) {
+  }
 }
 
 export class CoinsObject {
@@ -13,6 +13,8 @@ export class CoinsObject {
 }
 
 export class CoinsObjectInput {
+  public hasProperties: CoinsProperty[];
+
   constructor(public name: string, public userID: string, public description: string, public creationDate: string) {
   }
 }

@@ -151,11 +151,18 @@ type Query {
   oneSystemSlot(datasetId: Int!, uri: String!): SystemSlot
 }
 
+input CoinsPropertyInput {
+	name: String
+	type: String
+	value: String
+}
+
 input CoinsObjectInput {
 	name: String
 	userID: String
 	description: String
 	creationDate: String
+	hasProperties: [CoinsPropertyInput]
 }
 
 input DatasetInput {

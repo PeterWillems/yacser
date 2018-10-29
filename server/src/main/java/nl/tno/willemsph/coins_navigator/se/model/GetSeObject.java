@@ -409,34 +409,35 @@ public class GetSeObject {
 		queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
 		queryStr.setIri("graph", getDatasetUri());
 		queryStr.setIri("se_object", this.uri.toString());
-		queryStr.append("SELECT ?propertyRsrc ?propertyType ?superPropertyType ?propertyValue ?name ?userID ?description ?creationDate ");
+		queryStr.append(
+				"SELECT ?propertyRsrc ?propertyType ?superPropertyType ?predicate ?p ?propertyValue ?name ?userID ?description ?creationDate ");
 		queryStr.append("{");
 		queryStr.append("  OPTIONAL {");
 		queryStr.append("    GRAPH ?graph { ");
 		queryStr.append("      ?se_object coins2:hasProperties ?propertyRsrc . ");
 		queryStr.append("      ?propertyRsrc rdf:type ?propertyType . ");
 		queryStr.append("    }");
-		queryStr.append("      ?propertyType rdfs:subClassOf+ ?superPropertyType . ");
+		queryStr.append("    ?propertyType rdfs:subClassOf+ ?superPropertyType . ");
 		queryStr.append(
 				"      FILTER (?superPropertyType = coins2:ComplexProperty || ?superPropertyType = coins2:SimpleProperty) ");
 		queryStr.append(
-				"      BIND (IF (?superPropertyType = coins2:ComplexProperty,coins2:objectValue,  coins2:datatypeValue) AS ?value) ");
+				"      BIND (IF (?superPropertyType = coins2:ComplexProperty, coins2:objectValue,  coins2:datatypeValue) AS ?predicate) ");
 		queryStr.append("    GRAPH ?graph { ");
-		queryStr.append("      ?propertyRsrc ?value ?propertyValue . ");
-		queryStr.append("    }");
-		queryStr.append("  }");
-		queryStr.append("  GRAPH ?graph { ");
-		queryStr.append("    OPTIONAL {");
-		queryStr.append("      ?propertyRsrc coins2:name ?name .");
-		queryStr.append("    }");
-		queryStr.append("    OPTIONAL {");
-		queryStr.append("      ?propertyRsrc coins2:userID ?userID .");
-		queryStr.append("    }");
-		queryStr.append("    OPTIONAL {");
-		queryStr.append("      ?propertyRsrc coins2:description ?description .");
-		queryStr.append("    }");
-		queryStr.append("    OPTIONAL {");
-		queryStr.append("      ?propertyRsrc coins2:creationDate ?creationDate .");
+		queryStr.append("      OPTIONAL {");
+		queryStr.append("        ?propertyRsrc ?predicate ?propertyValue .");
+		queryStr.append("      }");
+		queryStr.append("      OPTIONAL {");
+		queryStr.append("        ?propertyRsrc coins2:name ?name .");
+		queryStr.append("      }");
+		queryStr.append("      OPTIONAL {");
+		queryStr.append("        ?propertyRsrc coins2:userID ?userID .");
+		queryStr.append("      }");
+		queryStr.append("      OPTIONAL {");
+		queryStr.append("        ?propertyRsrc coins2:description ?description .");
+		queryStr.append("      }");
+		queryStr.append("      OPTIONAL {");
+		queryStr.append("        ?propertyRsrc coins2:creationDate ?creationDate .");
+		queryStr.append("      }");
 		queryStr.append("    }");
 		queryStr.append("  }");
 		queryStr.append("}");
@@ -447,11 +448,17 @@ public class GetSeObject {
 		for (JsonNode jsonNode : responseNodes) {
 			JsonNode propertyTypeNode = jsonNode.get("propertyType");
 			if (propertyTypeNode != null) {
-				String propertyType = propertyTypeNode.get("value").asText();
 				CoinsProperty coinsProperty = new CoinsProperty();
+				String propertyType = propertyTypeNode.get("value").asText();
 				coinsProperty.setType(new URI(propertyType));
-				JsonNode propertyValueNode = jsonNode.get("propertyValue");
-				Object propertyValue = propertyValueNode != null ? propertyValueNode.get("value").asText() : null;
+				JsonNode propertyRsrcNode = jsonNode.get("propertyRsrc");
+				String propertyRsrcType = propertyRsrcNode != null ? propertyRsrcNode.get("type").asText() : null;
+				coinsProperty.setPropertyRsrcType(propertyRsrcType);
+				JsonNode valueRsrcNode = jsonNode.get("propertyValue");
+				String valueRsrcType = valueRsrcNode != null ? valueRsrcNode.get("type").asText() : null;
+				coinsProperty.setValueRsrcType(valueRsrcType);
+				// JsonNode propertyValueNode = jsonNode.get("propertyValue");
+				Object propertyValue = valueRsrcNode != null ? valueRsrcNode.get("value").asText() : null;
 				coinsProperty.setValue(propertyValue);
 				coinsProperties.add(coinsProperty);
 				JsonNode nameNode = responseNodes.get(index).get("name");
@@ -513,6 +520,75 @@ public class GetSeObject {
 			queryStr.append("}");
 
 			getEmbeddedServer().update(queryStr);
+
+			queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
+			queryStr.setIri("graph", getDatasetUri());
+			queryStr.setIri("subject", getUri().toString());
+			queryStr.append("  DELETE { GRAPH ?graph { ");
+			queryStr.append("    ?subject coins2:hasProperties ?hasProperties . ");
+			queryStr.append("  }} ");
+			List<CoinsProperty> hasProperties = coinsObject.getHasProperties();
+			if (hasProperties != null) {
+				queryStr.append("  INSERT { GRAPH ?graph { ");
+				int index = 0;
+				for (CoinsProperty coinsProperty : hasProperties) {
+					String name = "name" + index;
+					queryStr.setLiteral(name, coinsProperty.getName());
+					String value = "value" + index;
+
+					switch (coinsProperty.getType().getFragment()) {
+					case "BooleanProperty":
+						queryStr.setLiteral(value, Boolean.parseBoolean(coinsProperty.getValue().toString()));
+						queryStr.append(" ?subject coins2:hasProperties [rdf:type coins2:BooleanProperty; coins2:name ?"
+								+ name + " ; coins2:datatypeValue ?" + value + " ] . ");
+						break;
+					case "DateTimeProperty":
+						Calendar dateTime = DatatypeConverter.parseDateTime(coinsProperty.getValue().toString());
+						queryStr.setLiteral(value, dateTime);
+						queryStr.append(
+								" ?subject coins2:hasProperties [rdf:type coins2:DateTimeProperty; coins2:name ?" + name
+										+ " ; coins2:datatypeValue ?" + value + " ] . ");
+						break;
+					case "FloatProperty":
+						queryStr.setLiteral(value, Float.parseFloat(coinsProperty.getValue().toString()));
+						queryStr.append(" ?subject coins2:hasProperties [rdf:type coins2:FloatProperty; coins2:name ?"
+								+ name + " ; coins2:datatypeValue ?" + value + " ] . ");
+						break;
+					case "IntegerProperty":
+						queryStr.setLiteral(value, Integer.parseInt(coinsProperty.getValue().toString()));
+						queryStr.append(" ?subject coins2:hasProperties [rdf:type coins2:IntegerProperty; coins2:name ?"
+								+ name + " ; coins2:datatypeValue ?" + value + " ] . ");
+						break;
+					case "StringProperty":
+						queryStr.setLiteral(value, coinsProperty.getValue().toString());
+						queryStr.append(" ?subject coins2:hasProperties [rdf:type coins2:StringProperty; coins2:name ?"
+								+ name + " ; coins2:datatypeValue ?" + value + " ] . ");
+						break;
+					case "DocumentProperty":
+						Object propValue = coinsProperty.getValue();
+						if (propValue != null) {
+							queryStr.setIri(value, propValue.toString());
+							queryStr.append(
+									" ?subject coins2:hasProperties [rdf:type coins2:DocumentProperty; coins2:name ?"
+											+ name + " ; coins2:objectValue ?" + value + " ] . ");
+
+						} else {
+							queryStr.append(
+									" ?subject coins2:hasProperties [rdf:type coins2:DocumentProperty; coins2:name ?"
+											+ name + " ] . ");
+						}
+						break;
+					}
+					index++;
+				}
+				queryStr.append("  }} ");
+				queryStr.append("WHERE { GRAPH ?graph { ");
+				queryStr.append("  OPTIONAL { ?subject coins2:hasProperties ?hasProperties . }");
+				queryStr.append("  } ");
+				queryStr.append("}");
+
+				getEmbeddedServer().update(queryStr);
+			}
 		}
 	}
 }

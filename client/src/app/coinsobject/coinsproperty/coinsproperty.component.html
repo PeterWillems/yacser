@@ -24,7 +24,7 @@
   <tr>
     <td>type</td>
     <td>
-      <app-property [editMode]="propertyEdited=='type'" [value]="selectedProperty.type"
+      <app-property [editMode]="propertyEdited=='type'" [value]="selectedProperty.type" [options]="types"
                     (sessionStarted)="onSessionStarted('type')"
                     (sessionEnded)="onSessionEnded($event, 'type')"></app-property>
     </td>
@@ -39,6 +39,7 @@
     <td>value</td>
     <td>
       <app-property [editMode]="propertyEdited=='value'" [value]="selectedProperty.value"
+                    [type]="selectedProperty.type === types[1]?'datetime-local':null"
                     (sessionStarted)="onSessionStarted('value')"
                     (sessionEnded)="onSessionEnded($event, 'value')"></app-property>
     </td>

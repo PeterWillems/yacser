@@ -11,9 +11,11 @@ import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsPropertyInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlot;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.SystemSlotInput;
 import nl.tno.willemsph.coins_navigator.se.model.CoinsObject;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsProperty;
 import nl.tno.willemsph.coins_navigator.se.model.GetSystemSlot;
 import nl.tno.willemsph.coins_navigator.se.model.PutSystemSlot;
 
@@ -88,8 +90,20 @@ public class SystemSlotRepository {
 			putSystemSlot.setInterfaces(interfaces);
 		}
 		if (coinsObjectInput != null) {
+			List<CoinsProperty> hasProperties = null;
+			List<CoinsPropertyInput> coinsProperties = coinsObjectInput.getHasProperties();
+			if (coinsProperties != null) {
+				hasProperties = new ArrayList<>();
+				for (CoinsPropertyInput coinsProperty : coinsProperties) {
+					CoinsProperty hasProperty = new CoinsProperty();
+					hasProperty.setName(coinsProperty.getName());
+					hasProperty.setType(coinsProperty.getType());
+					hasProperty.setValue(coinsProperty.getValue());
+					hasProperties.add(hasProperty);
+				}
+			}
 			putSystemSlot.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
-					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), null));
+					coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), hasProperties));
 		}
 
 		GetSystemSlot updatedSystemSlot = seService.updateSystemSlot(systemSlotInput.getDatasetId(),

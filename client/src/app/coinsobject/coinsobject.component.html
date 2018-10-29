@@ -71,15 +71,25 @@
       <tr>
         <td>properties</td>
         <td>
-          <app-property [editMode]="propertyEdited=='properties'" [list]="true" [iri]="true"
+          <app-property [editMode]="propertyEdited=='hasProperties'" [list]="true" [iri]="true"
+                        [label]="showList(selectedCoinsObject.hasProperties)"
                         [value]="selectedCoinsObject.hasProperties" (selectedObject)="onSelectedProperty($event)"
-                        (sessionStarted)="onSessionStarted('properties')"
-                        (sessionEnded)="onSessionEnded($event, 'properties')"></app-property>
+                        (sessionStarted)="onSessionStarted('hasProperties')"
+                        (sessionEnded)="onSessionEnded($event, 'hasProperties')"
+                        (createObjectRequested)="onCreateObjectRequested($event)"
+                        (deleteObjectRequested)="onDeleteObjectRequested($event)"></app-property>
+        </td>
+        <td>
+          <button type="button" (click)="onSessionStarted('hasProperties')"
+                  [class]="propertyEdited=='hasProperties'?'btn btn-primary btn-sm':'btn btn-sm'"><span
+            class="fa fa-edit fa-lg"></span>
+          </button>
         </td>
       </tr>
       <tr>
         <td *ngIf="selectedProperty" colspan="2">
-          <app-coinsproperty [selectedProperty]="selectedProperty"></app-coinsproperty>
+          <app-coinsproperty [selectedProperty]="selectedProperty"
+                             (updatedCoinsProperty)="onUpdateObjectRequested($event)"></app-coinsproperty>
         </td>
       </tr>
       </tbody>

@@ -6,6 +6,8 @@ import java.util.List;
 
 public class CoinsProperty extends CoinsEntity {
 	private URI type;
+	private String propertyRsrcType;
+	private String valueRsrcType;
 	private Object value;
 
 	public CoinsProperty() {
@@ -25,6 +27,22 @@ public class CoinsProperty extends CoinsEntity {
 		this.type = type;
 	}
 
+	public String getPropertyRsrcType() {
+		return propertyRsrcType;
+	}
+
+	public void setPropertyRsrcType(String propertyRsrcType) {
+		this.propertyRsrcType = propertyRsrcType;
+	}
+
+	public String getValueRsrcType() {
+		return valueRsrcType;
+	}
+
+	public void setValueRsrcType(String valueRsrcType) {
+		this.valueRsrcType = valueRsrcType;
+	}
+
 	public Object getValue() throws URISyntaxException {
 		switch (type.getFragment()) {
 		case "BooleanProperty":
@@ -32,7 +50,7 @@ public class CoinsProperty extends CoinsEntity {
 		case "DateTimeProperty":
 			return new String((String) value);
 		case "DocumentProperty":
-			return new URI((String) value);
+			return value != null ? new URI((String) value) : null;
 		case "FloatProperty":
 			return new Float((String) value);
 		case "IntegerProperty":

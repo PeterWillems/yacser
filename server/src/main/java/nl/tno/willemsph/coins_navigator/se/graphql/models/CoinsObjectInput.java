@@ -1,10 +1,13 @@
 package nl.tno.willemsph.coins_navigator.se.graphql.models;
 
+import java.util.List;
+
 public class CoinsObjectInput {
 	private String name;
 	private String userID;
 	private String description;
 	private String creationDate;
+	private List<CoinsPropertyInput> hasProperties;
 
 	public CoinsObjectInput() {
 	}
@@ -39,6 +42,14 @@ public class CoinsObjectInput {
 
 	public void setCreationDate(String creationDate) {
 		this.creationDate = creationDate;
+	}
+
+	public List<CoinsPropertyInput> getHasProperties() {
+		return hasProperties;
+	}
+
+	public void setHasProperties(List<CoinsPropertyInput> hasProperties) {
+		this.hasProperties = hasProperties;
 	}
 
 }

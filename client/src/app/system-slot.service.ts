@@ -91,7 +91,8 @@ export class SystemSlotService {
           name: coinsObject.name,
           userID: coinsObject.userID,
           description: coinsObject.description,
-          creationDate: coinsObject.creationDate
+          creationDate: coinsObject.creationDate,
+          hasProperties: coinsObject.hasProperties
         }
       },
       // update: (proxy, {data: {updateSystemSlot}}) => {
