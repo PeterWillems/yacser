@@ -445,6 +445,7 @@ public class GetSeObject {
 		responseNodes = getEmbeddedServer().query(queryStr);
 		List<CoinsProperty> coinsProperties = new ArrayList<>();
 		int index = 0;
+		List<String> names = new ArrayList<>();
 		for (JsonNode jsonNode : responseNodes) {
 			JsonNode propertyTypeNode = jsonNode.get("propertyType");
 			if (propertyTypeNode != null) {
@@ -460,9 +461,12 @@ public class GetSeObject {
 				// JsonNode propertyValueNode = jsonNode.get("propertyValue");
 				Object propertyValue = valueRsrcNode != null ? valueRsrcNode.get("value").asText() : null;
 				coinsProperty.setValue(propertyValue);
-				coinsProperties.add(coinsProperty);
 				JsonNode nameNode = responseNodes.get(index).get("name");
 				coinsProperty.setName(nameNode != null ? nameNode.get("value").asText() : null);
+				if (!names.contains(coinsProperty.getName())) {
+					names.add(coinsProperty.getName());
+					coinsProperties.add(coinsProperty);
+				}
 				JsonNode userIDNode = responseNodes.get(index).get("userID");
 				coinsProperty.setUserID(userIDNode != null ? userIDNode.get("value").asText() : null);
 				JsonNode descriptionNode = responseNodes.get(index).get("description");
@@ -520,13 +524,25 @@ public class GetSeObject {
 			queryStr.append("}");
 
 			getEmbeddedServer().update(queryStr);
-
+			
 			queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
 			queryStr.setIri("graph", getDatasetUri());
 			queryStr.setIri("subject", getUri().toString());
 			queryStr.append("  DELETE { GRAPH ?graph { ");
 			queryStr.append("    ?subject coins2:hasProperties ?hasProperties . ");
+			queryStr.append("    ?hasProperties ?predicate ?value . ");
 			queryStr.append("  }} ");
+			queryStr.append("WHERE { GRAPH ?graph { ");
+			queryStr.append("  OPTIONAL { ?subject coins2:hasProperties ?hasProperties . ");
+			queryStr.append("    ?hasProperties ?predicate ?value . } ");
+			queryStr.append("  } ");
+			queryStr.append("}");
+
+			getEmbeddedServer().update(queryStr);
+
+			queryStr = new ParameterizedSparqlString(getEmbeddedServer().getPrefixMapping());
+			queryStr.setIri("graph", getDatasetUri());
+			queryStr.setIri("subject", getUri().toString());
 			List<CoinsProperty> hasProperties = coinsObject.getHasProperties();
 			if (hasProperties != null) {
 				queryStr.append("  INSERT { GRAPH ?graph { ");
@@ -582,9 +598,7 @@ public class GetSeObject {
 					index++;
 				}
 				queryStr.append("  }} ");
-				queryStr.append("WHERE { GRAPH ?graph { ");
-				queryStr.append("  OPTIONAL { ?subject coins2:hasProperties ?hasProperties . }");
-				queryStr.append("  } ");
+				queryStr.append("WHERE { ");
 				queryStr.append("}");
 
 				getEmbeddedServer().update(queryStr);

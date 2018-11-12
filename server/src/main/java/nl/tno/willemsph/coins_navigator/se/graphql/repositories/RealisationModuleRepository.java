@@ -11,9 +11,11 @@ import org.springframework.stereotype.Component;
 
 import nl.tno.willemsph.coins_navigator.se.SeService;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsObjectInput;
+import nl.tno.willemsph.coins_navigator.se.graphql.models.CoinsPropertyInput;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationModule;
 import nl.tno.willemsph.coins_navigator.se.graphql.models.RealisationModuleInput;
 import nl.tno.willemsph.coins_navigator.se.model.CoinsObject;
+import nl.tno.willemsph.coins_navigator.se.model.CoinsProperty;
 import nl.tno.willemsph.coins_navigator.se.model.GetRealisationModule;
 import nl.tno.willemsph.coins_navigator.se.model.PutRealisationModule;
 
@@ -84,9 +86,21 @@ public class RealisationModuleRepository {
 			putRealisationModule.setPorts(ports);
 		}
 		if (coinsObjectInput != null) {
+			List<CoinsProperty> hasProperties = null;
+			List<CoinsPropertyInput> coinsProperties = coinsObjectInput.getHasProperties();
+			if (coinsProperties != null) {
+				hasProperties = new ArrayList<>();
+				for (CoinsPropertyInput coinsProperty : coinsProperties) {
+					CoinsProperty hasProperty = new CoinsProperty();
+					hasProperty.setName(coinsProperty.getName());
+					hasProperty.setType(coinsProperty.getType());
+					hasProperty.setValue(coinsProperty.getValue());
+					hasProperties.add(hasProperty);
+				}
+			}
 			putRealisationModule
 					.setCoinsObject(new CoinsObject(coinsObjectInput.getName(), coinsObjectInput.getUserID(),
-							coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), null));
+							coinsObjectInput.getDescription(), coinsObjectInput.getCreationDate(), hasProperties));
 		}
 
 		GetRealisationModule updatedRealisationModule = seService.updateRealisationModule(
